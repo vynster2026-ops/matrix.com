@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedhikaArts | Enterprise Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(33, 150, 184, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(138, 43, 226, 0.1) 0px, transparent 50%);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            padding: 2rem;
+        }
+        .brand-icon {
+            font-size: 4rem;
+            color: #38bdf8;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.5));
+        }
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .portal-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem 2rem;
+            border-radius: 24px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .portal-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+        .portal-icon {
+            font-size: 3.5rem;
+            color: #38bdf8;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+        }
+        .portal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            z-index: 1;
+        }
+        .portal-desc {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            z-index: 1;
+        }
+        .version {
+            margin-top: 4rem;
+            color: #475569;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="fa-solid fa-crown brand-icon"></i>
+        <h1>MedhikaArts Enterprise</h1>
+        <p>Welcome to the global platform gateway. Please select your authorized module to proceed.</p>
+        
+        <div class="portal-grid">
+            <a href="MedhikaArts_superadmin_portal.html" class="portal-card">
+                <i class="fa-solid fa-chess-king portal-icon" style="color: #a855f7;"></i>
+                <div class="portal-title">Super Admin Portal</div>
+                <div class="portal-desc">Manage platform settings, global vendors, verification KYC, and comprehensive revenue ledger.</div>
+            </a>
+            
+            <a href="login.html" class="portal-card">
+                <i class="fa-solid fa-briefcase portal-icon" style="color: #38bdf8;"></i>
+                <div class="portal-title">Branch Portal</div>
+                <div class="portal-desc">Manage your specific salon operations, staff, analytics, and business performance metrics.</div>
+            </a>
+
+            <a href="MedhikaArts_booking_module.html" class="portal-card">
+                <i class="fa-solid fa-calendar-check portal-icon" style="color: #34d399;"></i>
+                <div class="portal-title">Reception Booking</div>
+                <div class="portal-desc">Handle customer walk-ins, daily appointments, client check-ins, and direct billing at the front desk.</div>
+            </a>
+        </div>
+        
+        <div class="version">System Core v2.4.1 - Authenticated Environment</div>
+    </div>
+</body>
+</html>

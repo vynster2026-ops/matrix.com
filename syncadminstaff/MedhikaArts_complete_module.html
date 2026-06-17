@@ -5206,7 +5206,6 @@
             loadSettings();
             checkOpeningAmount();
             resetAdScrollInterval();
-            switchView('dashboard');
         });
 
         function loadSettings() {
@@ -9892,7 +9891,7 @@
             renderInventoryView();
             renderReportsView();
             renderServicesStatsView();
-            if (typeof window.renderFullCalendar === 'function') window.renderFullCalendar();
+            renderFullCalendar();
 
             const dateDisplay = document.getElementById('current-date-label');
             const scheduleTitle = document.getElementById('schedule-title');
@@ -11716,7 +11715,7 @@
             fullCalViewDate.setDate(1);
             displayDate = new Date();
             displayDate.setHours(0, 0, 0, 0);
-            if (typeof window.renderFullCalendar === 'function') window.renderFullCalendar();
+            renderFullCalendar();
             renderDashboard();
         }
 
@@ -12504,7 +12503,7 @@
                 } else {
                     displayDate.setDate(displayDate.getDate() + dir);
                 }
-                if (typeof window.renderFullCalendar === 'function') window.renderFullCalendar();
+                renderFullCalendar();
             } else {
                 displayDate.setDate(displayDate.getDate() + dir);
                 renderDashboard();
@@ -12515,7 +12514,7 @@
             if (!dateStr) return;
             displayDate = new Date(dateStr);
             if (typeof currentViewId !== 'undefined' && currentViewId === 'calendar') {
-                if (typeof window.renderFullCalendar === 'function') window.renderFullCalendar();
+                renderFullCalendar();
             } else {
                 renderDashboard();
             }
@@ -15170,7 +15169,7 @@
             await new Promise(resolve => setTimeout(resolve, 500));
 
             // 4. Render Active View
-            if (typeof window.renderFullCalendar === 'function') window.renderFullCalendar();
+            renderFullCalendar();
         };
 
         // Router function (Replaces original renderFullCalendar)
@@ -15556,45 +15555,42 @@
             } catch (e) { console.error('Check-out error', e); }
         }
 
-        async function renderLeaveRequestsTable() {
+        function renderLeaveRequestsTable() {
             const tbody = document.getElementById('staff-leaves-body');
             if (!tbody) return;
-            
-            try {
-                const res = await fetch(`${API_URL}/leave-requests`);
-                const requests = await res.json();
-                
-                requests.sort((a, b) => new Date(b.fromDate || b.createdAt) - new Date(a.fromDate || a.createdAt));
-                
-                if (requests.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No leave requests found.</td></tr>';
-                    return;
+            let requests = [];
+            STAFF.forEach(s => {
+                if (s.leaveRequests && s.leaveRequests.length > 0) {
+                    s.leaveRequests.forEach(l => {
+                        requests.push({ ...l, staffId: s.id, staffName: s.name });
+                    });
                 }
-                
-                tbody.innerHTML = requests.map(r => {
-                    let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
-                    let statusBg = r.status === 'Approved' ? 'var(--success-bg)' : r.status === 'Rejected' ? 'var(--danger-bg)' : '#fff3cd';
-                    let startStr = r.fromDate ? new Date(r.fromDate).toLocaleDateString() : (r.startDate ? new Date(r.startDate).toLocaleDateString() : '-');
-                    let endStr = r.toDate ? new Date(r.toDate).toLocaleDateString() : (r.endDate ? new Date(r.endDate).toLocaleDateString() : '-');
-                    let dates = startStr === endStr ? startStr : startStr + ' - ' + endStr;
-                    return `
-                    <tr>
-                        <td style="font-weight:700;">${r.staffName || 'Staff'}</td>
-                        <td>${dates}</td>
-                        <td>${r.reason || '-'}</td>
-                        <td><span style="background:${statusBg}; color:${statusColor}; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:700;">${r.status}</span></td>
-                        <td>
-                            ${r.status.toLowerCase() === 'pending' ? `
-                            <button class="btn btn-sm" style="background:var(--success); color:white; font-size:11px; padding:4px 8px;" onclick="approveLeave('${r.staffId}', '${r._id || r.id}')">Approve</button>
-                            <button class="btn btn-sm" style="background:var(--danger); color:white; font-size:11px; padding:4px 8px;" onclick="rejectLeave('${r.staffId}', '${r._id || r.id}')">Reject</button>
-                            ` : '-'}
-                        </td>
-                    </tr>`;
-                }).join('');
-            } catch (e) {
-                console.error("Error loading leave requests:", e);
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Error loading leave requests.</td></tr>';
+            });
+            requests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            if (requests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No leave requests found.</td></tr>';
+                return;
             }
+            tbody.innerHTML = requests.map(r => {
+                let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
+                let statusBg = r.status === 'Approved' ? 'var(--success-bg)' : r.status === 'Rejected' ? 'var(--danger-bg)' : '#fff3cd';
+                let startStr = new Date(r.startDate).toLocaleDateString();
+                let endStr = new Date(r.endDate).toLocaleDateString();
+                let dates = startStr === endStr ? startStr : startStr + ' - ' + endStr;
+                return `
+                <tr>
+                    <td style="font-weight:700;">${r.staffName}</td>
+                    <td>${dates}</td>
+                    <td>${r.reason || '-'}</td>
+                    <td><span style="background:${statusBg}; color:${statusColor}; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:700;">${r.status}</span></td>
+                    <td>
+                        ${r.status === 'Pending' ? `
+                        <button class="btn btn-sm" style="background:var(--success); color:white; font-size:11px; padding:4px 8px;" onclick="approveLeave('${r.staffId}', '${r.id}')">Approve</button>
+                        <button class="btn btn-sm" style="background:var(--danger); color:white; font-size:11px; padding:4px 8px;" onclick="rejectLeave('${r.staffId}', '${r.id}')">Reject</button>
+                        ` : '-'}
+                    </td>
+                </tr>`;
+            }).join('');
         }
 
         function openLeaveModal() {
@@ -15622,17 +15618,17 @@
             if (new Date(startDate) > new Date(endDate)) {
                 return showToast('End date cannot be before start date', 'error');
             }
-            
-            const staffName = STAFF.find(s => s.id === staffId)?.name || "Staff";
 
             try {
-                const res = await fetch(`${API_URL}/leave-request`, {
+                const res = await fetch(`${API_URL}/staff/${staffId}/leave-request`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ staffId, staffName, fromDate: startDate, toDate: endDate, reason, status: "Pending" })
+                    body: JSON.stringify({ startDate, endDate, reason })
                 });
                 const data = await res.json();
-                if (data.success || res.ok) {
+                if (data.success) {
+                    let s = STAFF.find(x => x.id === staffId);
+                    if (s) { s.leaveRequests = data.leaveRequests; }
                     renderLeaveRequestsTable();
                     closeLeaveModal();
                     showToast('Leave Request submitted');
@@ -15652,13 +15648,18 @@
 
         async function updateLeaveStatus(staffId, leaveId, status) {
             try {
-                const res = await fetch(`${API_URL}/leave-request/${leaveId}`, {
+                const res = await fetch(`${API_URL}/staff/${staffId}/leave-request/${leaveId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
                 });
                 const data = await res.json();
-                if (data.success || res.ok) {
+                if (data.success) {
+                    let s = STAFF.find(x => x.id === staffId);
+                    if (s) {
+                        s.leaveRequests = data.leaveRequests;
+                        s.attendance = data.attendance;
+                    }
                     renderLeaveRequestsTable();
                     renderStaffAttendance();
                     showToast(`Leave ${status}`);

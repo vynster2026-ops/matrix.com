@@ -11093,45 +11093,5 @@
       ]
     }
   ],
-  "supplies": [],
-  "branches": [
-    {
-      "id": "b1",
-      "name": "Main Branch",
-      "location": "Default Location",
-      "phone": "9876543210",
-      "verificationStatus": "Approved",
-      "status": "Active",
-      "email": "BR-MAIN-5511",
-      "password": "874767",
-      "subscription": {
-        "plan": "Basic",
-        "price": "₹1,999/mo",
-        "expiry": "2027-06-17",
-        "status": "Active"
-      }
-    },
-    {
-      "id": "b1781699741807",
-      "name": "pavni ss",
-      "ownerName": "pavni",
-      "phone": "7893574755",
-      "location": "lb nagar",
-      "verificationStatus": "Approved",
-      "aadhaarDoc": "aadhaar_mock.pdf",
-      "panDoc": "pan_mock.pdf",
-      "addressProofDoc": "license_mock.pdf",
-      "date": "2026-06-17T12:35:41.807Z",
-      "subscription": {
-        "plan": "Deluxe",
-        "price": "₹9,999/mo",
-        "expiry": "2027-06-17",
-        "status": "Active"
-      },
-      "status": "Suspended",
-      "verificationNotes": "System Approved",
-      "type": "Unisex Salon"
-    }
-  ],
-  "chains": []
+  "supplies": []
 }
