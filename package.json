@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "build": "npm install",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +19,7 @@
     "express": "^5.2.1",
     "jsdom": "^29.1.1",
     "mongoose": "^9.6.1",
+    "nodemailer": "^9.0.1",
     "qrcode-terminal": "^0.12.0",
     "razorpay": "^2.9.6",
     "socket.io": "^4.8.3",
