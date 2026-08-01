@@ -412,9 +412,8 @@
 
             pendingRegistration = { name, role, phone, uniqueId, summary, specialties: selectedSpecialties };
             
-            const isFile = window.location.protocol === 'file:';
-            const isLiveServer = window.location.port !== '5000' && window.location.port !== '';
-            const API_URL = (isFile || isLiveServer) ? 'http://localhost:5000' : '';
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+            const API_URL = isLocal ? 'http://localhost:5000' : '';
             
             try {
                 const response = await fetch(`${API_URL}/api/send-otp`, {
@@ -452,9 +451,8 @@
             const otp = document.getElementById('otpInput').value;
             if (!pendingRegistration || !otp) return;
 
-            const isFile = window.location.protocol === 'file:';
-            const isLiveServer = window.location.port !== '5000' && window.location.port !== '';
-            const API_URL = (isFile || isLiveServer) ? 'http://localhost:5000' : '';
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+            const API_URL = isLocal ? 'http://localhost:5000' : '';
 
             try {
                 const response = await fetch(`${API_URL}/api/verify-otp`, {
