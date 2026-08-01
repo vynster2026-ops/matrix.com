@@ -263,11 +263,9 @@ const razorpay = new Razorpay({
 mongoose.set('bufferCommands', false);
 
 let isConnected = false;
-// mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 2000 })
-//   .then(() => { console.log('Connected to MongoDB'); isConnected = true; })
-//   .catch(err => { console.error('MongoDB connection failed. Falling back to local storage.'); isConnected = false; });
-console.log('Running in LOCAL STORAGE mode (MongoDB bypassed)');
-isConnected = false;
+mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
+  .then(() => { console.log('Connected to MongoDB'); isConnected = true; })
+  .catch(err => { console.error('MongoDB connection failed. Falling back to local storage.'); isConnected = false; });
 
 const clientSchema = new mongoose.Schema({ id: String, name: String, phone: String, email: String, location: String, pts: Number, ltv: String, av: String, branchId: String }, { bufferCommands: false });
 const staffSchema = new mongoose.Schema({ id: String, name: String, gender: String, spec: String, rating: String, av: String, services: [String], status: String, branchId: String }, { bufferCommands: false });
