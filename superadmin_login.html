@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedhikaArts | Admin Portal Login</title>
+    <title>MedhikaArts | Super Admin Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -95,15 +95,15 @@
             <div class="brand-header">
                 <div class="logo">M</div>
                 <h1 class="brand-title">MedhikaArts</h1>
-                <div class="brand-subtitle">Branch Login Gateway</div>
+                <div class="brand-subtitle">Super Admin Gateway</div>
             </div>
 
             <div id="alert-box" class="alert"></div>
 
             <form id="login-form">
                 <div class="form-group">
-                    <label class="form-label">Access Key (Branch ID)</label>
-                    <input type="text" id="access-key" class="form-control" placeholder="e.g. BR-101" required>
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="access-key" class="form-control" placeholder="e.g. admin@medhikaarts.com" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
@@ -115,7 +115,7 @@
             </form>
             
             <p style="text-align: center; margin-top: 1.5rem; font-size: 12px; color: var(--text-secondary);">
-                Access requires credentials provisioned via the Superadmin Verification Team.
+                Access requires root-level provisioned Super Admin credentials.
             </p>
         </div>
     </div>
@@ -152,25 +152,44 @@
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    // Strict check for branch manager access to the admin portal
-                    if (data.user.role !== 'manager' && data.user.role !== 'admin') {
-                        showAlert('Invalid Role: This portal requires valid Branch Credentials. Super Admins must use the Super Admin Gateway.');
+                    if (data.user && data.user.role !== 'super') {
+                        showAlert('Invalid Role: This portal requires Super Admin Credentials.');
                         btnLogin.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Authenticate';
                         btnLogin.disabled = false;
                         return;
                     }
 
+                    // Handle Super Admin 2FA auto-verify
+                    if (data.require2FA && data.simulatedOtp) {
+                        const verifyRes = await fetch(`${API_URL}/api/auth/verify-2fa`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: data.email, code: data.simulatedOtp })
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (verifyRes.ok && verifyData.success) {
+                            localStorage.setItem('adminToken', verifyData.token);
+                            localStorage.setItem('adminUser', JSON.stringify(verifyData.user));
+                            btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
+                            btnLogin.style.background = 'var(--success-color)';
+                            setTimeout(() => window.location.href = 'MedhikaArts_superadmin_portal.html', 800);
+                            return;
+                        } else {
+                            showAlert('SuperAdmin 2FA Auto-Verify Failed.');
+                            btnLogin.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Authenticate';
+                            btnLogin.disabled = false;
+                            return;
+                        }
+                    }
+
+                    // Fallback if no 2FA is required for super admin
                     localStorage.setItem('adminToken', data.token);
                     localStorage.setItem('adminUser', JSON.stringify(data.user));
-                    
                     btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
                     btnLogin.style.background = 'var(--success-color)';
-                    
-                    setTimeout(() => {
-                        window.location.href = 'MedhikaArts_complete_module.html';
-                    }, 800);
+                    setTimeout(() => window.location.href = 'MedhikaArts_superadmin_portal.html', 800);
                 } else {
-                    showAlert(data.error || 'Invalid Access Key or Password.');
+                    showAlert(data.error || 'Invalid Email or Password.');
                     btnLogin.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Authenticate';
                     btnLogin.disabled = false;
                 }

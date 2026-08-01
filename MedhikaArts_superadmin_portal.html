@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Admin Portal | MedhikaArts</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Three.js for 3D Visuals -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -21,8 +23,10 @@
             --glass-border: rgba(255, 255, 255, 0.4);
             --shadow-neon: 0 10px 30px -10px rgba(26, 107, 138, 0.2);
             --body-gradient: radial-gradient(at 0% 0%, hsla(197, 68%, 32%, 0.15) 0px, transparent 50%),
-                             radial-gradient(at 50% 0%, hsla(160, 68%, 37%, 0.1) 0px, transparent 50%),
-                             radial-gradient(at 100% 0%, hsla(20, 68%, 50%, 0.1) 0px, transparent 50%);
+                radial-gradient(at 50% 0%, hsla(160, 68%, 37%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(20, 68%, 50%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(197, 68%, 32%, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(160, 68%, 37%, 0.1) 0px, transparent 50%);
         }
 
         body.dark-theme {
@@ -34,8 +38,10 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --shadow-neon: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
             --body-gradient: radial-gradient(at 0% 0%, hsla(197, 68%, 32%, 0.3) 0px, transparent 50%),
-                             radial-gradient(at 50% 0%, hsla(160, 68%, 37%, 0.2) 0px, transparent 50%),
-                             radial-gradient(at 100% 0%, hsla(20, 68%, 50%, 0.2) 0px, transparent 50%);
+                radial-gradient(at 50% 0%, hsla(160, 68%, 37%, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(20, 68%, 50%, 0.2) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(197, 68%, 32%, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(160, 68%, 37%, 0.2) 0px, transparent 50%);
         }
 
         * {
@@ -109,6 +115,18 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 0.5rem;
+        }
+
+        .nav-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+        .nav-menu::-webkit-scrollbar-thumb {
+            background: rgba(138, 43, 226, 0.3);
+            border-radius: 4px;
         }
 
         .nav-item {
@@ -123,7 +141,8 @@
             font-weight: 500;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .nav-item:hover,
+        .nav-item.active {
             background: rgba(138, 43, 226, 0.15);
             color: var(--text-main);
             box-shadow: inset 0 0 0 1px var(--border-glow);
@@ -141,7 +160,8 @@
             font-weight: 600;
         }
 
-        body.dark-theme .nav-item:hover, body.dark-theme .nav-item.active {
+        body.dark-theme .nav-item:hover,
+        body.dark-theme .nav-item.active {
             color: #ffffff;
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.9), 0 0 20px rgba(56, 189, 248, 0.6);
             background: rgba(56, 189, 248, 0.15);
@@ -152,6 +172,7 @@
         .main-content {
             flex: 1;
             padding: 2rem;
+            padding-bottom: 4rem;
             overflow-y: auto;
             z-index: 10;
         }
@@ -207,7 +228,9 @@
         }
 
         @keyframes spin {
-            100% { transform: rotate(360deg); }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .ai-assistant-btn {
@@ -236,9 +259,17 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* Dashboard Grid */
@@ -277,10 +308,25 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .stat-card:nth-child(1) .stat-icon { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
-        .stat-card:nth-child(2) .stat-icon { color: #00d2ff; background: rgba(0, 210, 255, 0.1); }
-        .stat-card:nth-child(3) .stat-icon { color: #ff007a; background: rgba(255, 0, 122, 0.1); }
-        .stat-card:nth-child(4) .stat-icon { color: #ffd700; background: rgba(255, 215, 0, 0.1); }
+        .stat-card:nth-child(1) .stat-icon {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            color: #00d2ff;
+            background: rgba(0, 210, 255, 0.1);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            color: #ff007a;
+            background: rgba(255, 0, 122, 0.1);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
 
         .stat-value {
             font-size: 2.2rem;
@@ -303,8 +349,13 @@
             gap: 0.3rem;
         }
 
-        .trend-up { color: #00ff88; }
-        .trend-down { color: #ff007a; }
+        .trend-up {
+            color: #00ff88;
+        }
+
+        .trend-down {
+            color: #ff007a;
+        }
 
         /* Complex Sections */
         .revenue-chart-section {
@@ -512,7 +563,7 @@
             color: #00ff88;
             border: 1px solid rgba(0, 255, 136, 0.3);
         }
-        
+
         .btn-reactivate:hover {
             background: rgba(0, 255, 136, 0.2);
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
@@ -553,7 +604,7 @@
             border-left: 4px solid var(--accent-secondary);
             padding: 1rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -562,11 +613,19 @@
             transform: translateX(100%);
         }
 
-        .toast.error { border-left-color: #ff007a; }
-        .toast.success { border-left-color: #00ff88; }
-        
+        .toast.error {
+            border-left-color: #ff007a;
+        }
+
+        .toast.success {
+            border-left-color: #00ff88;
+        }
+
         @keyframes slideIn {
-            to { opacity: 1; transform: translateX(0); }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .toast-hide {
@@ -574,14 +633,20 @@
         }
 
         @keyframes slideOut {
-            to { opacity: 0; transform: translateX(100%); }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
         }
 
         /* Modal Overlay */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
@@ -613,9 +678,23 @@
             transform: scale(1);
         }
 
-        .modal-content h3 { margin-bottom: 1rem; font-size: 1.5rem; color: var(--text-main); }
-        .modal-content p { color: var(--text-muted); margin-bottom: 2rem; }
-        .modal-actions { display: flex; gap: 1rem; justify-content: center; }
+        .modal-content h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .modal-content p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
         .modal-actions button {
             padding: 0.8rem 1.5rem;
             border-radius: 10px;
@@ -624,28 +703,42 @@
             border: none;
             transition: all 0.2s;
         }
-        .btn-cancel { background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--glass-border); }
-        .btn-cancel:hover { background: var(--glass-bg); }
-        .btn-confirm-suspend { background: #ff007a; color: white; }
-        .btn-confirm-suspend:hover { box-shadow: 0 0 15px rgba(255,0,122,0.4); }
+
+        .btn-cancel {
+            background: var(--bg-panel);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-cancel:hover {
+            background: var(--glass-bg);
+        }
+
+        .btn-confirm-suspend {
+            background: #ff007a;
+            color: white;
+        }
+
+        .btn-confirm-suspend:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 122, 0.4);
+        }
 
         /* Sign Out Button */
         .btn-signout {
             background: #e53e3e;
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
             transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
+            margin: 0 auto; /* perfectly bottom center */
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4);
         }
 
         .btn-signout:hover {
@@ -664,25 +757,28 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .btn-approve:hover { background: rgba(0, 255, 136, 0.2); }
+
+        .btn-approve:hover {
+            background: rgba(0, 255, 136, 0.2);
+        }
 
         /* Theme Switch */
         .theme-switch-wrapper {
             display: flex;
             align-items: center;
         }
-        
+
         .theme-switch {
             display: inline-block;
             height: 34px;
             position: relative;
             width: 60px;
         }
-        
+
         .theme-switch input {
             display: none;
         }
-        
+
         .slider {
             background-color: #cbd5e1;
             bottom: 0;
@@ -697,9 +793,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 8px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
+
         .slider:before {
             background-color: #fff;
             bottom: 4px;
@@ -710,34 +806,184 @@
             transition: .4s;
             width: 26px;
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 2;
         }
-        
-        input:checked + .slider {
+
+        input:checked+.slider {
             background-color: #1e293b;
         }
-        
-        input:checked + .slider:before {
+
+        input:checked+.slider:before {
             transform: translateX(26px);
             background-color: #2196B8;
         }
-        
+
         .slider .fa-sun {
             color: #f59e0b;
             font-size: 12px;
             z-index: 1;
         }
-        
+
         .slider .fa-moon {
             color: #cbd5e1;
             font-size: 12px;
             z-index: 1;
         }
 
+        /* Mobile Menu Overlay */
+        #mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #mobile-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1.25rem;
+            cursor: pointer;
+            margin-right: 1rem;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        body.dark-theme .mobile-menu-btn {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .stat-card {
+                grid-column: span 3;
+            }
+
+            .chart-card {
+                grid-column: span 6;
+            }
+
+            /* Make inputs full width on tablets */
+            form[onsubmit*="submitSalonApplication"]>div {
+                grid-column: span 2 !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -300px;
+                /* Hide completely */
+                top: 0;
+                height: 100vh;
+                z-index: 101;
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .sidebar.open {
+                transform: translateX(300px);
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .dashboard-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1.5rem;
+            }
+
+            .stat-card,
+            .chart-card {
+                width: 100% !important;
+            }
+
+            /* Table responsiveness */
+            div[style*="overflow-x"],
+            .glass-panel>table,
+            .table-container {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            .main-content {
+                padding: 1rem;
+                width: 100%;
+            }
+
+            /* Typography resizing */
+            .greeting h1 {
+                font-size: 1.8rem;
+            }
+
+            .greeting p {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
+
 <body>
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay"></div>
 
     <!-- 3D Background Canvas -->
     <div id="canvas-container"></div>
@@ -748,7 +994,7 @@
             <i class="fa-solid fa-crown"></i>
             <span>MedhikaArts</span>
         </div>
-        
+
         <div class="nav-menu" style="margin-top: 2rem;">
             <a href="#" class="nav-item active" data-target="overview">
                 <i class="fa-solid fa-border-all"></i>
@@ -782,33 +1028,49 @@
                 <i class="fa-solid fa-users"></i>
                 User Network
             </a>
+            <a href="#" class="nav-item" data-target="business-analysis">
+                <i class="fa-solid fa-chart-pie"></i>
+                Business Analysis
+            </a>
+            <a href="#" class="nav-item" data-target="ad-manager">
+                <i class="fa-solid fa-bullhorn"></i>
+                Ad Management
+            </a>
             <a href="#" class="nav-item" data-target="settings">
                 <i class="fa-solid fa-gear"></i>
                 System Settings
             </a>
         </div>
 
-        <div style="margin-top: auto; padding: 1.5rem; background: rgba(138,43,226,0.1); border-radius: 15px; border: 1px solid rgba(138,43,226,0.2);">
+        <div class="server-status-block"
+            style="padding: 1.5rem; background: rgba(138,43,226,0.1); border-radius: 15px; border: 1px solid rgba(138,43,226,0.2); margin-top: auto; margin-bottom: 1.5rem;">
             <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">Server Status</h4>
             <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #00ff88;">
-                <div style="width: 8px; height: 8px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88;"></div>
+                <div
+                    style="width: 8px; height: 8px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88;">
+                </div>
                 All Systems Operational
             </div>
         </div>
-        
-        <button type="button" class="btn-signout" onclick="signOut()">
-            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+
+        <button type="button" class="btn-signout" onclick="signOut()" title="Sign Out">
+            <i class="fa-solid fa-power-off"></i>
         </button>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
         <header class="header">
-            <div class="greeting">
-                <h1 id="page-title">Super Admin Headquarters</h1>
-                <p id="page-subtitle">Welcome back, Chief. Here is the global overview of MedhikaArts.</p>
+            <div style="display: flex; align-items: flex-start;">
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="greeting">
+                    <h1 id="page-title">Super Admin Headquarters</h1>
+                    <p id="page-subtitle">Welcome back, Chief. Here is the global overview of MedhikaArts.</p>
+                </div>
             </div>
-            
+
             <div class="header-actions">
                 <button type="button" class="sync-btn" id="sync-btn">
                     <i class="fa-solid fa-rotate"></i> Sync Data
@@ -827,148 +1089,173 @@
 
         <div id="section-overview" class="content-section" style="display: block;">
             <div class="dashboard-grid">
-            <!-- Stats -->
-            <div class="stat-card glass-panel">
-                <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-                <div>
-                    <div class="stat-value">₹4.2M</div>
-                    <div class="stat-label">Total Platform Revenue</div>
-                </div>
-                <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.5%</div>
-            </div>
-
-            <div class="stat-card glass-panel">
-                <div class="stat-icon"><i class="fa-solid fa-store"></i></div>
-                <div>
-                    <div class="stat-value">342</div>
-                    <div class="stat-label">Active Salons/Vendors</div>
-                </div>
-                <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8</div>
-            </div>
-
-            <div class="stat-card glass-panel">
-                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-                <div>
-                    <div class="stat-value">128.5k</div>
-                    <div class="stat-label">Total Users Base</div>
-                </div>
-                <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +5.2%</div>
-            </div>
-
-            <div class="stat-card glass-panel">
-                <div class="stat-icon"><i class="fa-solid fa-bolt"></i></div>
-                <div>
-                    <div class="stat-value">99.9%</div>
-                    <div class="stat-label">System Uptime</div>
-                </div>
-                <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> Optimal</div>
-            </div>
-
-            <!-- Revenue Chart Area -->
-            <div class="revenue-chart-section glass-panel">
-                <div class="section-header">
-                    <div class="section-title">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        Revenue Growth (Projected)
+                <!-- Stats -->
+                <div class="stat-card glass-panel">
+                    <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                    <div>
+                        <div class="stat-value">₹4.2M</div>
+                        <div class="stat-label">Total Platform Revenue</div>
                     </div>
-                    <select style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 0.5rem 1rem; border-radius: 8px; outline: none;">
-                        <option>Last 6 Months</option>
-                        <option>This Year</option>
-                        <option>All Time</option>
-                    </select>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.5%</div>
                 </div>
-                
-                <div class="chart-bars">
-                    <div class="bar-group"><div class="bar" style="height: 40%"></div><span class="bar-label">Jan</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 55%"></div><span class="bar-label">Feb</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 45%"></div><span class="bar-label">Mar</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 70%"></div><span class="bar-label">Apr</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 65%"></div><span class="bar-label">May</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 85%"></div><span class="bar-label">Jun</span></div>
-                    <div class="bar-group"><div class="bar" style="height: 95%; background: linear-gradient(to top, #ff007a, #ffd700); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);"></div><span class="bar-label" style="color: #ffd700;">Jul (Est)</span></div>
-                </div>
-            </div>
 
-            <!-- Platform Insights -->
-            <div class="ai-insights-section glass-panel">
-                <div class="section-header" style="margin-bottom: 0;">
-                    <div class="section-title">
-                        <i class="fa-solid fa-microchip"></i>
-                        Platform Insights
+                <div class="stat-card glass-panel">
+                    <div class="stat-icon"><i class="fa-solid fa-store"></i></div>
+                    <div>
+                        <div class="stat-value">342</div>
+                        <div class="stat-label">Active Salons/Vendors</div>
                     </div>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8</div>
                 </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
-                    <div class="insight-content">
-                        <h4>Trending Services Alert</h4>
-                        <p>Keratin treatments are up 45% this week across premium salons. Suggesting targeted ad boost to vendors.</p>
+                <div class="stat-card glass-panel">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <div class="stat-value">128.5k</div>
+                        <div class="stat-label">Total Users Base</div>
                     </div>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +5.2%</div>
                 </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="insight-content">
-                        <h4>Vendor Attrition Risk</h4>
-                        <p>'Elite Looks Salon' shows decreasing engagement. System recommends initiating automated retention sequence.</p>
+                <div class="stat-card glass-panel">
+                    <div class="stat-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div>
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">System Uptime</div>
+                    </div>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> Optimal</div>
+                </div>
+
+                <!-- Revenue Chart Area -->
+                <div class="revenue-chart-section glass-panel">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            Revenue Growth (Projected)
+                        </div>
+                        <select
+                            style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 0.5rem 1rem; border-radius: 8px; outline: none;">
+                            <option>Last 6 Months</option>
+                            <option>This Year</option>
+                            <option>All Time</option>
+                        </select>
+                    </div>
+
+                    <div class="chart-bars">
+                        <div class="bar-group">
+                            <div class="bar" style="height: 40%"></div><span class="bar-label">Jan</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 55%"></div><span class="bar-label">Feb</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 45%"></div><span class="bar-label">Mar</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 70%"></div><span class="bar-label">Apr</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 65%"></div><span class="bar-label">May</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 85%"></div><span class="bar-label">Jun</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar"
+                                style="height: 95%; background: linear-gradient(to top, #ff007a, #ffd700); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);">
+                            </div><span class="bar-label" style="color: #ffd700;">Jul (Est)</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="insight-card">
-                    <div class="insight-icon"><i class="fa-solid fa-map-location-dot"></i></div>
-                    <div class="insight-content">
-                        <h4>Expansion Opportunity</h4>
-                        <p>High search volume detected in South Zone with low vendor density. Potential for 20% growth.</p>
+                <!-- Platform Insights -->
+                <div class="ai-insights-section glass-panel">
+                    <div class="section-header" style="margin-bottom: 0;">
+                        <div class="section-title">
+                            <i class="fa-solid fa-microchip"></i>
+                            Platform Insights
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                        <div class="insight-content">
+                            <h4>Trending Services Alert</h4>
+                            <p>Keratin treatments are up 45% this week across premium salons. Suggesting targeted ad
+                                boost to vendors.</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="insight-content">
+                            <h4>Vendor Attrition Risk</h4>
+                            <p>'Elite Looks Salon' shows decreasing engagement. System recommends initiating automated
+                                retention sequence.</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <div class="insight-content">
+                            <h4>Expansion Opportunity</h4>
+                            <p>High search volume detected in South Zone with low vendor density. Potential for 20%
+                                growth.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Vendor List -->
-            <div class="vendor-list-section glass-panel">
-                <div class="section-header">
-                    <div class="section-title">
-                        <i class="fa-solid fa-store"></i>
-                        Recent Vendor Onboarding
+                <!-- Vendor List -->
+                <div class="vendor-list-section glass-panel">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fa-solid fa-store"></i>
+                            Recent Vendor Onboarding
+                        </div>
+                        <button type="button"
+                            style="background: transparent; border: 1px solid var(--accent-secondary); color: var(--accent-secondary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">View
+                            All</button>
                     </div>
-                    <button type="button" style="background: transparent; border: 1px solid var(--accent-secondary); color: var(--accent-secondary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">View All</button>
-                </div>
 
-                <table class="vendor-table">
-                    <thead>
-                        <tr>
-                            <th>Salon Name</th>
-                            <th>Shop Type</th>
-                            <th>Location</th>
-                            <th>Subscription Plan</th>
-                            <th>Revenue Generated</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="vendor-table-body">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
+                    <table class="vendor-table">
+                        <thead>
+                            <tr>
+                                <th>Salon Name</th>
+                                <th>Shop Type</th>
+                                <th>Location</th>
+                                <th>Subscription Plan</th>
+                                <th>Revenue Generated</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vendor-table-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="section-salons" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Salons & Vendors Management</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Full list of all registered salons across the platform. Manage approvals, suspensions, and view detailed vendor analytics.</p>
-                
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Full list of all registered
+                    salons across the platform. Manage approvals, suspensions, and view detailed vendor analytics.</p>
+
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <div>
                         <h3 style="color: var(--accent-primary);">Vendor Directory</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Active: <strong style="color: var(--text-main);">342</strong></p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Active: <strong
+                                style="color: var(--text-main);">342</strong></p>
                     </div>
                 </div>
 
                 <div>
                     <h3 style="margin-bottom: 1rem;">Active Vendor Network</h3>
                     <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                        <input type="text" placeholder="Search by salon name or ID..." style="flex: 1; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
+                        <input type="text" placeholder="Search by salon name or ID..."
+                            style="flex: 1; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
                         <button type="button" class="sync-btn"><i class="fa-solid fa-filter"></i> Filter</button>
                     </div>
                     <table class="vendor-table">
@@ -993,10 +1280,12 @@
         <div id="section-verification" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Salon Verification & KYC</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Review newly registered salons, verify their owner identity (Aadhaar, PAN), and approve their listing on MedhikaArts.</p>
-                
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Review newly registered
+                    salons, verify their owner identity (Aadhaar, PAN), and approve their listing on MedhikaArts.</p>
+
                 <h3 style="margin-bottom: 1rem; color: var(--accent-primary);">Pending Salon Approvals</h3>
-                <div id="verification-queue" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+                <div id="verification-queue"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
                     <!-- Populated by JS -->
                 </div>
 
@@ -1007,55 +1296,86 @@
         <div id="section-marketing" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Onboarding</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Register newly acquired salons. Applications will be sent directly to the Verification & KYC queue for document validation and approval.</p>
-                
-                <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 12px; border: 1px solid var(--glass-border); max-width: 800px;">
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Register newly acquired
+                    salons. Applications will be sent directly to the Verification & KYC queue for document validation
+                    and approval.</p>
+
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 12px; border: 1px solid var(--glass-border); max-width: 800px;">
                     <h3 style="margin-bottom: 1.5rem;">New Salon Onboarding Application</h3>
-                    <form onsubmit="event.preventDefault(); submitSalonApplication();" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <form onsubmit="event.preventDefault(); submitSalonApplication();"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                         <div>
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Salon / Brand Name *</label>
-                            <input type="text" id="marketing-salon-name" placeholder="e.g. Glamour Lounge" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Salon
+                                / Brand Name *</label>
+                            <input type="text" id="marketing-salon-name" placeholder="e.g. Glamour Lounge" required
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                         </div>
                         <div>
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner Name *</label>
-                            <input type="text" id="marketing-owner-name" placeholder="e.g. Rahul Sharma" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner
+                                Name *</label>
+                            <input type="text" id="marketing-owner-name" placeholder="e.g. Rahul Sharma" required
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                         </div>
                         <div>
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Contact Phone *</label>
-                            <input type="tel" id="marketing-phone" placeholder="e.g. 9876543210" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Contact
+                                Phone *</label>
+                            <input type="tel" id="marketing-phone" placeholder="e.g. 9876543210" required
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                         </div>
                         <div>
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Location / City *</label>
-                            <input type="text" id="marketing-location" placeholder="e.g. Jubilee Hills, Hyderabad" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Location
+                                / City *</label>
+                            <input type="text" id="marketing-location" placeholder="e.g. Jubilee Hills, Hyderabad"
+                                required
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                         </div>
                         <div style="grid-column: span 2;">
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Subscription Type *</label>
-                            <select id="marketing-subscription" required style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Subscription
+                                Type *</label>
+                            <select id="marketing-subscription" required
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                                 <option value="Basic">Basic</option>
                                 <option value="Premium">Premium</option>
                                 <option value="Deluxe">Deluxe</option>
                             </select>
                         </div>
-                        
+
                         <div style="grid-column: span 2;">
-                            <h4 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--accent-primary);">Document Proofs (KYC)</h4>
+                            <h4 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--accent-primary);">Document
+                                Proofs (KYC)</h4>
                         </div>
-                        
+
                         <div>
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner Aadhaar Card</label>
-                            <input type="file" id="marketing-doc-aadhaar" accept=".pdf,image/*" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner
+                                Aadhaar Card</label>
+                            <input type="file" id="marketing-doc-aadhaar" accept=".pdf,image/*"
+                                style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
                         </div>
                         <div>
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner PAN Card</label>
-                            <input type="file" id="marketing-doc-pan" accept=".pdf,image/*" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner
+                                PAN Card</label>
+                            <input type="file" id="marketing-doc-pan" accept=".pdf,image/*"
+                                style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
                         </div>
                         <div style="grid-column: span 2;">
-                            <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Salon License / Electricity Bill</label>
-                            <input type="file" id="marketing-doc-license" accept=".pdf,image/*" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Salon
+                                License / Electricity Bill</label>
+                            <input type="file" id="marketing-doc-license" accept=".pdf,image/*"
+                                style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
                         </div>
 
                         <div style="grid-column: span 2; margin-top: 1.5rem;">
-                            <button type="submit" class="ai-assistant-btn" style="width: 100%; justify-content: center;">
+                            <button type="submit" class="ai-assistant-btn"
+                                style="width: 100%; justify-content: center;">
                                 <i class="fa-solid fa-cloud-arrow-up"></i> Submit Application to KYC Queue
                             </button>
                         </div>
@@ -1067,8 +1387,9 @@
         <div id="section-users" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>User Network Analytics</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Demographics, active sessions, and booking behaviors of end users.</p>
-                
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Demographics, active
+                    sessions, and booking behaviors of end users.</p>
+
                 <div class="dashboard-grid">
                     <div class="stat-card glass-panel" style="grid-column: span 6;">
                         <div class="stat-icon"><i class="fa-solid fa-user-plus"></i></div>
@@ -1091,28 +1412,36 @@
         <div id="section-revenue" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Revenue & Payouts</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Track total gross merchandise value (GMV), platform fees, and pending salon payouts.</p>
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Track total gross
+                    merchandise value (GMV), platform fees, and pending salon payouts.</p>
                 <div style="display: flex; gap: 2rem; align-items: flex-start;">
                     <!-- Left Column -->
                     <div style="flex: 1; display: flex; flex-direction: column; gap: 2rem;">
-                        <div style="padding: 2rem; background: rgba(0, 255, 136, 0.1); border-radius: 15px; border: 1px solid rgba(0,255,136,0.3);">
+                        <div
+                            style="padding: 2rem; background: rgba(0, 255, 136, 0.1); border-radius: 15px; border: 1px solid rgba(0,255,136,0.3);">
                             <h3 style="color: #166534; margin-bottom: 1rem;">Platform Fees Collected</h3>
                             <h1 style="font-size: 3rem; color: #00ff88;">₹8,45,200</h1>
-                            <p style="color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">Total gross platform fees accumulated from all successful procedures and bookings across MedhikaArts vendor network.</p>
+                            <p style="color: var(--text-muted); margin-top: 1rem; line-height: 1.5;">Total gross
+                                platform fees accumulated from all successful procedures and bookings across MedhikaArts
+                                vendor network.</p>
                         </div>
                     </div>
 
                     <!-- Right Column: Payouts & Ledger -->
                     <div style="flex: 2; display: flex; flex-direction: column; gap: 2rem;">
-                        <div style="padding: 2rem; background: rgba(245, 158, 11, 0.1); border-radius: 15px; border: 1px solid rgba(245, 158, 11, 0.3);">
+                        <div
+                            style="padding: 2rem; background: rgba(245, 158, 11, 0.1); border-radius: 15px; border: 1px solid rgba(245, 158, 11, 0.3);">
                             <h3 style="color: #b45309; margin-bottom: 1rem;">Pending Payouts</h3>
                             <h1 style="font-size: 3rem; color: #f59e0b;">₹12,50,000</h1>
-                            <button type="button" class="sync-btn" style="margin-top: 1rem; background: #f59e0b; color: white; border: none;">Process Payouts</button>
+                            <button type="button" class="sync-btn"
+                                style="margin-top: 1rem; background: #f59e0b; color: white; border: none;">Process
+                                Payouts</button>
                         </div>
 
                         <div>
                             <h3 style="margin-bottom: 1rem;">Salon Ledger & Payment History</h3>
-                            <div style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
+                            <div
+                                style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
                                 <table class="vendor-table" style="margin-top: 0;">
                                     <thead>
                                         <tr>
@@ -1138,16 +1467,21 @@
         <div id="section-transactions" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Transactions & Payment Records</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Complete ledger of all financial transactions across the platform. Use filters to generate custom payment reports.</p>
-                
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Complete ledger of all
+                    financial transactions across the platform. Use filters to generate custom payment reports.</p>
+
                 <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                    <input type="text" placeholder="Search by Txn ID, Salon, or Service..." style="flex: 1; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
-                    <input type="date" style="padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
+                    <input type="text" placeholder="Search by Txn ID, Salon, or Service..."
+                        style="flex: 1; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
+                    <input type="date"
+                        style="padding: 0.8rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
                     <button type="button" class="sync-btn"><i class="fa-solid fa-filter"></i> Filter</button>
-                    <button type="button" class="ai-assistant-btn"><i class="fa-solid fa-download"></i> Export CSV</button>
+                    <button type="button" class="ai-assistant-btn"><i class="fa-solid fa-download"></i> Export
+                        CSV</button>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
+                <div
+                    style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
                     <table class="vendor-table" style="margin-top: 0;">
                         <thead>
                             <tr>
@@ -1173,15 +1507,20 @@
         <div id="section-manual-record" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Manual Record of Business Transaction</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Log offline payments, direct business expenditures, or custom adjustments.</p>
-                
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Log offline payments, direct
+                    business expenditures, or custom adjustments.</p>
+
                 <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 300px; background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 12px; border: 1px solid var(--glass-border);">
+                    <div
+                        style="flex: 1; min-width: 300px; background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 12px; border: 1px solid var(--glass-border);">
                         <h3 style="margin-bottom: 1.5rem;">New Transaction Entry</h3>
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             <div>
-                                <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Transaction Type</label>
-                                <select id="manual-txn-type" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                                <label
+                                    style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Transaction
+                                    Type</label>
+                                <select id="manual-txn-type"
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                                     <option value="Offline Payment (Credit)">Offline Payment (Credit)</option>
                                     <option value="Vendor Adjustment (Debit)">Vendor Adjustment (Debit)</option>
                                     <option value="Platform Expense (Debit)">Platform Expense (Debit)</option>
@@ -1189,30 +1528,45 @@
                                 </select>
                             </div>
                             <div>
-                                <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Amount (₹)</label>
-                                <input type="number" id="manual-txn-amount" placeholder="e.g. 5000" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                                <label
+                                    style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Amount
+                                    (₹)</label>
+                                <input type="number" id="manual-txn-amount" placeholder="e.g. 5000"
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                             </div>
                             <div>
-                                <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Related Vendor/Entity (Optional)</label>
-                                <input type="text" id="manual-txn-entity" placeholder="e.g. Style Studio" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                                <label
+                                    style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Related
+                                    Vendor/Entity (Optional)</label>
+                                <input type="text" id="manual-txn-entity" placeholder="e.g. Style Studio"
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                             </div>
                             <div>
-                                <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Description / Remarks</label>
-                                <textarea id="manual-txn-desc" rows="3" placeholder="Details about this transaction..." style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main); resize: vertical;"></textarea>
+                                <label
+                                    style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Description
+                                    / Remarks</label>
+                                <textarea id="manual-txn-desc" rows="3" placeholder="Details about this transaction..."
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main); resize: vertical;"></textarea>
                             </div>
                             <div>
-                                <label style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Date of Transaction</label>
-                                <input type="date" id="manual-txn-date" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                                <label
+                                    style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Date
+                                    of Transaction</label>
+                                <input type="date" id="manual-txn-date"
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
                             </div>
-                            <button type="button" class="ai-assistant-btn" style="width: 100%; justify-content: center; margin-top: 1rem;" onclick="submitManualRecord()">
+                            <button type="button" class="ai-assistant-btn"
+                                style="width: 100%; justify-content: center; margin-top: 1rem;"
+                                onclick="submitManualRecord()">
                                 <i class="fa-solid fa-plus"></i> Add Record
                             </button>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 2; min-width: 400px;">
                         <h3 style="margin-bottom: 1.5rem;">Recent Manual Records</h3>
-                        <div style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
+                        <div
+                            style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
                             <table class="vendor-table" style="margin-top: 0;">
                                 <thead>
                                     <tr>
@@ -1226,17 +1580,23 @@
                                 <tbody id="manual-records-body">
                                     <tr>
                                         <td>04 Jun 2026</td>
-                                        <td><span class="status-badge" style="background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3);">Credit</span></td>
+                                        <td><span class="status-badge"
+                                                style="background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3);">Credit</span>
+                                        </td>
                                         <td><strong>Glamour Lounge</strong></td>
                                         <td style="font-weight: 700; color: #00ff88;">+ ₹15,000</td>
-                                        <td style="color: var(--text-muted); font-size: 0.85rem;">Offline settlement for May</td>
+                                        <td style="color: var(--text-muted); font-size: 0.85rem;">Offline settlement for
+                                            May</td>
                                     </tr>
                                     <tr>
                                         <td>02 Jun 2026</td>
-                                        <td><span class="status-badge" style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">Debit</span></td>
+                                        <td><span class="status-badge"
+                                                style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">Debit</span>
+                                        </td>
                                         <td><strong>Marketing Agency</strong></td>
                                         <td style="font-weight: 700; color: #ff007a;">- ₹8,500</td>
-                                        <td style="color: var(--text-muted); font-size: 0.85rem;">Ad campaign adjustment</td>
+                                        <td style="color: var(--text-muted); font-size: 0.85rem;">Ad campaign adjustment
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1246,43 +1606,234 @@
             </div>
         </div>
 
+        <div id="section-business-analysis" class="content-section" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h2>Business Analysis Engine</h2>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Real-time diagnostics and AI-driven growth
+                        recommendations.</p>
+                </div>
+                <select id="ba-branch-select"
+                    style="background: var(--glass-bg); color: var(--text-main); border: 1px solid var(--glass-border); padding: 0.8rem 1.2rem; border-radius: 12px; font-weight: 600; outline: none;"
+                    onchange="renderBusinessAnalysis()">
+                    <option value="all">Global Performance (All Branches)</option>
+                </select>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card glass-panel"
+                    style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05)); border-color: rgba(0,255,136,0.3);">
+                    <div class="stat-icon" style="color: #00ff88; background: rgba(0, 255, 136, 0.2);"><i
+                            class="fa-solid fa-arrow-trend-up"></i></div>
+                    <div class="stat-value" id="ba-total-revenue">₹0</div>
+                    <div class="stat-label">Total Generated Revenue</div>
+                </div>
+                <div class="stat-card glass-panel"
+                    style="background: linear-gradient(135deg, rgba(255, 0, 122, 0.1), rgba(255, 0, 122, 0.05)); border-color: rgba(255,0,122,0.3);">
+                    <div class="stat-icon" style="color: #ff007a; background: rgba(255, 0, 122, 0.2);"><i
+                            class="fa-solid fa-arrow-trend-down"></i></div>
+                    <div class="stat-value" id="ba-total-expenses">₹0</div>
+                    <div class="stat-label">Total Operating Expenses</div>
+                </div>
+                <div class="stat-card glass-panel"
+                    style="background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(0, 210, 255, 0.05)); border-color: rgba(0,210,255,0.3);">
+                    <div class="stat-icon" style="color: #00d2ff; background: rgba(0, 210, 255, 0.2);"><i
+                            class="fa-solid fa-money-bill-wave"></i></div>
+                    <div class="stat-value" id="ba-net-profit">₹0</div>
+                    <div class="stat-label">Net Profit (EBITDA)</div>
+                </div>
+                <div class="stat-card glass-panel"
+                    style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05)); border-color: rgba(255,215,0,0.3);">
+                    <div class="stat-icon" style="color: #ffd700; background: rgba(255, 215, 0, 0.2);"><i
+                            class="fa-solid fa-percent"></i></div>
+                    <div class="stat-value" id="ba-profit-margin">0%</div>
+                    <div class="stat-label">Calculated Profit Margin</div>
+                </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(138,43,226,0.3) 0%, transparent 70%); border-radius: 50%;">
+                </div>
+
+                <h3 style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; font-size: 1.4rem;">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="color: #8a2be2;"></i> Automated Growth Plan
+                </h3>
+
+                <div id="ba-ai-report" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Generated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="section-ad-manager" class="content-section" style="display: none;">
+            <div class="dashboard-grid">
+                <!-- Create Ad Form -->
+                <div class="glass-panel" style="grid-column: span 5; padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                        <i class="fa-solid fa-plus-circle" style="color: var(--accent-primary);"></i> Create New
+                        Campaign
+                    </h3>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label
+                                style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; display: block;">Emoji
+                                / Icon</label>
+                            <input type="text" id="ad-emoji" placeholder="e.g. 🎁"
+                                style="width: 100%; background: var(--bg-panel); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.8rem; border-radius: 8px; outline: none; font-size: 1.2rem;">
+                        </div>
+                        <div>
+                            <label
+                                style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; display: block;">Headline</label>
+                            <input type="text" id="ad-title" placeholder="e.g. Summer Special 50% Off!"
+                                style="width: 100%; background: var(--bg-panel); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.8rem; border-radius: 8px; outline: none;">
+                        </div>
+                        <div>
+                            <label
+                                style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; display: block;">Description
+                                / Body</label>
+                            <textarea id="ad-desc" rows="3" placeholder="Explain the offer..."
+                                style="width: 100%; background: var(--bg-panel); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.8rem; border-radius: 8px; outline: none; resize: none;"></textarea>
+                        </div>
+                        <div>
+                            <label
+                                style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; display: block;">Button
+                                Text</label>
+                            <input type="text" id="ad-btn-text" placeholder="e.g. Claim Now"
+                                style="width: 100%; background: var(--bg-panel); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.8rem; border-radius: 8px; outline: none;">
+                        </div>
+                        <div>
+                            <label
+                                style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; display: block;">Target
+                                Audience (Branches)</label>
+                            <select id="ad-targets" multiple
+                                style="width: 100%; background: var(--bg-panel); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.8rem; border-radius: 8px; outline: none; height: 100px;">
+                                <option value="Global" selected>Global (All Connected Salons)</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">Hold Ctrl/Cmd
+                                to select multiple. Leave 'Global' selected to push everywhere.</p>
+                        </div>
+                        <button onclick="publishAd()" class="ai-assistant-btn"
+                            style="margin-top: 1rem; justify-content: center; width: 100%;">
+                            <i class="fa-solid fa-paper-plane"></i> Push Ad to Network
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Ads List -->
+                <div class="glass-panel" style="grid-column: span 7; padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                        <i class="fa-solid fa-list" style="color: var(--accent-secondary);"></i> Active Global Ads
+                    </h3>
+                    <div style="overflow-x: auto;">
+                        <table class="vendor-table">
+                            <thead>
+                                <tr>
+                                    <th>Ad Creative</th>
+                                    <th>Button</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ads-table-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bill & Invoice Advertisement Manager -->
+                <div class="glass-panel" style="grid-column: span 12; padding: 2rem; margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                        <i class="fa-solid fa-receipt" style="color: var(--accent-primary);"></i> Bill & Invoice Advertisement Manager
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Target Salon</label>
+                            <select id="setting-bill-ad-target" onchange="populateBillAdForm(this.value)" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                                <option value="global">All Salons (Global Override)</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Ad Type</label>
+                            <select id="setting-bill-ad-type" onchange="document.getElementById('bill-ad-text-container').style.display = this.value === 'text' ? 'block' : 'none'; document.getElementById('bill-ad-media-container').style.display = this.value === 'media' ? 'block' : 'none';" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                                <option value="text">Text Message</option>
+                                <option value="media">Image / Poster</option>
+                            </select>
+                        </div>
+
+                        <div id="bill-ad-text-container" style="margin-bottom: 1rem;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Ad Text</label>
+                            <input type="text" id="setting-bill-ad" placeholder="e.g. Thanks for visiting! Get 10% off next time."
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                        </div>
+
+                        <div id="bill-ad-media-container" style="margin-bottom: 1rem; display: none;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Upload Ad Image</label>
+                            <input type="file" id="setting-bill-ad-media" accept="image/*, application/pdf" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="ai-assistant-btn" id="btn-save-bill-ad"
+                        style="width: fit-content; margin-top: 1rem;" onclick="saveSystemSettings()">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Bill Ad Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div id="section-settings" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>System Settings</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Configure core platform parameters and API integrations.</p>
-                
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Configure core platform
+                    parameters and API integrations.</p>
+
                 <div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 600px;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                         <div>
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Platform Fee Percentage (%)</label>
-                            <input type="number" id="setting-fee" value="15" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Platform Fee
+                                Percentage (%)</label>
+                            <input type="number" id="setting-fee" value="15"
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
                         </div>
                         <div>
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Tax Rate (GST %)</label>
-                            <input type="number" id="setting-tax" value="18" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Tax Rate (GST
+                                %)</label>
+                            <input type="number" id="setting-tax" value="18"
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
                         </div>
                         <div>
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Maintenance Mode</label>
-                            <select id="setting-maintenance" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Maintenance
+                                Mode</label>
+                            <select id="setting-maintenance"
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
                                 <option value="off">Off (System Live)</option>
                                 <option value="on">On (Maintenance Page)</option>
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Razorpay Environment</label>
-                            <select id="setting-razorpay" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
+                            <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Razorpay
+                                Environment</label>
+                            <select id="setting-razorpay"
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5);">
                                 <option value="test">Test Mode (Sandbox)</option>
                                 <option value="live">Live Mode (Production)</option>
                             </select>
                         </div>
                         <div style="grid-column: span 2;">
-                            <label style="display: flex; align-items: center; gap: 0.8rem; font-weight: 600; cursor: pointer;">
+                            <label
+                                style="display: flex; align-items: center; gap: 0.8rem; font-weight: 600; cursor: pointer;">
                                 <input type="checkbox" id="setting-auto-approve" style="width: 20px; height: 20px;">
                                 Auto-Approve New Vendor Registrations (Bypass KYC)
                             </label>
                         </div>
+                        <!-- Bill Ad Manager moved to Ad Manager Tab -->
                     </div>
-                    <button type="button" class="ai-assistant-btn" id="btn-save-settings" style="width: fit-content; margin-top: 1rem;" onclick="saveSystemSettings()">
+                    <button type="button" class="ai-assistant-btn" id="btn-save-settings"
+                        style="width: fit-content; margin-top: 1rem;" onclick="saveSystemSettings()">
                         <i class="fa-solid fa-floppy-disk"></i> Save Configuration
                     </button>
                 </div>
@@ -1296,8 +1847,10 @@
 
     <div class="modal-overlay" id="suspend-modal">
         <div class="modal-content">
-            <h3><i class="fa-solid fa-triangle-exclamation" style="color:#ff007a; margin-right:10px;"></i>Suspend License?</h3>
-            <p>Are you sure you want to suspend the license for <strong id="modal-salon-name"></strong>? They will immediately lose access to the MedhikaArts platform.</p>
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color:#ff007a; margin-right:10px;"></i>Suspend
+                License?</h3>
+            <p>Are you sure you want to suspend the license for <strong id="modal-salon-name"></strong>? They will
+                immediately lose access to the MedhikaArts platform.</p>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
                 <button type="button" class="btn-confirm-suspend" onclick="confirmSuspend()">Yes, Suspend</button>
@@ -1309,14 +1862,21 @@
     <div class="modal-overlay" id="kyc-modal">
         <div class="modal-content" style="max-width: 600px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 id="kyc-modal-title"><i class="fa-regular fa-id-card" style="color:var(--accent-primary); margin-right:10px;"></i> Document Viewer</h3>
-                <button type="button" onclick="closeKycModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+                <h3 id="kyc-modal-title"><i class="fa-regular fa-id-card"
+                        style="color:var(--accent-primary); margin-right:10px;"></i> Document Viewer</h3>
+                <button type="button" onclick="closeKycModal()"
+                    style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted);">&times;</button>
             </div>
-            
-            <div style="background: rgba(26,107,138,0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px dashed var(--accent-secondary);">
-                <div style="display: flex; align-items: center; justify-content: center; height: 150px; background: rgba(255,255,255,0.5); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
-                    <i class="fa-solid fa-file-image" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 10px;"></i>
-                    <span style="display: block; width: 100%; text-align: center; color: var(--text-muted); font-size: 0.8rem; position: absolute; margin-top: 60px;">Secure Document Preview</span>
+
+            <div
+                style="background: rgba(26,107,138,0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px dashed var(--accent-secondary);">
+                <div
+                    style="display: flex; align-items: center; justify-content: center; height: 150px; background: rgba(255,255,255,0.5); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
+                    <i class="fa-solid fa-file-image"
+                        style="font-size: 3rem; color: var(--text-muted); margin-bottom: 10px;"></i>
+                    <span
+                        style="display: block; width: 100%; text-align: center; color: var(--text-muted); font-size: 0.8rem; position: absolute; margin-top: 60px;">Secure
+                        Document Preview</span>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>
@@ -1324,16 +1884,20 @@
                         <p style="font-weight: 600;" id="kyc-doc-type">Aadhaar Card</p>
                     </div>
                     <div>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Document Number</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Document Number
+                        </p>
                         <p style="font-weight: 600; font-family: monospace;" id="kyc-doc-number">XXXX-XXXX-1234</p>
                     </div>
                     <div>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Verified Entity</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Verified Entity
+                        </p>
                         <p style="font-weight: 600;" id="kyc-owner-name">Rahul Sharma</p>
                     </div>
                     <div>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Verification Status</p>
-                        <p style="font-weight: 600; color: #b45309;"><i class="fa-solid fa-circle-notch fa-spin"></i> Pending Manual Review</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem;">Verification
+                            Status</p>
+                        <p style="font-weight: 600; color: #b45309;"><i class="fa-solid fa-circle-notch fa-spin"></i>
+                            Pending Manual Review</p>
                     </div>
                 </div>
             </div>
@@ -1349,7 +1913,7 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
+
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
@@ -1358,7 +1922,7 @@
         const particlesCount = 700;
         const posArray = new Float32Array(particlesCount * 3);
 
-        for(let i = 0; i < particlesCount * 3; i++) {
+        for (let i = 0; i < particlesCount * 3; i++) {
             posArray[i] = (Math.random() - 0.5) * 15;
         }
 
@@ -1378,14 +1942,14 @@
 
         // Add a floating geometric shape representing "AI Core"
         const geometry = new THREE.IcosahedronGeometry(1.5, 1);
-        const wireframeMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0x2196B8, 
+        const wireframeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x2196B8,
             wireframe: true,
             transparent: true,
             opacity: 0.4
         });
         const sphere = new THREE.Mesh(geometry, wireframeMaterial);
-        
+
         // Position it nicely behind the UI
         sphere.position.x = 3;
         sphere.position.y = 0;
@@ -1397,7 +1961,7 @@
         // Mouse interaction
         let mouseX = 0;
         let mouseY = 0;
-        
+
         document.addEventListener('mousemove', (event) => {
             mouseX = event.clientX / window.innerWidth - 0.5;
             mouseY = event.clientY / window.innerHeight - 0.5;
@@ -1436,12 +2000,12 @@
         });
 
         // --- Application Logic --- //
-        
+
         const token = localStorage.getItem('adminToken');
         if (!token) {
             window.location.href = 'login.html';
         }
-        
+
         let vendors = [
             { id: 1, name: 'Glamour Lounge', joined: '2 days ago', initials: 'GL', location: 'Mumbai, West', plan: 'Premium (Yearly)', revenue: '₹45,000', status: 'Active', type: 'Premium Unisex Salon' },
             { id: 2, name: 'Style Studio', joined: '5 days ago', initials: 'SS', location: 'Delhi, South', plan: 'Basic (Monthly)', revenue: '₹12,500', status: 'Active', type: 'Hair Studio' },
@@ -1449,6 +2013,8 @@
         ];
 
         let salonToSuspend = null;
+        let globalBookings = [];
+        let globalExpenses = [];
 
         function renderVendorTable() {
             const tbody = document.getElementById('vendor-table-body');
@@ -1502,10 +2068,10 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
+
             const icon = type === 'success' ? '<i class="fa-solid fa-check-circle" style="color: #00ff88;"></i>' : '<i class="fa-solid fa-triangle-exclamation" style="color: #ff007a;"></i>';
             toast.innerHTML = `${icon} <span>${message}</span>`;
-            
+
             container.appendChild(toast);
 
             setTimeout(() => {
@@ -1540,7 +2106,7 @@
                         closeModal();
                         return;
                     }
-                } catch(e) {}
+                } catch (e) { }
 
                 salonToSuspend.status = 'Suspended';
                 renderVendorTable();
@@ -1553,25 +2119,25 @@
             const vendor = vendors.find(v => String(v.id) === String(id));
             if (vendor) {
                 vendor.plan = newPlan;
-                
+
                 const price = newPlan === 'Premium' ? '₹4,999/mo' : (newPlan === 'Deluxe' ? '₹9,999/mo' : '₹1,999/mo');
                 const subscription = {
                     plan: newPlan,
                     price: price,
-                    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0],
+                    expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     status: 'Active'
                 };
-                
+
                 try {
                     const response = await fetch(`http://localhost:5000/api/branches/${id}`, {
                         method: 'PUT',
-                        headers: { 
+                        headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}` 
+                            'Authorization': `Bearer ${token}`
                         },
                         body: JSON.stringify({ subscription })
                     });
-                    
+
                     if (response.ok) {
                         showToast(`${vendor.name}'s subscription updated to ${newPlan} in real-time.`, 'success');
                         return;
@@ -1597,7 +2163,7 @@
                         fetchRealTimeData();
                         return;
                     }
-                } catch(e) {}
+                } catch (e) { }
 
                 vendor.status = 'Active';
                 renderVendorTable();
@@ -1607,10 +2173,22 @@
 
         async function generateAndSetCredentials(id) {
             const vendor = vendors.find(v => String(v.id) === String(id));
-            if(!vendor) return;
+            if (!vendor) return;
 
-            const accessKey = 'BR-' + vendor.name.substring(0,4).toUpperCase().replace(/[^A-Z]/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
+            const accessKey = 'BR-' + vendor.name.substring(0, 4).toUpperCase().replace(/[^A-Z]/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
             const passcode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            // Local real-time sync for Staff Portal
+            vendor.email = accessKey;
+            vendor.password = passcode;
+            let creds = JSON.parse(localStorage.getItem('STAFF_CREDENTIALS') || '{}');
+            creds[accessKey] = {
+                password: passcode,
+                name: vendor.name,
+                role: vendor.owner || 'Branch Admin',
+                phone: '1234567890'
+            };
+            localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
 
             try {
                 const response = await fetch(`http://localhost:5000/api/branches/${vendor.id}`, {
@@ -1619,9 +2197,9 @@
                     body: JSON.stringify({ email: accessKey, password: passcode })
                 });
 
-                if(response.ok) {
+                if (response.ok) {
                     showToast(`Credentials generated for ${vendor.name}! Access Key: ${accessKey}, Passcode: ${passcode}`, 'success');
-                    
+
                     // Alert the user so they can copy it!
                     setTimeout(() => {
                         alert(`Successfully generated branch credentials for ${vendor.name}!\n\nAccess Key: ${accessKey}\nPasscode: ${passcode}\n\nMake sure to securely communicate these to the branch manager.`);
@@ -1633,7 +2211,10 @@
                 }
             } catch (e) {
                 console.error(e);
-                showToast('Backend offline. Could not generate credentials.', 'error');
+                showToast(`Credentials generated for ${vendor.name} (Local Sync Active)`, 'success');
+                setTimeout(() => {
+                    alert(`Successfully generated branch credentials for ${vendor.name}!\n\nAccess Key: ${accessKey}\nPasscode: ${passcode}\n\nMake sure to securely communicate these to the branch manager.`);
+                }, 500);
             }
         }
 
@@ -1646,7 +2227,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     const branch = data.find(b => String(b.id) === String(id));
-                    if(branch && branch.email) {
+                    if (branch && branch.email) {
                         alert(`Active Credentials for ${branch.name}:\n\nAccess Key (Email): ${branch.email}\nPasscode: ${branch.password}`);
                         return;
                     }
@@ -1654,11 +2235,11 @@
             } catch (e) {
                 console.log("Backend offline, trying local state");
             }
-            
+
             // Fallback to local state if backend fetch fails
             const vendor = vendors.find(v => String(v.id) === String(id));
-            if(!vendor) return;
-            if(vendor.email) {
+            if (!vendor) return;
+            if (vendor.email) {
                 alert(`Active Credentials for ${vendor.name}:\n\nAccess Key (Email): ${vendor.email}\nPasscode: ${vendor.password}`);
             } else {
                 alert(`No credentials generated yet for ${vendor.name}. Please click 'Generate Credentials' first.`);
@@ -1671,7 +2252,7 @@
             const entity = document.getElementById('manual-txn-entity').value || 'N/A';
             const desc = document.getElementById('manual-txn-desc').value || 'No remarks';
             let date = document.getElementById('manual-txn-date').value;
-            
+
             if (!amount || amount <= 0) {
                 showToast('Please enter a valid amount', 'error');
                 return;
@@ -1683,10 +2264,10 @@
                 const d = new Date(date);
                 date = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
             }
-            
+
             const isCredit = type.includes('(Credit)');
-            const badge = isCredit ? 
-                '<span class="status-badge" style="background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3);">Credit</span>' : 
+            const badge = isCredit ?
+                '<span class="status-badge" style="background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3);">Credit</span>' :
                 '<span class="status-badge" style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">Debit</span>';
             const amountFormatted = isCredit ? `+ ₹${amount}` : `- ₹${amount}`;
             const amountColor = isCredit ? '#00ff88' : '#ff007a';
@@ -1701,12 +2282,12 @@
                 <td style="color: var(--text-muted); font-size: 0.85rem;">${desc}</td>
             `;
             tbody.prepend(row);
-            
+
             // Clear fields
             document.getElementById('manual-txn-amount').value = '';
             document.getElementById('manual-txn-entity').value = '';
             document.getElementById('manual-txn-desc').value = '';
-            
+
             showToast('Manual record added successfully', 'success');
         }
 
@@ -1719,11 +2300,11 @@
         document.getElementById('sync-btn').addEventListener('click', (e) => {
             const btn = e.currentTarget;
             const icon = btn.querySelector('i');
-            
+
             icon.classList.add('spin');
             btn.disabled = true;
             showToast('Syncing platform data...', 'success');
-            
+
             setTimeout(() => {
                 icon.classList.remove('spin');
                 btn.disabled = false;
@@ -1747,6 +2328,8 @@
             'revenue': { title: 'Revenue & Finances', subtitle: 'Track GMV, platform fees, and pending payouts.' },
             'transactions': { title: 'Transaction Ledger', subtitle: 'Detailed records of all payments, payouts, and platform fees.' },
             'manual-record': { title: 'Manual Business Records', subtitle: 'Log offline payments, direct expenditures, and adjustments.' },
+            'business-analysis': { title: 'Business Analysis Engine', subtitle: 'Real-time diagnostics and AI-driven growth recommendations.' },
+            'ad-manager': { title: 'Network Ad Management', subtitle: 'Push promotional banners and announcements to all connected salons globally.' },
             'settings': { title: 'System Configuration', subtitle: 'Manage core platform settings and integrations.' }
         };
 
@@ -1754,7 +2337,7 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const target = item.getAttribute('data-target');
-                if(!target) return;
+                if (!target) return;
 
                 // Update Active Tab
                 navItems.forEach(nav => nav.classList.remove('active'));
@@ -1767,7 +2350,7 @@
                 document.getElementById(`section-${target}`).style.display = 'block';
 
                 // Update Header
-                if(sectionTitles[target]) {
+                if (sectionTitles[target]) {
                     pageTitle.innerText = sectionTitles[target].title;
                     pageSubtitle.innerText = sectionTitles[target].subtitle;
                 }
@@ -1833,17 +2416,17 @@
                     </div>
                 `;
             });
-            if(pendingSalons.length === 0) verifyQueue.innerHTML = `<p style="color:var(--text-muted);">No pending verifications at this time.</p>`;
+            if (pendingSalons.length === 0) verifyQueue.innerHTML = `<p style="color:var(--text-muted);">No pending verifications at this time.</p>`;
 
             // Render Full Active Vendor Table
             const fullTbody = document.getElementById('full-vendor-table-body');
             fullTbody.innerHTML = '';
             vendors.forEach(vendor => {
-                if(vendor.status === 'Pending Review') return; // Hide pending in active list
-                let actionBtn = vendor.status === 'Suspended' ? 
+                if (vendor.status === 'Pending Review') return; // Hide pending in active list
+                let actionBtn = vendor.status === 'Suspended' ?
                     `<button type="button" type="button" class="action-btn btn-reactivate" onclick="reactivateLicense('${vendor.id}')">Reactivate</button>` :
                     `<button type="button" type="button" class="action-btn btn-suspend" onclick="requestSuspend('${vendor.id}')">Suspend</button>`;
-                
+
                 fullTbody.innerHTML += `
                     <tr>
                         <td><strong>${vendor.name}</strong></td>
@@ -1871,8 +2454,8 @@
             const paymentTbody = document.getElementById('payment-history-body');
             paymentTbody.innerHTML = '';
             payments.forEach(pay => {
-                let statusBadge = pay.status === 'Completed' ? 
-                    `<span class="status-badge status-active">Completed</span>` : 
+                let statusBadge = pay.status === 'Completed' ?
+                    `<span class="status-badge status-active">Completed</span>` :
                     `<span class="status-badge status-pending">Processing</span>`;
                 paymentTbody.innerHTML += `
                     <tr>
@@ -1888,21 +2471,21 @@
 
             // Render Full Transactions Table
             const fullTxTbody = document.getElementById('full-transactions-body');
-            if(fullTxTbody) {
+            if (fullTxTbody) {
                 fullTxTbody.innerHTML = '';
-                let extendedPayments = [...payments, 
-                    { txId: 'TXN-98202', salon: 'Luxe Beauty Bar', procedure: 'Party Makeup', amount: '₹5,500', date: '01 Jun 2026, 11:00 AM', status: 'Completed' },
-                    { txId: 'TXN-98199', salon: 'Glow Up Studio', procedure: 'Hair Coloring', amount: '₹8,200', date: '30 May 2026, 03:45 PM', status: 'Completed' },
-                    { txId: 'TXN-98150', salon: 'Elite Looks Salon', procedure: 'Manicure & Pedicure', amount: '₹2,500', date: '28 May 2026, 01:15 PM', status: 'Completed' }
+                let extendedPayments = [...payments,
+                { txId: 'TXN-98202', salon: 'Luxe Beauty Bar', procedure: 'Party Makeup', amount: '₹5,500', date: '01 Jun 2026, 11:00 AM', status: 'Completed' },
+                { txId: 'TXN-98199', salon: 'Glow Up Studio', procedure: 'Hair Coloring', amount: '₹8,200', date: '30 May 2026, 03:45 PM', status: 'Completed' },
+                { txId: 'TXN-98150', salon: 'Elite Looks Salon', procedure: 'Manicure & Pedicure', amount: '₹2,500', date: '28 May 2026, 01:15 PM', status: 'Completed' }
                 ];
                 extendedPayments.forEach(pay => {
-                    let statusBadge = pay.status === 'Completed' ? 
-                        `<span class="status-badge status-active">Completed</span>` : 
+                    let statusBadge = pay.status === 'Completed' ?
+                        `<span class="status-badge status-active">Completed</span>` :
                         `<span class="status-badge status-pending">Processing</span>`;
-                    
+
                     let amountNum = parseInt(pay.amount.replace(/[^0-9]/g, ''));
                     let fee = amountNum * 0.15;
-                    
+
                     fullTxTbody.innerHTML += `
                         <tr>
                             <td style="font-family: monospace;">${pay.txId}</td>
@@ -1925,14 +2508,21 @@
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     vendors = [];
                     pendingSalons = [];
-                    
+
+                    const targetSelect = document.getElementById('setting-bill-ad-target');
+                    let currentTargetVal = 'global';
+                    if (targetSelect) {
+                        currentTargetVal = targetSelect.value;
+                        targetSelect.innerHTML = '<option value="global">All Salons (Global Override)</option>';
+                    }
+
                     data.forEach(branch => {
                         if (branch.verificationStatus === 'Approved') {
                             vendors.push({
-                                id: branch.id, name: branch.name, joined: 'Recently', initials: branch.name.substring(0,2).toUpperCase(),
+                                id: branch.id, name: branch.name, joined: 'Recently', initials: branch.name.substring(0, 2).toUpperCase(),
                                 location: branch.location || 'N/A',
                                 plan: (branch.subscription && branch.subscription.plan) ? branch.subscription.plan : 'Basic',
                                 revenue: '₹' + (branch.grossRevenue || 0),
@@ -1941,6 +2531,10 @@
                                 email: branch.email || '',
                                 password: branch.password || ''
                             });
+                            
+                            if (targetSelect) {
+                                targetSelect.innerHTML += `<option value="${branch.id}">${branch.name}</option>`;
+                            }
                         } else if (branch.verificationStatus === 'Pending') {
                             pendingSalons.push({
                                 id: branch.id, name: branch.name, location: branch.location || 'N/A', applied: 'Recently', docs: 'Pending...', type: branch.type || 'Unisex Salon',
@@ -1948,7 +2542,13 @@
                             });
                         }
                     });
-                    
+
+                    if (targetSelect) {
+                        if (Array.from(targetSelect.options).some(o => o.value === currentTargetVal)) {
+                            targetSelect.value = currentTargetVal;
+                        }
+                    }
+
                     renderVendorTable();
                     renderExtendedTables();
                 } else {
@@ -1960,13 +2560,43 @@
                 renderVendorTable();
                 renderExtendedTables();
             }
-            
+
             try {
                 const mkRes = await fetch('http://localhost:5000/api/marketing');
                 if (mkRes.ok) {
                     marketingRequests = await mkRes.json();
                 }
-            } catch(e) {}
+            } catch (e) { }
+
+            try {
+                const bkRes = await fetch('http://localhost:5000/api/bookings');
+                if (bkRes.ok) globalBookings = await bkRes.json();
+            } catch (e) { }
+
+            try {
+                const setRes = await fetch('http://localhost:5000/api/settings');
+                if (setRes.ok) {
+                    const settings = await setRes.json();
+                    if (settings.fee) document.getElementById('setting-fee').value = settings.fee;
+                    if (settings.tax) document.getElementById('setting-tax').value = settings.tax;
+                    if (settings.maint) document.getElementById('setting-maintenance').value = settings.maint;
+                    if (settings.razorpay) document.getElementById('setting-razorpay').value = settings.razorpay;
+                    if (settings.autoApprove !== undefined) document.getElementById('setting-auto-approve').checked = settings.autoApprove;
+                    if (settings.billAds) {
+                        globalBillAds = settings.billAds;
+                    } else if (settings.billAd) {
+                        globalBillAds = { "global": { type: "text", content: settings.billAd } };
+                    }
+                    if (document.getElementById('setting-bill-ad-target')) {
+                        populateBillAdForm(document.getElementById('setting-bill-ad-target').value);
+                    }
+                }
+            } catch (e) { }
+
+            try {
+                const expRes = await fetch('http://localhost:5000/api/expenses');
+                if (expRes.ok) globalExpenses = await expRes.json();
+            } catch (e) { }
         }
 
         async function approveSalon(id) {
@@ -1976,13 +2606,13 @@
             // Optimistic update for immediate feedback
             const salonIndex = pendingSalons.findIndex(s => String(s.id) === String(id));
             let salon = null;
-            if(salonIndex > -1) {
+            if (salonIndex > -1) {
                 salon = pendingSalons[salonIndex];
                 pendingSalons.splice(salonIndex, 1);
-                
+
                 const planName = (salon.subscription && salon.subscription.plan) ? salon.subscription.plan : 'Basic';
                 vendors.push({
-                    id: salon.id, name: salon.name, joined: 'Just now', initials: (salon.name || 'NA').substring(0,2).toUpperCase(),
+                    id: salon.id, name: salon.name, joined: 'Just now', initials: (salon.name || 'NA').substring(0, 2).toUpperCase(),
                     location: salon.location, plan: planName, revenue: '₹0', status: 'Active', type: selectedType
                 });
                 renderVendorTable();
@@ -1995,20 +2625,20 @@
                 const subscription = {
                     plan: planName,
                     price: price,
-                    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0],
+                    expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     status: 'Active'
                 };
 
                 const response = await fetch(`http://localhost:5000/api/branches/${id}`, {
                     method: 'PUT',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
+                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ 
-                        verificationStatus: 'Approved', 
-                        status: 'Active', 
-                        verificationNotes: 'System Approved', 
+                    body: JSON.stringify({
+                        verificationStatus: 'Approved',
+                        status: 'Active',
+                        verificationNotes: 'System Approved',
                         type: selectedType,
                         subscription
                     })
@@ -2026,7 +2656,7 @@
                 console.log("Backend offline, falling back to mock logic.");
             }
 
-            if(salon) {
+            if (salon) {
                 showToast(`Provisioning services for ${selectedType}...`, 'success');
                 setTimeout(() => {
                     showToast(`${salon.name} has been verified and onboarded (locally)!`, 'success');
@@ -2038,9 +2668,9 @@
             try {
                 const response = await fetch(`http://localhost:5000/api/branches/${id}/verify`, {
                     method: 'PUT',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ verificationStatus: 'Rejected' })
                 });
@@ -2055,7 +2685,7 @@
             }
 
             const salonIndex = pendingSalons.findIndex(s => String(s.id) === String(id));
-            if(salonIndex > -1) {
+            if (salonIndex > -1) {
                 const salon = pendingSalons[salonIndex];
                 pendingSalons.splice(salonIndex, 1);
                 showToast(`${salon.name}'s application has been rejected.`, 'error');
@@ -2073,7 +2703,7 @@
             const pan = document.getElementById('marketing-doc-pan').files[0];
             const license = document.getElementById('marketing-doc-license').files[0];
 
-            if(!name || !owner || !phone || !location) {
+            if (!name || !owner || !phone || !location) {
                 showToast('Please fill all required fields.', 'error');
                 return;
             }
@@ -2094,7 +2724,7 @@
                 subscription: {
                     plan: subscriptionPlan,
                     price: subscriptionPlan === 'Premium' ? '₹4,999/mo' : (subscriptionPlan === 'Deluxe' ? '₹9,999/mo' : '₹1,999/mo'),
-                    expiry: new Date(Date.now() + 365*24*60*60*1000).toISOString().split('T')[0],
+                    expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     status: 'Pending'
                 }
             };
@@ -2105,7 +2735,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(reqPayload)
                 });
-            } catch(e) {
+            } catch (e) {
                 console.log("Backend offline, pushing to local pending array.");
                 pendingSalons.push(reqPayload);
             }
@@ -2120,7 +2750,7 @@
             document.getElementById('marketing-doc-license').value = '';
 
             showToast('Application successfully pushed to Verification & KYC queue in real-time!', 'success');
-            
+
             // Re-fetch to populate the Verification queue immediately
             fetchRealTimeData();
         }
@@ -2134,7 +2764,7 @@
             document.getElementById('kyc-doc-type').innerText = docType;
             document.getElementById('kyc-doc-number').innerText = docNumber;
             document.getElementById('kyc-owner-name').innerText = ownerName;
-            
+
             document.getElementById('kyc-modal').classList.add('active');
         }
 
@@ -2142,11 +2772,33 @@
             document.getElementById('kyc-modal').classList.remove('active');
         }
 
-        // Settings Logic
-        function saveSystemSettings() {
+        let globalBillAds = {};
+
+        function populateBillAdForm(targetId) {
+            const ad = globalBillAds[targetId];
+            if (ad) {
+                document.getElementById('setting-bill-ad-type').value = ad.type;
+                if (ad.type === 'text') {
+                    document.getElementById('setting-bill-ad').value = ad.content;
+                    document.getElementById('bill-ad-text-container').style.display = 'block';
+                    document.getElementById('bill-ad-media-container').style.display = 'none';
+                } else {
+                    document.getElementById('setting-bill-ad').value = '';
+                    document.getElementById('bill-ad-text-container').style.display = 'none';
+                    document.getElementById('bill-ad-media-container').style.display = 'block';
+                }
+            } else {
+                document.getElementById('setting-bill-ad-type').value = 'text';
+                document.getElementById('setting-bill-ad').value = '';
+                document.getElementById('setting-bill-ad-media').value = '';
+                document.getElementById('bill-ad-text-container').style.display = 'block';
+                document.getElementById('bill-ad-media-container').style.display = 'none';
+            }
+        }
+
+        async function saveSystemSettings() {
             const btn = document.getElementById('btn-save-settings');
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...';
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
             btn.disabled = true;
 
             const fee = document.getElementById('setting-fee').value;
@@ -2154,14 +2806,62 @@
             const maint = document.getElementById('setting-maintenance').value;
             const razorpay = document.getElementById('setting-razorpay').value;
             const autoApprove = document.getElementById('setting-auto-approve').checked;
+            
+            const targetId = document.getElementById('setting-bill-ad-target').value;
+            const adType = document.getElementById('setting-bill-ad-type').value;
+            let adContent = '';
 
-            // Simulate saving settings to backend API
-            setTimeout(() => {
+            if (adType === 'text') {
+                adContent = document.getElementById('setting-bill-ad').value;
+                await processSettingsSave(fee, tax, maint, razorpay, autoApprove, targetId, adType, adContent);
+            } else {
+                const fileInput = document.getElementById('setting-bill-ad-media');
+                if (fileInput.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        adContent = e.target.result;
+                        await processSettingsSave(fee, tax, maint, razorpay, autoApprove, targetId, adType, adContent);
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    // Retain old media if no new file uploaded
+                    const existingAd = globalBillAds[targetId];
+                    if (existingAd && existingAd.type === 'media') {
+                         adContent = existingAd.content;
+                    }
+                    await processSettingsSave(fee, tax, maint, razorpay, autoApprove, targetId, adType, adContent);
+                }
+            }
+        }
+
+        async function processSettingsSave(fee, tax, maint, razorpay, autoApprove, targetId, adType, adContent) {
+            const btn = document.getElementById('btn-save-settings');
+            const originalHtml = '<i class="fa-solid fa-floppy-disk"></i> Save Configuration';
+
+            if (adContent) {
+                 globalBillAds[targetId] = { type: adType, content: adContent };
+            } else if (adType === 'text' && !adContent) {
+                 delete globalBillAds[targetId];
+            }
+
+            try {
+                const res = await fetch('http://localhost:5000/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fee, tax, maint, razorpay, autoApprove, billAds: globalBillAds })
+                });
+                if (res.ok) {
+                    showToast('System Configuration saved and applied globally!', 'success');
+                } else {
+                    showToast('Failed to save settings to server', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('Network error while saving settings', 'error');
+            } finally {
                 btn.innerHTML = originalHtml;
                 btn.disabled = false;
-                
-                showToast('System Configuration saved and applied globally!', 'success');
-            }, 1200);
+            }
         }
 
         // Theme Toggle Logic
@@ -2177,13 +2877,13 @@
 
         // Override renderVendorTable to also update extended tables
         const originalRender = renderVendorTable;
-        renderVendorTable = function() {
+        renderVendorTable = function () {
             originalRender();
-            if(typeof renderExtendedTables === 'function') renderExtendedTables();
+            if (typeof renderExtendedTables === 'function') renderExtendedTables();
         }
 
         async function deleteVendor(id) {
-            if(confirm("Are you sure you want to completely delete this branch? This action cannot be undone.")) {
+            if (confirm("Are you sure you want to completely delete this branch? This action cannot be undone.")) {
                 try {
                     const response = await fetch(`http://localhost:5000/api/branches/${id}`, {
                         method: 'DELETE',
@@ -2194,13 +2894,13 @@
                         fetchRealTimeData();
                         return;
                     }
-                } catch(e) {
+                } catch (e) {
                     console.log("Backend offline, attempting local delete");
                 }
-                
+
                 // Fallback local delete
                 const vIndex = vendors.findIndex(v => String(v.id) === String(id));
-                if(vIndex > -1) {
+                if (vIndex > -1) {
                     vendors.splice(vIndex, 1);
                     showToast('Branch deleted locally.', 'success');
                     renderVendorTable();
@@ -2218,11 +2918,221 @@
             }, 1500);
         }
 
-        // Initial Render
+        function populateBABranchSelector() {
+            const selector = document.getElementById('ba-branch-select');
+            if (!selector) return;
+            const currentVal = selector.value;
+            while (selector.options.length > 1) selector.remove(1);
+
+            vendors.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.id;
+                opt.innerText = v.name;
+                selector.appendChild(opt);
+            });
+            selector.value = currentVal || 'all';
+        }
+
+        function renderBusinessAnalysis() {
+            const selector = document.getElementById('ba-branch-select');
+            if (!selector) return;
+            const branchId = selector.value;
+            let branchBookings = globalBookings;
+            if (branchId !== 'all') branchBookings = branchBookings.filter(b => String(b.branchId) === String(branchId));
+
+            let branchExpenses = globalExpenses;
+            if (branchId !== 'all') branchExpenses = branchExpenses.filter(e => String(e.branchId) === String(branchId));
+
+            const totalRev = branchBookings.reduce((sum, b) => sum + (Number(b.total) || 0), 0);
+            const totalExp = branchExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+            const netProfit = totalRev - totalExp;
+            const margin = totalRev > 0 ? ((netProfit / totalRev) * 100).toFixed(1) : 0;
+
+            document.getElementById('ba-total-revenue').innerText = '₹' + totalRev.toLocaleString();
+            document.getElementById('ba-total-expenses').innerText = '₹' + totalExp.toLocaleString();
+            document.getElementById('ba-net-profit').innerText = '₹' + netProfit.toLocaleString();
+
+            const marginEl = document.getElementById('ba-profit-margin');
+            marginEl.innerText = margin + '%';
+
+            const reportContainer = document.getElementById('ba-ai-report');
+            reportContainer.innerHTML = '';
+
+            if (totalRev === 0 && totalExp === 0) {
+                reportContainer.innerHTML = `<div class="insight-card"><div class="insight-icon"><i class="fa-solid fa-hourglass-start"></i></div><div class="insight-content"><h4>Insufficient Data</h4><p>This branch has not logged any revenue or expenses yet. Start processing bookings to generate AI insights.</p></div></div>`;
+                return;
+            }
+
+            let insightsHtml = '';
+            if (margin > 30) {
+                marginEl.style.color = '#00ff88';
+                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(0, 255, 136, 0.2); color: #00ff88;"><i class="fa-solid fa-trophy"></i></div><div class="insight-content"><h4 style="color: #00ff88;">Excellent Profitability (Margin > 30%)</h4><p>This branch is highly profitable. <b>Recommendation:</b> Reinvest profits into premium equipment, reward top-performing staff, and consider expanding operations or running brand awareness campaigns to capture more market share.</p></div></div>`;
+            } else if (margin > 10) {
+                marginEl.style.color = '#00d2ff';
+                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(0, 210, 255, 0.2); color: #00d2ff;"><i class="fa-solid fa-check"></i></div><div class="insight-content"><h4 style="color: #00d2ff;">Healthy Operations (10% - 30% Margin)</h4><p>The business is stable. <b>Recommendation:</b> Focus on customer retention. Implement loyalty programs and cross-sell premium services to increase average ticket size and push margins higher.</p></div></div>`;
+            } else if (margin > 0) {
+                marginEl.style.color = '#f59e0b';
+                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="insight-content"><h4 style="color: #f59e0b;">Low Margins (Under 10%)</h4><p>Profit margins are dangerously thin. <b>Recommendation:</b> Analyze the highest operating expenses. Negotiate better rates with suppliers, optimize staff scheduling to avoid idle time, and consider a slight price hike on high-demand services.</p></div></div>`;
+            } else {
+                marginEl.style.color = '#ff007a';
+                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(255, 0, 122, 0.2); color: #ff007a;"><i class="fa-solid fa-skull-crossbones"></i></div><div class="insight-content"><h4 style="color: #ff007a;">Operating at a Loss</h4><p>Expenses are exceeding revenue. <b>Immediate Action Required:</b> Conduct an aggressive cost-cutting audit. Freeze non-essential spending, run promotional discount bundles to drive immediate footfall, and evaluate underperforming staff or services.</p></div></div>`;
+            }
+
+            if (totalRev < 5000 && totalRev > 0) {
+                insightsHtml += `<div class="insight-card" style="margin-top: 10px;"><div class="insight-icon" style="background: rgba(138,43,226, 0.2); color: #8a2be2;"><i class="fa-solid fa-bullhorn"></i></div><div class="insight-content"><h4 style="color: #8a2be2;">Low Revenue Alert</h4><p>Footfall is exceptionally low. <b>Recommendation:</b> Launch localized social media ads, offer "first-time visitor" discounts, and partner with local businesses to drive new client acquisitions.</p></div></div>`;
+            }
+
+            reportContainer.innerHTML = insightsHtml;
+        }
+
+        const originalFetchRealTimeData = fetchRealTimeData;
+        fetchRealTimeData = async function () {
+            await originalFetchRealTimeData();
+            populateBABranchSelector();
+            populateAdTargets();
+            renderBusinessAnalysis();
+            fetchAndRenderAds();
+        }
+
+        // --- Ad Management Logic ---
+        function populateAdTargets() {
+            const selector = document.getElementById('ad-targets');
+            if (!selector) return;
+            const currentSelected = Array.from(selector.selectedOptions).map(o => o.value);
+
+            while (selector.options.length > 1) selector.remove(1);
+
+            vendors.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.id;
+                opt.innerText = v.name;
+                selector.appendChild(opt);
+            });
+
+            for (let opt of selector.options) {
+                if (currentSelected.includes(opt.value)) opt.selected = true;
+            }
+        }
+        async function fetchAndRenderAds() {
+            try {
+                const res = await fetch('http://localhost:5000/api/ads');
+                if (!res.ok) return;
+                const ads = await res.json();
+
+                const tbody = document.getElementById('ads-table-body');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                if (ads.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 2rem;">No active ads running.</td></tr>`;
+                    return;
+                }
+
+                ads.forEach(ad => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <div style="font-size: 2rem; background: var(--bg-panel); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">${ad.emoji || '📢'}</div>
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 1rem;">${ad.title}</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted); max-width: 300px; white-space: normal;">${ad.description}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span style="background: rgba(0, 210, 255, 0.1); color: #00d2ff; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${ad.buttonText || 'Click Here'}</span></td>
+                            <td>
+                                <button onclick="deleteAd('${ad.id}')" class="action-btn btn-suspend"><i class="fa-solid fa-trash"></i> Revoke</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error('Failed to fetch ads:', e);
+            }
+        }
+
+        async function publishAd() {
+            const emoji = document.getElementById('ad-emoji').value;
+            const title = document.getElementById('ad-title').value;
+            const description = document.getElementById('ad-desc').value;
+            const buttonText = document.getElementById('ad-btn-text').value;
+
+            const targetsElement = document.getElementById('ad-targets');
+            const targetValues = Array.from(targetsElement.selectedOptions).map(o => o.value);
+            const targets = (targetValues.includes('all') || targetValues.includes('Global')) ? ['Global'] : targetValues;
+
+            if (!title || !description) {
+                showToast('Headline and Description are required!', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost:5000/api/ads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ emoji, title, description, buttonText, targets })
+                });
+
+                if (res.ok) {
+                    showToast('Ad successfully pushed to all salon networks!', 'success');
+                    document.getElementById('ad-title').value = '';
+                    document.getElementById('ad-desc').value = '';
+                    document.getElementById('ad-btn-text').value = '';
+                    fetchAndRenderAds();
+                }
+            } catch (e) {
+                console.error('Failed to push ad to network:', e);
+                showToast('Failed to push ad to network.', 'error');
+            }
+        }
+
+        async function deleteAd(id) {
+            if (!confirm('Are you sure you want to pull this ad from the network?')) return;
+            try {
+                const res = await fetch(`http://localhost:5000/api/ads/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Ad revoked successfully.', 'success');
+                    fetchAndRenderAds();
+                }
+            } catch (e) {
+                showToast('Failed to revoke ad.', 'error');
+            }
+        }
+
+        // Render Data
         renderVendorTable();
         fetchRealTimeData();
         renderMarketingTables();
 
+        // Mobile Menu Toggle Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+
+        if (mobileMenuBtn && sidebar && mobileOverlay) {
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                mobileOverlay.classList.add('show');
+            });
+
+            mobileOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                mobileOverlay.classList.remove('show');
+            });
+
+            // Close sidebar when clicking a nav item on mobile
+            const navItemsList = document.querySelectorAll('.nav-item');
+            navItemsList.forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                        mobileOverlay.classList.remove('show');
+                    }
+                });
+            });
+        }
     </script>
 </body>
+
 </html>
