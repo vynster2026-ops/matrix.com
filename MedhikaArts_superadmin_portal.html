@@ -1372,6 +1372,12 @@
                             <input type="file" id="marketing-doc-license" accept=".pdf,image/*"
                                 style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
                         </div>
+                        <div style="grid-column: span 2;">
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Clients List (CSV: Name, Phone, Email) - Optional</label>
+                            <input type="file" id="marketing-doc-clients" accept=".csv"
+                                style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                        </div>
 
                         <div style="grid-column: span 2; margin-top: 1.5rem;">
                             <button type="submit" class="ai-assistant-btn"
@@ -2398,6 +2404,7 @@
                             <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Assign Shop Type & Provision Services:</label>
                             <select id="shop-type-${salon.id}" style="width: 100%; padding: 0.6rem; margin-top: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-dark); color: var(--text-main); outline: none;">
                                 <option value="Unisex Salon" ${salon.type === 'Unisex Salon' ? 'selected' : ''}>Unisex Salon</option>
+                                <option value="Feminine Salon" ${salon.type === 'Feminine Salon' ? 'selected' : ''}>Feminine Salon</option>
                                 <option value="Mens Salon" ${salon.type === 'Mens Salon' ? 'selected' : ''}>Men's Salon</option>
                                 <option value="Premium Unisex Salon" ${salon.type === 'Premium Unisex Salon' ? 'selected' : ''}>Premium Unisex Salon</option>
                                 <option value="Barber Shop" ${salon.type === 'Barber Shop' ? 'selected' : ''}>Barber Shop</option>
@@ -2702,6 +2709,7 @@
             const aadhaar = document.getElementById('marketing-doc-aadhaar').files[0];
             const pan = document.getElementById('marketing-doc-pan').files[0];
             const license = document.getElementById('marketing-doc-license').files[0];
+            const clientsFile = document.getElementById('marketing-doc-clients').files[0];
 
             if (!name || !owner || !phone || !location) {
                 showToast('Please fill all required fields.', 'error');
@@ -2735,6 +2743,43 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(reqPayload)
                 });
+                
+                // Process clients CSV file if provided
+                if (clientsFile) {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const text = e.target.result;
+                        const lines = text.split('\n');
+                        for (let i = 1; i < lines.length; i++) { // Skip header line
+                            const line = lines[i].trim();
+                            if (!line) continue;
+                            
+                            // Simple CSV parse handling commas inside quotes optionally
+                            const parts = line.split(',');
+                            if (parts.length >= 2) {
+                                const clientPayload = {
+                                    id: 'c' + Date.now() + i,
+                                    name: parts[0] ? parts[0].trim() : 'Unknown',
+                                    phone: parts[1] ? parts[1].trim() : '',
+                                    email: parts[2] ? parts[2].trim() : '',
+                                    pts: 0,
+                                    ltv: "₹0",
+                                    branchId: reqPayload.id
+                                };
+                                try {
+                                    await fetch('http://localhost:5000/api/clients', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(clientPayload)
+                                    });
+                                } catch(err) {
+                                    console.error('Failed to upload client row', err);
+                                }
+                            }
+                        }
+                    };
+                    reader.readAsText(clientsFile);
+                }
             } catch (e) {
                 console.log("Backend offline, pushing to local pending array.");
                 pendingSalons.push(reqPayload);
@@ -2748,8 +2793,9 @@
             document.getElementById('marketing-doc-aadhaar').value = '';
             document.getElementById('marketing-doc-pan').value = '';
             document.getElementById('marketing-doc-license').value = '';
+            document.getElementById('marketing-doc-clients').value = '';
 
-            showToast('Application successfully pushed to Verification & KYC queue in real-time!', 'success');
+            showToast('Application submitted to KYC queue! Clients uploaded if provided.', 'success');
 
             // Re-fetch to populate the Verification queue immediately
             fetchRealTimeData();

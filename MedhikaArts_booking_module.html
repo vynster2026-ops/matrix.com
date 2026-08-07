@@ -1719,10 +1719,10 @@
         setTimeout(fireConfetti, 100);
 
         // Open WhatsApp in a background tab after the confirmation screen is shown
-        // 1. Trigger WhatsApp immediately (disabled to prevent duplicate sending)
-        // if (state.notify.includes('whatsapp')) {
-        //   sendWhatsApp(true);
-        // }
+        // 1. Trigger WhatsApp immediately
+        if (state.notify.includes('whatsapp')) {
+          sendWhatsApp(true);
+        }
 
         // 2. Signal data refresh
         const refreshMsg = 'refreshData';

@@ -19,6 +19,7 @@
     "express": "^5.2.1",
     "jsdom": "^29.1.1",
     "mongoose": "^9.6.1",
+    "node-cron": "^4.6.0",
     "nodemailer": "^9.0.1",
     "qrcode-terminal": "^0.12.0",
     "razorpay": "^2.9.6",

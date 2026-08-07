@@ -1,14 +1,21 @@
 require('dotenv').config();
+// Global error handler to prevent whatsapp-web.js background errors from crashing the server
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('[CRITICAL] Unhandled Rejection (often WA file lock):', reason);
+});
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const fs = require('fs');
+const cron = require('node-cron');
 const path = require('path');
-const Razorpay = require('razorpay');
+
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 const app = express();
+
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -197,9 +204,56 @@ app.put('/api/bookings/:id', async (req, res) => {
 
     const idx = localDb.bookings.findIndex(b => b.id === id || b._id === id);
     if (idx !== -1) {
+        const previousStatus = localDb.bookings[idx].status;
         localDb.bookings[idx] = { ...localDb.bookings[idx], ...updatedData };
         saveLocal();
         console.log(`[SUCCESS] Booking ${id} updated in localDb.json`);
+        
+        // Automated WhatsApp Message for Confirmed Bookings
+        if (updatedData.status && updatedData.status.toLowerCase() === 'confirmed' && (!previousStatus || previousStatus.toLowerCase() !== 'confirmed')) {
+            const booking = localDb.bookings[idx];
+            const client = localDb.clients.find(c => c.id === booking.clientId);
+            const phone = client ? client.phone : booking.clientPhone;
+            
+            if (phone && whatsappReady && whatsappClient) {
+                // Parse date nicely if needed, but assuming booking.date is display-ready based on screenshot format
+                let msg = `*Srijes Booking*\n\nHello ${booking.clientName || 'there'},\n\nYour booking for *${booking.serviceName || 'your service'}* is confirmed!\n\n🗓️ Date: ${booking.date}\n⏰ Time: ${booking.time}\n🏷️ Booking ID: ${booking.id || id}\n\nThank you for choosing Srijes!`;
+                
+                // Add Welcome Ad / Promotional Offer Image
+                const billAd = localDb.settings?.billAd;
+                let media = null;
+                if (billAd && billAd.enabled) {
+                    if (billAd.imageEnabled && billAd.imageUrl) {
+                        try {
+                            const { MessageMedia } = require('whatsapp-web.js');
+                            media = await MessageMedia.fromUrl(billAd.imageUrl, { unsafeMime: true });
+                        } catch (err) {
+                            console.error("[WHATSAPP] Failed to load Bill Ad Image:", err);
+                        }
+                    }
+                }
+
+                let cleanPhone = String(phone).replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+                if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+                
+                const chatId = cleanPhone + "@c.us";
+                
+                try {
+                    if (media) {
+                        await whatsappClient.sendMessage(chatId, media, { caption: msg });
+                    } else {
+                        await whatsappClient.sendMessage(chatId, msg);
+                    }
+                    console.log(`[WHATSAPP] Booking confirmation sent to ${booking.clientName} (${cleanPhone})`);
+                } catch(err) {
+                    console.error("[WHATSAPP] Failed to send booking confirmation message:", err);
+                }
+            } else {
+                console.log(`[WHATSAPP] Could not send confirmation. Missing phone number or WhatsApp client not ready. (Phone: ${phone})`);
+            }
+        }
+        
         return res.json({ success: true });
     }
 
@@ -254,12 +308,6 @@ if (fs.existsSync(DB_FILE)) {
 }
 const saveLocal = () => fs.writeFileSync(DB_FILE, JSON.stringify(localDb, null, 2));
 
-// Initialize Razorpay (Replace with your actual keys from Razorpay Dashboard)
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_YourKeyHere',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'YourSecretHere'
-});
-
 mongoose.set('bufferCommands', false);
 
 let isConnected = false;
@@ -271,7 +319,7 @@ const clientSchema = new mongoose.Schema({ id: String, name: String, phone: Stri
 const staffSchema = new mongoose.Schema({ id: String, name: String, gender: String, spec: String, rating: String, av: String, services: [String], status: String, branchId: String }, { bufferCommands: false });
 const serviceSchema = new mongoose.Schema({ id: String, name: String, cat: String, duration: Number, price: Number, prices: [Number], icon: String, gender: String, branchId: String }, { bufferCommands: false });
 const inventorySchema = new mongoose.Schema({ id: String, name: String, cat: String, stock: Number, min: Number, unit: String, cost: Number, branchId: String }, { bufferCommands: false });
-const bookingSchema = new mongoose.Schema({ id: String, clientId: String, clientName: String, services: [String], staffId: String, date: String, time: String, total: Number, status: String, notes: String, source: String, location: String, deposit: Boolean, timestamp: String, branchId: String }, { bufferCommands: false });
+const bookingSchema = new mongoose.Schema({ id: String, clientId: String, clientName: String, services: [String], staffId: mongoose.Schema.Types.Mixed, date: String, time: String, total: Number, status: String, notes: String, source: String, location: String, deposit: Boolean, timestamp: String, branchId: String }, { bufferCommands: false });
 const eventSchema = new mongoose.Schema({ id: String, title: String, type: String, time: String, description: String, date: String, branchId: String }, { bufferCommands: false });
 const expenseSchema = new mongoose.Schema({ id: String, title: String, amount: Number, category: String, date: String, notes: String, branchId: String }, { bufferCommands: false });
 
@@ -745,22 +793,8 @@ app.post('/api/auth/reset-password', async (req, res) => {
 });
 
 // Helpers to mask PII
-const maskPhone = (p) => {
-    if (!p) return '';
-    const str = String(p).trim();
-    if (str.length <= 4) return '****';
-    return '*'.repeat(str.length - 4) + str.slice(-4);
-};
-const maskEmail = (e) => {
-    if (!e) return '';
-    const str = String(e).trim();
-    const parts = str.split('@');
-    if (parts.length !== 2) return '****';
-    const name = parts[0];
-    const domain = parts[1];
-    if (name.length <= 2) return '*@' + domain;
-    return name[0] + '*'.repeat(name.length - 2) + name[name.length - 1] + '@' + domain;
-};
+const maskPhone = (p) => p;
+const maskEmail = (e) => e;
 
 // Admin Management (For Super Admin)
 app.get('/api/admins', authMiddleware(2), (req, res) => {
@@ -893,6 +927,28 @@ app.put('/api/clients/:id', async (req, res) => {
         localDb.clients[idx] = { ...localDb.clients[idx], ...req.body };
         saveLocal();
         return res.json(localDb.clients[idx]);
+    }
+    res.status(404).json({ error: 'Client not found' });
+});
+
+app.delete('/api/clients/:id', async (req, res) => {
+    const searchId = String(req.params.id).trim();
+    if (isConnected) {
+        try {
+            const deleted = await Client.findOneAndDelete(
+                { $or: [{ id: searchId }, { name: { $regex: new RegExp(`^${searchId}$`, 'i') } }] }
+            );
+            if (deleted) return res.json({ success: true });
+        } catch (e) { }
+    }
+    const idx = localDb.clients.findIndex(c =>
+        String(c.id).trim() === searchId ||
+        String(c.name).trim().toLowerCase() === searchId.toLowerCase()
+    );
+    if (idx !== -1) {
+        localDb.clients.splice(idx, 1);
+        saveLocal();
+        return res.json({ success: true });
     }
     res.status(404).json({ error: 'Client not found' });
 });
@@ -1130,12 +1186,7 @@ app.post('/api/bookings', async (req, res) => {
     
     res.json(result);
 });
-app.put('/api/bookings/:id', async (req, res) => {
-    if (isConnected) { try { return res.json(await Booking.findOneAndUpdate({ id: req.params.id }, req.body, { new: true })); } catch (e) { } }
-    const idx = localDb.bookings.findIndex(b => b.id === req.params.id);
-    if (idx !== -1) { localDb.bookings[idx] = { ...localDb.bookings[idx], ...req.body }; saveLocal(); return res.json(localDb.bookings[idx]); }
-    res.status(404).json({ error: 'Not found' });
-});
+
 app.delete('/api/bookings/:id', async (req, res) => {
     const id = req.params.id;
     if (isConnected) {
@@ -1171,65 +1222,7 @@ app.post('/api/bookings/delete/:id', async (req, res) => {
     res.status(404).json({ error: 'Booking not found' });
 });
 
-// --- NEW: Payment Integration Routes ---
-app.post('/api/payment/create-session', async (req, res) => {
-    const { amount, bookingId, clientName } = req.body;
 
-    // Check if keys are placeholders
-    const isMock = !process.env.RAZORPAY_KEY_ID ||
-        process.env.RAZORPAY_KEY_ID.includes('YourKeyHere') ||
-        process.env.RAZORPAY_KEY_ID.includes('PASTE_YOUR_KEY');
-
-    if (isMock) {
-        console.log("Using Mock Payment Mode (No real keys found)");
-        return res.json({
-            orderId: "order_mock_" + Math.random().toString(36).substr(2, 9),
-            amount: amount * 100,
-            currency: "INR",
-            key: "rzp_test_mockkey",
-            isMock: true
-        });
-    }
-
-    try {
-        const options = {
-            amount: amount * 100, // Razorpay works in paise (₹1 = 100 paise)
-            currency: "INR",
-            receipt: `receipt_${bookingId}`,
-        };
-
-        const order = await razorpay.orders.create(options);
-
-        // Return order details for the frontend to use
-        res.json({
-            orderId: order.id,
-            amount: order.amount,
-            currency: order.currency,
-            key: razorpay.key_id // Send public key to frontend
-        });
-    } catch (err) {
-        console.error("Razorpay Order Error:", err);
-        res.status(500).json({ error: "Failed to create payment order. Check your keys." });
-    }
-});
-
-app.post('/api/payment/verify', async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSignature = crypto
-        .createHmac("sha256", razorpay.key_secret)
-        .update(body.toString())
-        .digest("hex");
-
-    if (expectedSignature === razorpay_signature) {
-        // Payment verified! Update booking status
-        // (You would normally find the booking by orderId metadata or receipt)
-        res.json({ status: "success", message: "Payment verified successfully" });
-    } else {
-        res.status(400).json({ status: "failure", message: "Invalid signature" });
-    }
-});
 
 // Events
 app.get('/api/events', async (req, res) => {
@@ -1941,11 +1934,19 @@ let latestQr = null; // Store the latest QR code string globally
 // Initialize native automation client if provider is 'local' or default
 const activeProvider = process.env.WHATSAPP_PROVIDER || 'local';
 
-if (activeProvider === 'local') {
+function initWhatsAppClient() {
+    if (activeProvider !== 'local') return;
+
     whatsappClient = new WAClient({
-        authStrategy: new LocalAuth(),
+        authStrategy: new LocalAuth({ clientId: 'srijes-salon-master' }),
         puppeteer: {
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            headless: true,
+            args: [
+                '--no-sandbox', 
+                '--disable-setuid-sandbox',
+                '--disable-blink-features=AutomationControlled',
+                '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+            ]
         }
     });
 
@@ -1982,8 +1983,37 @@ if (activeProvider === 'local') {
         latestQr = null;
     });
 
-    whatsappClient.initialize();
+    whatsappClient.initialize().catch(err => {
+        console.error('[WHATSAPP] Fatal error during initialization:', err);
+        whatsappReady = false;
+        latestQr = null;
+    });
 }
+
+if (activeProvider === 'local') {
+    initWhatsAppClient();
+}
+
+// 0. Logout Endpoint
+app.post('/api/whatsapp/logout', async (req, res) => {
+    if (!whatsappClient) return res.status(400).json({ error: 'WhatsApp client not running' });
+    try {
+        await whatsappClient.logout();
+        whatsappReady = false;
+        latestQr = null;
+        
+        // Wait a brief moment before re-initializing
+        setTimeout(() => {
+            whatsappClient.destroy().catch(() => {});
+            initWhatsAppClient();
+        }, 1000);
+        
+        res.json({ success: true, message: 'Logged out and re-initializing session' });
+    } catch (e) {
+        console.error('[WHATSAPP] Logout Error:', e);
+        res.status(500).json({ error: 'Failed to logout', details: e.message });
+    }
+});
 
 // 1. Media Upload Endpoint
 app.post('/api/whatsapp/upload', (req, res) => {
@@ -2725,6 +2755,90 @@ Follow these structural examples when dealing with negative data:
     }
 
     res.json({ reply, command, data });
+});
+
+// Automated Event Notifications Job
+cron.schedule('0 9 * * *', async () => {
+    try {
+        const settings = localDb.settings || {};
+        if (!settings.eventNotificationsEnabled) return;
+        
+        const frequency = settings.eventNotificationsFrequency || 'daily';
+        console.log(`[CRON] Running automated event notifications check (Freq: ${frequency})`);
+        
+        const today = new Date();
+        const clients = isConnected ? await Client.find() : localDb.clients;
+        
+        for (let c of clients) {
+            if (!c.phone || c.phone === '-') continue;
+            
+            // Check birthdays
+            if (c.dob) {
+                const dobDate = new Date(c.dob);
+                let shouldSend = false;
+                
+                if (frequency === 'daily') {
+                    if (dobDate.getDate() === today.getDate() && dobDate.getMonth() === today.getMonth()) shouldSend = true;
+                } else if (frequency === 'weekly') {
+                    if (today.getDay() === 1) { // Monday
+                        const bdayThisYear = new Date(today.getFullYear(), dobDate.getMonth(), dobDate.getDate());
+                        const diffTime = bdayThisYear - today;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        if (diffDays >= 0 && diffDays < 7) shouldSend = true;
+                    }
+                } else if (frequency === 'monthly') {
+                    if (today.getDate() === 1 && dobDate.getMonth() === today.getMonth()) shouldSend = true;
+                }
+                
+                if (shouldSend) {
+                    const msg = `Happy Birthday from Srijes Salon! 🎉 We want to celebrate YOU! Book any service with us and claim your special treat.`;
+                    let cleanPhone = String(c.phone).replace(/\D/g, '');
+                    if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+                    if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+                    const chatId = `${cleanPhone}@c.us`;
+                    
+                    if (whatsappReady && whatsappClient) {
+                        console.log(`[CRON] Sending birthday greeting to ${c.name} (${c.phone})`);
+                        await whatsappClient.sendMessage(chatId, msg).catch(console.error);
+                    }
+                }
+            }
+            
+            // Check anniversaries
+            if (c.anniversary) {
+                const annDate = new Date(c.anniversary);
+                let shouldSend = false;
+                
+                if (frequency === 'daily') {
+                    if (annDate.getDate() === today.getDate() && annDate.getMonth() === today.getMonth()) shouldSend = true;
+                } else if (frequency === 'weekly') {
+                    if (today.getDay() === 1) { // Monday
+                        const annThisYear = new Date(today.getFullYear(), annDate.getMonth(), annDate.getDate());
+                        const diffTime = annThisYear - today;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        if (diffDays >= 0 && diffDays < 7) shouldSend = true;
+                    }
+                } else if (frequency === 'monthly') {
+                    if (today.getDate() === 1 && annDate.getMonth() === today.getMonth()) shouldSend = true;
+                }
+                
+                if (shouldSend) {
+                    const msg = `Happy Anniversary from Srijes Salon! 💖 Celebrate your special milestone with us!`;
+                    let cleanPhone = String(c.phone).replace(/\D/g, '');
+                    if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+                    if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+                    const chatId = `${cleanPhone}@c.us`;
+                    
+                    if (whatsappReady && whatsappClient) {
+                        console.log(`[CRON] Sending anniversary greeting to ${c.name} (${c.phone})`);
+                        await whatsappClient.sendMessage(chatId, msg).catch(console.error);
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.error('[CRON] Error running automated event notifications:', e);
+    }
 });
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

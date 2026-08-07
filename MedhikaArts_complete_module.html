@@ -7,14 +7,14 @@
     <title>Srijes | Salon Management Dashboard</title>
     <!-- Chart.js for reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
     <script>
         // Global variables for the app
         let currentView = 'dashboard';
 
         function logoutSession() {
-            if(confirm('Are you sure you want to sign out of the Branch Portal?')) {
+            if (confirm('Are you sure you want to sign out of the Branch Portal?')) {
                 window.location.href = 'index.html';
             }
         }
@@ -1451,6 +1451,7 @@
             transition: all 0.3s;
             border-color: #7c3aed !important;
         }
+
         /* Sign Out Button */
         .btn-signout {
             background: #e53e3e;
@@ -1465,7 +1466,8 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            margin: 0 auto; /* perfectly bottom center */
+            margin: 0 auto;
+            /* perfectly bottom center */
             box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4);
         }
 
@@ -1519,7 +1521,7 @@
                             class="nav-text">Staff</span></li>
                     <li class="nav-item" onclick="switchView('calendar')" id="nav-calendar"><span
                             style="display:inline-block; width:24px; text-align:center;">🗓️</span> <span
-                            class="nav-text">Appointments</span></li>
+                            class="nav-text">Scheduling</span></li>
                     <li class="nav-item" onclick="switchView('inventory')" id="nav-inventory"><span
                             style="display:inline-block; width:24px; text-align:center;">📦</span> <span
                             class="nav-text">Inventory</span></li>
@@ -2313,13 +2315,13 @@
                                             onclick="setClientFilter('birthdays'); document.getElementById('events-dropdown').style.display = 'none'"
                                             id="pill-birthdays"
                                             style="padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; border-radius:0; margin: 0; background: transparent;">
-                                            🎁 View Birthdays
+                                            🎁 Birthdays
                                         </div>
                                         <div class="tab-pill"
                                             onclick="setClientFilter('anniversaries'); document.getElementById('events-dropdown').style.display = 'none'"
                                             id="pill-anniversaries"
                                             style="padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; border-radius:0; margin: 0; background: transparent;">
-                                            🎂 View Anniversaries
+                                            🎂 Anniversaries
                                         </div>
                                     </div>
                                 </div>
@@ -2355,16 +2357,55 @@
                             onfocus="this.style.borderColor='var(--primary)'"
                             onblur="this.style.borderColor='var(--border)'">
 
-                        <div id="feature-toggle-container"
-                            style="display:none; align-items:center; gap:12px; margin-left:auto;">
-                            <button id="toggle-birthdays-btn" onclick="toggleEventFeature('birthdays', false)"
+                        <div id="event-automation-container" style="display:none; align-items:center; gap:12px; margin-left:auto;">
+                            <button
+                                onclick="document.getElementById('event-automation-modal').style.display='flex'; fetchEventSettings();"
                                 class="btn"
-                                style="display:none; align-items:center; gap:8px; font-size:13px; font-weight:700; padding:8px 16px; background:#ef4444; color:white; border:none;">🚫
-                                Disable</button>
-                            <button id="toggle-anniversaries-btn" onclick="toggleEventFeature('anniversaries', false)"
-                                class="btn"
-                                style="display:none; align-items:center; gap:8px; font-size:13px; font-weight:700; padding:8px 16px; background:#ef4444; color:white; border:none;">🚫
-                                Disable</button>
+                                style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; padding:8px 16px; background:var(--primary); color:white; border:none; border-radius:8px;">
+                                ⚙️ Event Automations
+                            </button>
+                        </div>
+
+                        <!-- Event Automations Modal -->
+                        <div id="event-automation-modal"
+                            style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:99999; justify-content:center; align-items:center;">
+                            <div
+                                style="background:white; width:400px; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+                                <div
+                                    style="background:var(--primary); padding:20px; color:white; display:flex; justify-content:space-between; align-items:center;">
+                                    <h3 style="margin:0; font-size:18px;">Automated Event Messages</h3>
+                                    <button
+                                        onclick="document.getElementById('event-automation-modal').style.display='none'"
+                                        style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">&times;</button>
+                                </div>
+                                <div style="padding:24px; display:flex; flex-direction:column; gap:20px;">
+                                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                                        <div>
+                                            <div style="font-weight:700; font-size:15px; color:var(--text-main);">Enable
+                                                Automation</div>
+                                            <div style="font-size:12px; color:var(--text-muted);">Automatically send
+                                                WhatsApp messages for birthdays and anniversaries.</div>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="setting-event-enabled">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label
+                                            style="display:block; font-weight:600; font-size:13px; margin-bottom:8px; color:var(--text-main);">Notification
+                                            Frequency</label>
+                                        <select id="setting-event-frequency" class="form-input" style="width:100%;" onchange="window.currentEventTimeFilter = this.value; renderClientsView(cachedClients);">
+                                            <option value="daily">Daily (Day-wise)</option>
+                                            <option value="weekly">Weekly (Week-wise, every Monday)</option>
+                                            <option value="monthly">Monthly (Month-wise, 1st of every month)</option>
+                                        </select>
+                                    </div>
+                                    <button onclick="saveEventSettings()" class="btn"
+                                        style="width:100%; background:var(--primary); color:white; padding:12px; margin-top:8px;">Save
+                                        Preferences</button>
+                                </div>
+                            </div>
                         </div>
 
                         <div id="bulk-client-actions"
@@ -3727,6 +3768,40 @@
                     } catch (e) { }
                 }
 
+                async function fetchEventSettings() {
+                    try {
+                        const res = await fetch(`${API_URL}/settings`);
+                        const data = await res.json();
+                        const enabled = data.eventNotificationsEnabled || false;
+                        const freq = data.eventNotificationsFrequency || 'daily';
+                        document.getElementById('setting-event-enabled').checked = enabled;
+                        document.getElementById('setting-event-frequency').value = freq;
+                        window.currentEventTimeFilter = freq;
+                        renderClientsView(cachedClients);
+                    } catch (e) {
+                        console.error("Failed to load event settings", e);
+                    }
+                }
+
+                async function saveEventSettings() {
+                    const enabled = document.getElementById('setting-event-enabled').checked;
+                    const freq = document.getElementById('setting-event-frequency').value;
+                    try {
+                        const res = await fetch(`${API_URL}/settings`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ eventNotificationsEnabled: enabled, eventNotificationsFrequency: freq })
+                        });
+                        if (res.ok) {
+                            showToast("Automated Event Settings saved!", "success");
+                            document.getElementById('event-automation-modal').style.display = 'none';
+                        }
+                    } catch (e) {
+                        console.error("Failed to save event settings", e);
+                        alert("Failed to save settings.");
+                    }
+                }
+
                 async function saveSecuritySettings() {
                     const payload = {
                         maskPhones: document.getElementById('setting-mask-phones').checked,
@@ -3868,7 +3943,7 @@
             <!-- Marketing View -->
             <div id="view-marketing" class="view-section"
                 style="padding: 0; height: calc(100vh - 120px); overflow: hidden;">
-                <iframe src="whatsapp.html?v=5"
+                <iframe src="whatsapp.html?v=7"
                     style="width: 100%; height: 100%; border: none; border-radius: var(--radius-xl);"
                     id="whatsapp-marketing-iframe"></iframe>
             </div>
@@ -6902,6 +6977,11 @@
                         style="font-size: 13px; opacity: 0.8; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
                         📍 Location</p>
                 </div>
+                <!-- Remove Button -->
+                <button onclick="deleteCurrentClient()" id="cp-remove-btn"
+                    style="position: absolute; bottom: 20px; right: 200px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; display:flex; align-items:center; gap:6px; transition: 0.2s;">
+                    🗑️ Remove
+                </button>
                 <!-- Edit Button -->
                 <button onclick="openEditClientModal()" id="cp-edit-btn"
                     style="position: absolute; bottom: 20px; right: 120px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; display:flex; align-items:center; gap:6px; transition: 0.2s;">
@@ -7610,9 +7690,11 @@
 
 
         window.currentBranch = localStorage.getItem("selectedBranch") || "Main Branch";
-        const API_URL = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.hostname === '127.0.0.1' || window.location.hostname.includes('loca.lt'))
-            ? 'http://localhost:5000/api'
-            : '/api';
+        const API_URL = localStorage.getItem('CUSTOM_API_URL') || (
+            (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5503' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.hostname.includes('loca.lt'))
+                ? 'http://localhost:5000/api'
+                : '/api'
+        );
         let cachedBookings = [];
         let cachedClients = [];
         let cachedEvents = [];
@@ -7755,23 +7837,16 @@
             if (!isOfflineMode && isApi) {
                 try {
                     const res = await originalFetch.call(window, ...args);
-                    // Update mock DB on successful data read so it's fresh when going offline later
-                    if (res.ok && args[1]?.method !== 'GET') {
-                        // We do not explicitly sync everything here to keep it simple,
-                        // UI will refreshData anyway.
-                    }
-                    return res;
+                    if (res.ok) return res;
+                    throw new Error(`Server returned ${res.status}`);
                 } catch (err) {
-                    if (!isOfflineMode) {
-                        console.warn("Backend connection failed", err);
-                        // Mock Mode disabled - enforcing live connection
-                        if (typeof updateConnectionStatus === 'function') updateConnectionStatus(false);
-                        if (typeof showToast === 'function') showToast('Connection to Live DB Failed. Retrying...', 'error');
-                    }
+                    console.warn("Live backend server unreachable. Switching to Offline Mock Mode.", err);
+                    isOfflineMode = true;
+                    if (typeof updateConnectionStatus === 'function') updateConnectionStatus(false);
                 }
             }
 
-            if (false && isOfflineMode && isApi) {
+            if (isOfflineMode && isApi) {
                 // Intercept logic for offline mode
                 const method = (args[1] && args[1].method) ? args[1].method.toUpperCase() : 'GET';
                 let data = null;
@@ -8245,14 +8320,17 @@
                     }
                 }
             } catch (err) {
-                console.error('Fetch error:', err);
+                console.warn('Backend live sync unavailable, activating Offline Mock Mode:', err);
+                isOfflineMode = true;
+                loadMockData();
                 updateConnectionStatus(false);
-                showToast('Sync Failed: ' + err.message, 'error');
                 try {
                     renderDashboard();
                     switchView(currentViewId);
+                    renderModalDaySchedule();
                 } catch (e) { }
-                return false;
+                showToast('Server Offline — Active in Mock Mode', 'warning');
+                return true;
             } finally {
                 isSyncing = false;
                 document.body.classList.remove('syncing');
@@ -13087,7 +13165,7 @@
 
             let filtered = [...cachedBookings];
             if (currentBookingsFilter === 'walkins') {
-                filtered = filtered.filter(b => b.clientId === 'walk-in');
+                filtered = filtered.filter(b => (b.clientId === 'walk-in') || (b.source && b.source.toLowerCase() === 'walk-in') || (b.source && b.source.toLowerCase() === 'walkin'));
             } else {
                 filtered = filtered.filter(b => !b.isPOSInvoice);
             }
@@ -13293,12 +13371,20 @@
 
             // Apply 'Birthdays' Filter
             if (currentClientFilter === 'birthdays') {
-                filtered = filtered.filter(c => c.dob && c.dob !== '—');
+                if (!window.currentEventTimeFilter) {
+                    filtered = []; // Do not show any clients by default
+                } else {
+                    filtered = filtered.filter(c => c.dob && c.dob !== '—' && window.isDateInFrequency(c.dob, window.currentEventTimeFilter));
+                }
             }
 
             // Apply 'Anniversaries' Filter
             if (currentClientFilter === 'anniversaries') {
-                filtered = filtered.filter(c => c.anniversary && c.anniversary !== '—');
+                if (!window.currentEventTimeFilter) {
+                    filtered = []; // Do not show any clients by default
+                } else {
+                    filtered = filtered.filter(c => c.anniversary && c.anniversary !== '—' && window.isDateInFrequency(c.anniversary, window.currentEventTimeFilter));
+                }
             }
 
             // Update UI tabs and Title
@@ -13315,41 +13401,13 @@
                 else titleEl.textContent = 'Client Directory';
             }
 
-            const toggleContainer = document.getElementById('feature-toggle-container');
-            const toggleBirthdaysBtn = document.getElementById('toggle-birthdays-btn');
-            const toggleAnniversariesBtn = document.getElementById('toggle-anniversaries-btn');
-
-            if (toggleContainer) {
+            const autoContainer = document.getElementById('event-automation-container');
+            if (autoContainer) {
                 if (currentClientFilter === 'birthdays' || currentClientFilter === 'anniversaries') {
-                    toggleContainer.style.display = 'flex';
-
-                    if (toggleBirthdaysBtn) {
-                        toggleBirthdaysBtn.style.display = currentClientFilter === 'birthdays' ? 'flex' : 'none';
-                        if (window.birthdaysEnabled) {
-                            toggleBirthdaysBtn.innerHTML = '🚫 Disable';
-                            toggleBirthdaysBtn.style.background = '#ef4444';
-                            toggleBirthdaysBtn.onclick = () => toggleEventFeature('birthdays', false);
-                        } else {
-                            toggleBirthdaysBtn.innerHTML = '✅ Enable';
-                            toggleBirthdaysBtn.style.background = '#10b981';
-                            toggleBirthdaysBtn.onclick = () => toggleEventFeature('birthdays', true);
-                        }
-                    }
-
-                    if (toggleAnniversariesBtn) {
-                        toggleAnniversariesBtn.style.display = currentClientFilter === 'anniversaries' ? 'flex' : 'none';
-                        if (window.anniversariesEnabled) {
-                            toggleAnniversariesBtn.innerHTML = '🚫 Disable';
-                            toggleAnniversariesBtn.style.background = '#ef4444';
-                            toggleAnniversariesBtn.onclick = () => toggleEventFeature('anniversaries', false);
-                        } else {
-                            toggleAnniversariesBtn.innerHTML = '✅ Enable';
-                            toggleAnniversariesBtn.style.background = '#10b981';
-                            toggleAnniversariesBtn.onclick = () => toggleEventFeature('anniversaries', true);
-                        }
-                    }
+                    autoContainer.style.display = 'flex';
                 } else {
-                    toggleContainer.style.display = 'none';
+                    autoContainer.style.display = 'none';
+                    window.currentEventTimeFilter = null; // reset filter when leaving events view
                 }
             }
 
@@ -15568,6 +15626,26 @@
             refreshData();
         }
 
+        async function deleteCurrentClient() {
+            const clientId = window.currentGalleryClientId;
+            if (!clientId) return;
+
+            try {
+                const res = await fetch(`${API_URL}/clients/${encodeURIComponent(clientId)}`, {
+                    method: 'DELETE'
+                });
+                if (res.ok) {
+                    closeClientProfile();
+                    refreshData();
+                } else {
+                    alert("Failed to delete client.");
+                }
+            } catch (e) {
+                console.error("Delete client error", e);
+                alert("An error occurred while deleting the client.");
+            }
+        }
+
         function openEditClientModal() {
             if (!window.currentGalleryClientId) return;
             const client = cachedClients.find(c => c.id === window.currentGalleryClientId || c._id === window.currentGalleryClientId);
@@ -16026,6 +16104,34 @@
             currentClientFilter = filter;
             renderClientsView(cachedClients);
         }
+
+        window.currentEventTimeFilter = null;
+
+        window.isDateInFrequency = function(dateStr, freq) {
+            if (!dateStr || dateStr === '-' || dateStr === '—') return false;
+            
+            const today = new Date();
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return false; // Fix: Prevent invalid dates from showing up
+            
+            if (freq === 'daily' || freq === 'day') {
+                return d.getDate() === today.getDate() && d.getMonth() === today.getMonth();
+            } else if (freq === 'weekly' || freq === 'week') {
+                const dThisYear = new Date(today.getFullYear(), d.getMonth(), d.getDate());
+                const diffTime = dThisYear - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                return diffDays >= 0 && diffDays < 7;
+            } else if (freq === 'monthly' || freq === 'month') {
+                return d.getMonth() === today.getMonth();
+            }
+            return false;
+        };
+
+        // Keeping this for backward compatibility if needed, but UI buttons are removed
+        window.setEventTimeFilter = function(val) {
+            window.currentEventTimeFilter = val;
+            renderClientsView(cachedClients);
+        };
 
         /* --- Dynamic Billing Hub Dashboard Statistics --- */
         function updateBillingHubStats() {
@@ -16791,7 +16897,7 @@
                             if (qrContainer) {
                                 qrContainer.style.display = 'block';
                                 if (statusData.qr) {
-                                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(statusData.qr)}`;
+                                    qrImg.src = `https://quickchart.io/qr?text=${encodeURIComponent(statusData.qr)}&size=250&margin=1`;
                                 } else {
                                     qrImg.src = `https://placehold.co/250x250/f8fafc/64748b?text=Generating+QR...`;
                                 }
@@ -18231,6 +18337,25 @@
             }).then(res => res.json())
                 .then(savedBooking => {
                     cachedBookings.push(savedBooking);
+
+                    // --- Auto WhatsApp Notification ---
+                    if (newBooking.clientPhone && newBooking.clientPhone.trim() !== '') {
+                        let cleanPhone = newBooking.clientPhone.replace(/\D/g, '');
+                        if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+                        const msg = `*Srijes Booking*\n--------------------------\n*Hello ${newBooking.clientName}*,\n\nYour booking is confirmed!\n\n📅 *Date:* ${newBooking.date}\n⏰ *Time:* ${newBooking.time}\n🔖 *Booking ID:* ${savedBooking.id || newBooking.id}\n\n_Thank you for choosing Srijes!_`;
+
+                        fetch(`${API_URL}/whatsapp/send-direct-bulk`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                recipients: [cleanPhone],
+                                message: msg,
+                                mediaUrls: []
+                            })
+                        }).catch(e => console.error('Failed to send WA notification', e));
+                    }
+
                     closeWizardModal();
                     refreshData(); // Triggers a full live re-render via SSE and updates UI
                 })
