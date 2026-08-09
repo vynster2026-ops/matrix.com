@@ -176,12 +176,24 @@
 
         
     </style>
+    <!-- Clerk Authentication SDK -->
+    <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 </head>
 
 <body>
     <div class="login-container">
         <div class="login-card">
             <div class="brand-header">
+                <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); padding: 4px 12px; border-radius: 50px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L3 7V12C3 17.55 6.84 22.74 12 24C17.16 22.74 21 17.55 21 12V7L12 2Z" fill="#6366F1"/>
+                            <path d="M12 4.18L19 8.07V12C19 16.4 16.03 20.5 12 21.78C7.97 20.5 5 16.4 5 12V8.07L12 4.18Z" fill="#818CF8"/>
+                            <path d="M10 15.5L7.5 13L8.91 11.59L10 12.67L15.09 7.58L16.5 9L10 15.5Z" fill="white"/>
+                        </svg>
+                        <span style="color: #6366f1; font-weight: 700; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;">Secured with Clerk</span>
+                    </div>
+                </div>
                 <div class="brand-icon">
                     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                         <path
@@ -189,7 +201,7 @@
                     </svg>
                 </div>
                 <h1 class="brand-name">Srijes</h1>
-                <p class="brand-sub">the beauty destination</p>
+                <p class="brand-sub">Staff Portal Access</p>
             </div>
 
             <form id="loginForm" onsubmit="event.preventDefault(); promptTwoFactor();">
@@ -201,13 +213,15 @@
                     <label class="form-label">Staff Unique ID</label>
                     <input type="text" id="loginUniqueId" class="form-input" placeholder="e.g. PRIYA3210" required style="text-transform: uppercase;">
                 </div>
-                <button type="submit" class="login-btn">Continue</button>
+                <button type="submit" class="login-btn">🔒 Continue via Clerk</button>
             </form>
-
-            
 
             <div class="footer-links" id="footerLinks">
                 Don't have an account? <a href="register.html">Sign Up</a>
+            </div>
+            
+            <div style="text-align: center; margin-top: 16px; font-size: 11px; color: #6366f1; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <span>🔒 Secured with Clerk Identity & Access</span>
             </div>
         </div>
     </div>

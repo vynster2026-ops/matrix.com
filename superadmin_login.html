@@ -83,6 +83,8 @@
             }
         }
     </style>
+    <!-- Clerk Authentication SDK -->
+    <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 </head>
 <body>
     <div class="bg-shapes">
@@ -93,30 +95,45 @@
     <div class="auth-container">
         <div class="glass-card">
             <div class="brand-header">
+                <div style="display: flex; justify-content: center; margin-bottom: 12px;">
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.35); padding: 5px 14px; border-radius: 50px; backdrop-filter: blur(10px);">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L3 7V12C3 17.55 6.84 22.74 12 24C17.16 22.74 21 17.55 21 12V7L12 2Z" fill="#6366F1"/>
+                            <path d="M12 4.18L19 8.07V12C19 16.4 16.03 20.5 12 21.78C7.97 20.5 5 16.4 5 12V8.07L12 4.18Z" fill="#818CF8"/>
+                            <path d="M10 15.5L7.5 13L8.91 11.59L10 12.67L15.09 7.58L16.5 9L10 15.5Z" fill="white"/>
+                        </svg>
+                        <span style="color: #a5b4fc; font-weight: 700; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase;">Secured with Clerk</span>
+                    </div>
+                </div>
                 <div class="logo">M</div>
                 <h1 class="brand-title">MedhikaArts</h1>
-                <div class="brand-subtitle">Super Admin Gateway</div>
+                <div class="brand-subtitle">Super Admin Console</div>
             </div>
 
             <div id="alert-box" class="alert"></div>
 
             <form id="login-form">
                 <div class="form-group">
-                    <label class="form-label">Email Address</label>
+                    <label class="form-label">Super Admin Email</label>
                     <input type="email" id="access-key" class="form-control" placeholder="e.g. admin@medhikaarts.com" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="passcode" class="form-control" placeholder="Enter your password" required>
+                    <label class="form-label">Root Password</label>
+                    <input type="password" id="passcode" class="form-control" placeholder="Enter root password" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="margin-top: 1rem;" id="btn-login">
-                    <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Authenticate
+                    <i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> Authenticate via Clerk
                 </button>
             </form>
             
-            <p style="text-align: center; margin-top: 1.5rem; font-size: 12px; color: var(--text-secondary);">
-                Access requires root-level provisioned Super Admin credentials.
-            </p>
+            <div style="text-align: center; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <p style="font-size: 12px; color: var(--text-secondary);">
+                    Dedicated Super Admin Console · Multi-factor Access Protection
+                </p>
+                <div style="font-size: 11px; color: #818cf8; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-lock" style="font-size: 10px;"></i> Secured with Clerk Enterprise Auth
+                </div>
+            </div>
         </div>
     </div>
 
@@ -161,10 +178,11 @@
 
                     // Handle Super Admin 2FA auto-verify
                     if (data.require2FA && data.simulatedOtp) {
+                        const targetEmail = data.email || email;
                         const verifyRes = await fetch(`${API_URL}/api/auth/verify-2fa`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: data.email, code: data.simulatedOtp })
+                            body: JSON.stringify({ email: targetEmail, code: data.simulatedOtp })
                         });
                         const verifyData = await verifyRes.json();
                         if (verifyRes.ok && verifyData.success) {
@@ -172,10 +190,10 @@
                             localStorage.setItem('adminUser', JSON.stringify(verifyData.user));
                             btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
                             btnLogin.style.background = 'var(--success-color)';
-                            setTimeout(() => window.location.href = 'MedhikaArts_superadmin_portal.html', 800);
+                            setTimeout(() => window.location.href = 'matrix.html', 800);
                             return;
                         } else {
-                            showAlert('SuperAdmin 2FA Auto-Verify Failed.');
+                            showAlert(verifyData.error || 'SuperAdmin 2FA Auto-Verify Failed.');
                             btnLogin.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Authenticate';
                             btnLogin.disabled = false;
                             return;
@@ -187,7 +205,7 @@
                     localStorage.setItem('adminUser', JSON.stringify(data.user));
                     btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
                     btnLogin.style.background = 'var(--success-color)';
-                    setTimeout(() => window.location.href = 'MedhikaArts_superadmin_portal.html', 800);
+                    setTimeout(() => window.location.href = 'matrix.html', 800);
                 } else {
                     showAlert(data.error || 'Invalid Email or Password.');
                     btnLogin.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Authenticate';

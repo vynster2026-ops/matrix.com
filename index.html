@@ -138,8 +138,15 @@
         }
 
         @keyframes floatCard {
-            0%, 100% { transform: translateY(0) translateZ(0); }
-            50% { transform: translateY(-10px) translateZ(10px); }
+
+            0%,
+            100% {
+                transform: translateY(0) translateZ(0);
+            }
+
+            50% {
+                transform: translateY(-10px) translateZ(10px);
+            }
         }
 
         /* Glassmorphism Cards (Light) */
@@ -263,21 +270,26 @@
             background: #0f172a;
             color: #f8fafc;
         }
+
         body.dark-mode .portal-card {
             background: rgba(15, 23, 42, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
         }
+
         body.dark-mode h1 {
             background: linear-gradient(135deg, #ffffff, #94a3b8);
             -webkit-background-clip: text;
         }
+
         body.dark-mode p {
             color: #94a3b8;
         }
+
         body.dark-mode .portal-desc {
             color: #cbd5e1;
         }
+
         body.dark-mode .version {
             color: #475569;
         }
@@ -298,9 +310,11 @@
             font-size: 1.25rem;
             transition: all 0.3s ease;
         }
+
         .theme-toggle:hover {
             transform: scale(1.1);
         }
+
         body.dark-mode .theme-toggle {
             background: rgba(15, 23, 42, 0.5);
             border-color: rgba(255, 255, 255, 0.1);
@@ -330,7 +344,8 @@
                 data-tilt-glare data-tilt-max-glare="0.1">
                 <i class="fa-solid fa-briefcase portal-icon" style="color: var(--accent-1);"></i>
                 <div class="portal-title">SALON Portal</div>
-                <div class="portal-desc">Manage specific salon operations, staff, analytics, and business performance metrics.</div>
+                <div class="portal-desc">Manage specific salon operations, staff, analytics, and business performance
+                    metrics.</div>
             </a>
 
             <a href="MedhikaArts_booking_module.html" class="portal-card booking" data-tilt data-tilt-max="15"
@@ -380,14 +395,14 @@
         const blueLight = new THREE.PointLight(0x3b82f6, 5, 100);
         blueLight.position.set(-15, -15, 15);
         scene.add(blueLight);
-        
+
         const greenLight = new THREE.PointLight(0x10b981, 3, 100);
         greenLight.position.set(0, 15, -15);
         scene.add(greenLight);
 
         // 3D Glass Tech Globe
         const globeRadius = 16;
-        const geometry = new THREE.SphereGeometry(globeRadius, 48, 48); 
+        const geometry = new THREE.SphereGeometry(globeRadius, 48, 48);
 
         // Make material clearly visible on light backgrounds
         const material = new THREE.MeshPhongMaterial({
@@ -413,12 +428,12 @@
         const wireBlob = new THREE.Mesh(wireGeometry, wireMaterial);
         wireBlob.scale.set(1.002, 1.002, 1.002);
         liquidBlob.add(wireBlob);
-        
+
         // Floating ambient background particles
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 500;
         const posArray = new Float32Array(particlesCount * 3);
-        for(let i=0; i<particlesCount * 3; i++) {
+        for (let i = 0; i < particlesCount * 3; i++) {
             posArray[i] = (Math.random() - 0.5) * 80;
         }
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -462,11 +477,11 @@
             // Rotate Blob
             liquidBlob.rotation.y += 0.002;
             liquidBlob.rotation.z += 0.001;
-            
+
             // Parallax effect
             liquidBlob.rotation.y += 0.05 * (targetX - liquidBlob.rotation.y);
             liquidBlob.rotation.x += 0.05 * (targetY - liquidBlob.rotation.x);
-            
+
             // Background rotation
             backgroundParticles.rotation.y -= 0.001;
             backgroundParticles.rotation.y += 0.02 * (targetX - backgroundParticles.rotation.y);
@@ -494,10 +509,10 @@
         // Dark Mode Logic
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('i');
-        
+
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            if(document.body.classList.contains('dark-mode')) {
+            if (document.body.classList.contains('dark-mode')) {
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
                 localStorage.setItem('theme', 'dark');
             } else {
@@ -507,7 +522,7 @@
         });
 
         // Load saved theme on load
-        if(localStorage.getItem('theme') === 'dark') {
+        if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
         }

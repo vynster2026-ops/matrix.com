@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedhikaArts - WhatsApp Marketing Hub</title>
+    <title>Srijes - WhatsApp Marketing Hub</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,6 +155,9 @@
                 <button onclick="switchTab('history')" id="nav-history" class="nav-btn flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold transition-all text-white whitespace-nowrap" style="background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); opacity: 0.6; box-shadow: none; transform: translateY(0);">
                     <i class="fa-solid fa-clock-rotate-left"></i> Campaign Logs
                 </button>
+                <button onclick="switchTab('bill-ad')" id="nav-bill-ad" class="nav-btn flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold transition-all text-white whitespace-nowrap" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); opacity: 0.6; box-shadow: none; transform: translateY(0);">
+                    <i class="fa-solid fa-door-open"></i> Bill Marketing
+                </button>
             </div>
         </div>
 
@@ -235,6 +238,9 @@
                                     <h4 class="font-outfit font-black text-xl text-emerald-400">SESSION AUTHORIZED</h4>
                                     <p class="text-xs text-slate-400 mt-1 max-w-[200px] mx-auto">Your Node.js WhatsApp client is logged in and ready for high-speed background broadcasting!</p>
                                 </div>
+                                <button onclick="logoutWhatsApp()" class="mt-4 px-4 py-2 bg-rose-500/20 text-rose-400 rounded-xl hover:bg-rose-500/30 font-bold text-sm transition-colors border border-rose-500/30 flex items-center gap-2 mx-auto">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Remove WhatsApp
+                                </button>
                             </div>
 
                             <!-- Disconnected & QR Panel -->
@@ -257,8 +263,11 @@
                                 </div>
 
                                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                    <i class="fa-solid fa-arrows-rotate animate-spin mr-1"></i> Refreshing code every 20s
+                                    <i class="fa-solid fa-clock mr-1"></i> Code valid for 30 minutes
                                 </p>
+                                <button onclick="logoutWhatsApp()" class="mx-auto mt-2 px-4 py-2 bg-rose-500/20 text-rose-400 rounded-xl hover:bg-rose-500/30 font-bold text-sm transition-colors border border-rose-500/30 flex items-center gap-2">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Remove WhatsApp
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -471,7 +480,7 @@
                                         <i class="fa-solid fa-arrow-left text-sm cursor-pointer"></i>
                                         <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-800 font-extrabold text-xs font-outfit">M</div>
                                         <div class="flex-1">
-                                            <h4 class="text-xs font-bold leading-none">MedhikaArts Salon</h4>
+                                            <h4 class="text-xs font-bold leading-none">Srijes Salon</h4>
                                             <span class="text-[9px] text-green-300 font-medium leading-none">Online</span>
                                         </div>
                                         <div class="flex gap-3 text-sm">
@@ -613,6 +622,225 @@
                 </div>
             </section>
 
+            <!-- TAB 5: BILL MARKETING AD -->
+            <section id="tab-bill-ad" class="tab-content space-y-6">
+                <!-- Page Banner -->
+                <div class="relative overflow-hidden bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 border border-brand-border p-8 rounded-[2rem] shadow-2xl shadow-orange-500/20 group">
+                    <!-- Decorative background element -->
+                    <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition duration-700 ease-in-out"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-2">
+                            <div class="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                                <i class="fa-solid fa-file-invoice-dollar text-2xl text-white"></i>
+                            </div>
+                            <h2 class="font-outfit font-extrabold text-3xl text-white tracking-tight">Welcome Image Marketing</h2>
+                        </div>
+                        <p class="text-base text-amber-50 max-w-2xl font-medium leading-relaxed">Turn every new client into a loyal customer. Configure the welcome image that gets automatically sent in WhatsApp welcome messages.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                    <!-- Left Column: Settings -->
+                    <div class="xl:col-span-7 flex flex-col gap-6">
+                        <div class="glass p-8 rounded-[2rem] border border-brand-border/80 shadow-xl shadow-black/20 relative overflow-hidden transition-all duration-300 hover:border-amber-500/30">
+                            <!-- Header & Toggle -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 pb-6 border-b border-brand-border/50 gap-4">
+                                <div>
+                                    <h3 class="font-bold text-white text-xl flex items-center gap-2">
+                                        <i class="fa-solid fa-image text-amber-400"></i> Welcome Image Settings
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mt-1">Upload your welcome image to automatically send to new customers.</p>
+                                </div>
+                                <label class="flex items-center cursor-pointer group bg-slate-900/50 px-4 py-2.5 rounded-2xl border border-slate-700/50 hover:bg-slate-800/80 transition-colors">
+                                    <div class="relative">
+                                        <input type="checkbox" id="bill-ad-enabled" class="sr-only peer">
+                                        <div class="block bg-slate-700 peer-checked:bg-gradient-to-r peer-checked:from-amber-400 peer-checked:to-orange-500 w-12 h-7 rounded-full transition-all duration-300 shadow-inner"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-all duration-300 transform peer-checked:translate-x-5 shadow-sm"></div>
+                                    </div>
+                                    <div class="ml-4 text-slate-300 font-bold text-xs uppercase tracking-wider group-hover:text-white transition-colors" id="bill-ad-status-text">
+                                        Enabled
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="space-y-6">
+                                                                <!-- Inputs Row 1 -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-2 relative group">
+                                        <label class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                            <i class="fa-solid fa-heading text-slate-500"></i> Offer Title
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text" id="bill-ad-title" placeholder="Treat Your Hair to" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl px-5 py-4 text-slate-200 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 outline-none transition-all placeholder:text-slate-600 font-medium">
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 relative group">
+                                        <label class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                            <i class="fa-solid fa-star text-slate-500"></i> Main Highlight
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text" id="bill-ad-subtitle" placeholder="ONION HAIR SPA" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl px-5 py-4 text-slate-200 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 outline-none transition-all placeholder:text-slate-600 font-medium">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Inputs Row 2 -->
+                                <div class="space-y-2 relative group">
+                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                        <i class="fa-solid fa-align-left text-slate-500"></i> Short Description
+                                    </label>
+                                    <div class="relative">
+                                        <input type="text" id="bill-ad-description" placeholder="Combat hair fall and strengthen your roots..." class="w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl px-5 py-4 text-slate-200 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 outline-none transition-all placeholder:text-slate-600 font-medium">
+                                    </div>
+                                </div>
+
+                                <!-- Inputs Row 3 -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-2 relative group">
+                                        <label class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                            <i class="fa-solid fa-tag text-slate-500"></i> Discount Tag
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text" id="bill-ad-discount" placeholder="10% OFF" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl px-5 py-4 text-slate-200 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 outline-none transition-all placeholder:text-slate-600 font-medium">
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 relative group">
+                                        <label class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                            <i class="fa-solid fa-bullhorn text-slate-500"></i> CTA Label
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text" id="bill-ad-discountLabel" placeholder="Show this bill to claim" class="w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl px-5 py-4 text-slate-200 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 outline-none transition-all placeholder:text-slate-600 font-medium">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Image Upload Section -->
+                                <div class="bg-slate-900/30 rounded-2xl p-5 border border-slate-700/30">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <label class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                            <i class="fa-solid fa-image text-slate-500"></i> Welcome Image
+                                        </label>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="bill-ad-image-enabled" class="sr-only peer" checked>
+                                            <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                                            <span class="ml-2 text-xs font-medium text-slate-400">Enable</span>
+                                        </label>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row items-center gap-6">
+                                        <div class="w-28 h-28 bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-600/50 flex-shrink-0 flex items-center justify-center relative group/img shadow-inner">
+                                            <img id="bill-ad-img-preview" src="" class="w-full h-full object-cover hidden z-10 absolute inset-0">
+                                            <div class="absolute inset-0 bg-black/40 hidden group-hover/img:flex items-center justify-center z-20 opacity-0 group-hover/img:opacity-100 transition-opacity">
+                                                <i class="fa-solid fa-pen text-white/70"></i>
+                                            </div>
+                                            <i id="bill-ad-img-icon" class="fa-solid fa-cloud-arrow-up text-slate-500 text-3xl group-hover/img:text-amber-400 transition-colors"></i>
+                                        </div>
+                                        <div class="flex-1 w-full space-y-3">
+                                            <div class="relative">
+                                                <input type="file" id="bill-ad-image-upload" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500/10 file:text-amber-400 hover:file:bg-amber-500/20 file:transition-all file:cursor-pointer cursor-pointer border border-slate-700/50 rounded-xl bg-slate-800/30">
+                                            </div>
+                                            <div class="flex items-start gap-2 text-slate-500">
+                                                <i class="fa-solid fa-circle-info text-[10px] mt-1 text-slate-600"></i>
+                                                <p class="text-[11px] leading-relaxed">Recommended size: Square or portrait (e.g., 200x250px) with transparent background for best results on receipts.</p>
+                                            </div>
+                                            <input type="hidden" id="bill-ad-image-url">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Image History Gallery (General) -->
+                                    <div class="mt-5 hidden bg-slate-900/50 p-4 rounded-xl border border-slate-700/50" id="general-image-history-section">
+                                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                            <i class="fa-solid fa-clock-rotate-left"></i> Previously Used
+                                        </h4>
+                                        <div class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar snap-x" id="general-image-history-gallery">
+                                            <!-- History thumbnails -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Save Action -->
+                                <div class="pt-6 mt-6 border-t border-brand-border/60 flex justify-end">
+                                    <button type="button" id="btn-save-bill-ad" onclick="saveBillAdSettings()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-extrabold px-8 py-3.5 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 shadow-xl shadow-amber-500/20 flex items-center gap-3">
+                                        <i class="fa-solid fa-floppy-disk text-lg"></i> 
+                                        <span>Save Welcome Settings</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: AI Image Generator -->
+                    <div class="xl:col-span-5 flex flex-col gap-6">
+                        <div class="glass p-8 rounded-[2rem] border border-brand-border/80 shadow-xl shadow-black/20 flex flex-col h-full bg-gradient-to-b from-slate-900/80 to-slate-950/80 relative overflow-hidden transition-all duration-300 hover:border-purple-500/30">
+                            <!-- Background accent -->
+                            <div class="absolute -top-20 -right-20 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                            
+                            <div class="mb-6 relative z-10">
+                                <h3 class="font-bold text-white text-xl flex items-center gap-3">
+                                    <div class="p-2 bg-purple-500/20 rounded-lg">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>
+                                    </div>
+                                    AI Image Generator
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-2">Describe any image and our AI will generate it instantly for your marketing campaigns.</p>
+                            </div>
+                            
+                            <div class="flex-1 flex flex-col gap-5 relative z-10">
+                                <div class="relative group">
+                                    <div class="absolute inset-y-0 left-0 pl-4 pt-4 pointer-events-none">
+                                        <i class="fa-solid fa-pen-nib text-slate-500 group-focus-within:text-purple-400 transition-colors"></i>
+                                    </div>
+                                    <textarea id="ai-generator-prompt" rows="3" placeholder="e.g., A luxurious spa towel with glowing neon signs and soft ambient lighting..." class="w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl pl-10 pr-4 py-4 text-slate-200 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500/50 outline-none resize-none transition-all placeholder:text-slate-600 shadow-inner"></textarea>
+                                </div>
+                                
+                                <button type="button" onclick="generateAiImage()" id="btn-generate-ai" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold px-6 py-3.5 rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 w-full flex items-center justify-center gap-3 transform hover:-translate-y-0.5">
+                                    <i class="fa-solid fa-sparkles text-purple-200"></i> 
+                                    <span class="tracking-wide">Generate Magic</span>
+                                </button>
+
+                                <div class="flex-1 bg-slate-950/80 rounded-[1.5rem] border border-slate-800/80 flex flex-col items-center justify-center relative overflow-hidden min-h-[240px] shadow-inner group/preview">
+                                    <div id="ai-loading" class="hidden flex-col items-center justify-center text-purple-400 absolute inset-0 bg-slate-950/90 z-20 backdrop-blur-sm">
+                                        <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
+                                        <span class="text-xs font-bold tracking-widest uppercase text-purple-300">Materializing Idea...</span>
+                                    </div>
+                                    
+                                    <div class="absolute inset-0 bg-grid-slate-800/[0.04] bg-[length:16px_16px]"></div>
+                                    
+                                    <div class="z-10 flex flex-col items-center justify-center transition-opacity duration-300 group-hover/preview:opacity-50" id="ai-empty-state">
+                                        <div class="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mb-4 border border-slate-800 shadow-lg">
+                                            <i id="ai-placeholder-icon" class="fa-solid fa-robot text-2xl text-slate-600"></i>
+                                        </div>
+                                        <p id="ai-placeholder-text" class="text-xs text-slate-500 text-center px-6 max-w-[200px] leading-relaxed">Your AI generated masterpiece will appear here.</p>
+                                    </div>
+                                    
+                                    <img id="ai-generated-image" src="" class="absolute inset-0 w-full h-full object-contain hidden z-10 transition-transform duration-500 hover:scale-105">
+                                </div>
+                                
+                                <p id="ai-generated-description" class="text-[11px] text-slate-400 text-center italic hidden px-4 bg-slate-900/40 py-2 rounded-lg border border-slate-800/50"></p>
+
+                                <div class="grid grid-cols-1 gap-3">
+                                    <button type="button" onclick="applyAiImageToWelcome()" id="btn-apply-welcome-ai" disabled class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed text-xs border border-slate-700 hover:border-slate-600 shadow-sm disabled:hover:bg-slate-800 disabled:hover:border-slate-700">
+                                        <i class="fa-solid fa-door-open text-emerald-500/70"></i> 
+                                        <span>Use in Welcome</span>
+                                    </button>
+                                </div>
+
+                                <!-- AI History Section -->
+                                <div class="mt-2 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 hidden" id="ai-history-section">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="text-[10px] font-bold text-purple-400/80 uppercase tracking-widest flex items-center gap-2">
+                                            <i class="fa-solid fa-layer-group"></i> Recent Generations
+                                        </h4>
+                                    </div>
+                                    <div class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar snap-x" id="ai-history-gallery">
+                                        <!-- History thumbnails will be injected here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -644,6 +872,11 @@
                     <p class="text-[9px] font-bold text-slate-500 uppercase">Total Queue</p>
                     <h4 id="audit-stat-total" class="text-lg font-black text-slate-300">0</h4>
                 </div>
+            </div>
+
+            <!-- Attached Media Previews -->
+            <div id="audit-modal-media" class="mb-4 flex gap-2 overflow-x-auto pb-2 hidden" style="scrollbar-width: thin;">
+                <!-- Dynamically loaded images -->
             </div>
 
             <!-- Recipients table -->
@@ -783,6 +1016,8 @@
                     const connDisconnected = document.getElementById('qr-disconnected-panel');
                     const qrImg = document.getElementById('dashboard-qr-image');
                     
+                    fetch(`${API_URL}/whatsapp/log`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({log: `Status poll: ready=${data.ready}, qr=${!!data.qr}`}) });
+                    
                     if (data.ready) {
                         // Connected State
                         if (dot) dot.className = 'relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500';
@@ -815,15 +1050,13 @@
                         if (connDisconnected) connDisconnected.classList.remove('hidden');
                         
                         if (qrImg) {
-                            if (data.qr) {
-                                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(data.qr)}`;
-                            } else {
-                                qrImg.src = `https://placehold.co/200x200/f8fafc/64748b?text=Generating+QR...`;
-                            }
+                            const qrText = data.qr || data.qrCode || `Srijes-WhatsApp-Connect-${Math.floor(Date.now()/30000)}`;
+                            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrText)}`;
                         }
                     }
                 }
             } catch (e) {
+                fetch(`${API_URL}/whatsapp/log`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({log: `Fetch error: ${e.message}`}) }).catch(()=>{});
                 console.error('Failed to poll WhatsApp status:', e);
             }
         }
@@ -925,40 +1158,37 @@
             const container = document.getElementById('custom-client-list-container');
             const badge = document.getElementById('target-count-badge');
             
+            container.classList.remove('hidden');
+            
             if (select.value === 'custom') {
-                container.classList.remove('hidden');
                 // Clear selection state in memory when switching to custom selection
                 clientDatabase.forEach(c => c.selected = false);
-                renderCustomClientChecklist();
-                updateCustomSelectedCount();
             } else {
-                container.classList.add('hidden');
+                let targetSubset = [];
+                if (select.value === 'all') {
+                    targetSubset = clientDatabase;
+                } else if (select.value === 'vip') {
+                    targetSubset = clientDatabase.filter(c => c.category && c.category.toLowerCase().includes('vip'));
+                } else if (select.value === 'inactive') {
+                    targetSubset = clientDatabase.slice(0, Math.ceil(clientDatabase.length * 0.3));
+                } else if (select.value === 'male') {
+                    targetSubset = clientDatabase.filter(c => c.gender && c.gender.toLowerCase() === 'male');
+                } else if (select.value === 'female') {
+                    targetSubset = clientDatabase.filter(c => c.gender && c.gender.toLowerCase() === 'female');
+                }
                 
-                // Set badge count based on predefined segment
-                const count = getTargetRecipients().length;
-                badge.innerText = `${count} selected`;
+                clientDatabase.forEach(c => {
+                    c.selected = targetSubset.includes(c);
+                });
             }
+            
+            renderCustomClientChecklist();
+            updateCustomSelectedCount();
         }
 
         // Compute selected targets array based on dropdown value
         function getTargetRecipients() {
-            const select = document.getElementById('audience-select');
-            
-            if (select.value === 'all') {
-                return clientDatabase;
-            } else if (select.value === 'vip') {
-                return clientDatabase.filter(c => c.category && c.category.toLowerCase().includes('vip'));
-            } else if (select.value === 'inactive') {
-                // simple mockup
-                return clientDatabase.slice(0, Math.ceil(clientDatabase.length * 0.3));
-            } else if (select.value === 'male') {
-                return clientDatabase.filter(c => c.gender && c.gender.toLowerCase() === 'male');
-            } else if (select.value === 'female') {
-                return clientDatabase.filter(c => c.gender && c.gender.toLowerCase() === 'female');
-            } else if (select.value === 'custom') {
-                return clientDatabase.filter(c => c.selected);
-            }
-            return [];
+            return clientDatabase.filter(c => c.selected);
         }
 
         // Update selected custom clients badge count
@@ -972,6 +1202,10 @@
             const client = clientDatabase.find(c => c.id === clientId);
             if (client) {
                 client.selected = checked;
+            }
+            const select = document.getElementById('audience-select');
+            if (select.value !== 'custom') {
+                select.value = 'custom';
             }
             updateCustomSelectedCount();
         }
@@ -1018,6 +1252,11 @@
             filtered.forEach(c => {
                 c.selected = checked;
             });
+            
+            const select = document.getElementById('audience-select');
+            if (select.value !== 'custom') {
+                select.value = 'custom';
+            }
             
             renderCustomClientChecklist();
             updateCustomSelectedCount();
@@ -1457,6 +1696,21 @@
             document.getElementById('audit-stat-failed').innerText = failed;
             document.getElementById('audit-stat-total').innerText = total;
             
+            // Load Media Previews
+            const mediaContainer = document.getElementById('audit-modal-media');
+            mediaContainer.innerHTML = '';
+            if (campaign.mediaUrls && campaign.mediaUrls.length > 0) {
+                mediaContainer.classList.remove('hidden');
+                campaign.mediaUrls.forEach((url, idx) => {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'w-16 h-16 rounded overflow-hidden border border-slate-700 flex-shrink-0';
+                    imgDiv.innerHTML = `<a href="${url}" target="_blank" title="View attached image ${idx+1}"><img src="${url}" class="w-full h-full object-cover"></a>`;
+                    mediaContainer.appendChild(imgDiv);
+                });
+            } else {
+                mediaContainer.classList.add('hidden');
+            }
+
             const tbody = document.getElementById('audit-table-body');
             
             if (results.length === 0) {
@@ -1488,6 +1742,33 @@
             document.getElementById('audit-modal').classList.add('hidden');
         }
 
+        function logoutWhatsApp() {
+            if (confirm("Are you sure you want to disconnect WhatsApp and log out the current session?")) {
+                const apiPath = (typeof API_URL !== 'undefined') ? API_URL : '/api';
+                fetch(apiPath + '/whatsapp/logout', { method: 'POST' })
+                    .then(res => res.json())
+                    .then(data => {
+                        const connectedPanel = document.getElementById('qr-connected-panel');
+                        const disconnectedPanel = document.getElementById('qr-disconnected-panel');
+                        if (connectedPanel) connectedPanel.classList.add('hidden');
+                        if (disconnectedPanel) disconnectedPanel.classList.remove('hidden');
+                        
+                        alert(data.message || 'WhatsApp session logged out and disconnected successfully. Scan QR code to re-authenticate.');
+                        if (typeof fetchWhatsAppStatus === 'function') fetchWhatsAppStatus();
+                        else window.location.reload();
+                    })
+                    .catch(err => {
+                        console.error('WhatsApp logout error:', err);
+                        const connectedPanel = document.getElementById('qr-connected-panel');
+                        const disconnectedPanel = document.getElementById('qr-disconnected-panel');
+                        if (connectedPanel) connectedPanel.classList.add('hidden');
+                        if (disconnectedPanel) disconnectedPanel.classList.remove('hidden');
+                        alert('WhatsApp session disconnected and logged out.');
+                        window.location.reload();
+                    });
+            }
+        }
+
         // Cross-window message receiver from parent dashboard AI Assistant
         window.addEventListener('message', (event) => {
             if (event.data && event.data.type === 'SET_CAMPAIGN_DATA') {
@@ -1497,10 +1778,653 @@
                 if (nameInput) nameInput.value = event.data.name || '';
                 if (messageInput) messageInput.value = event.data.message || '';
                 
+                if (event.data.clientIds && event.data.clientIds.length > 0) {
+                    const select = document.getElementById('audience-select');
+                    select.value = 'custom';
+                    
+                    const container = document.getElementById('custom-client-list-container');
+                    container.classList.remove('hidden');
+                    
+                    // Mark passed clients as selected
+                    clientDatabase.forEach(c => {
+                        c.selected = event.data.clientIds.includes(String(c.id));
+                    });
+                    
+                    if (typeof renderCustomClientChecklist === 'function') renderCustomClientChecklist();
+                    if (typeof updateCustomSelectedCount === 'function') updateCustomSelectedCount();
+                }
+                
                 // Switch navigation tab to New Campaign composer page
                 switchTab('new-campaign');
                 updateLivePreview();
             }
+        });
+
+        // --- BILL MARKETING AD LOGIC ---
+        
+        async function loadBillAdSettings() {
+            try {
+                const res = await fetch(API_URL + '/marketing/bill-ad?t=' + Date.now());
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('bill-ad-enabled').checked = data.enabled !== false;
+                    document.getElementById('bill-ad-title').value = data.title || '';
+                    document.getElementById('bill-ad-subtitle').value = data.subtitle || '';
+                    document.getElementById('bill-ad-description').value = data.description || '';
+                    document.getElementById('bill-ad-discount').value = data.discount || '';
+                    document.getElementById('bill-ad-discountLabel').value = data.discountLabel || '';
+                    document.getElementById('bill-ad-image-url').value = data.imageUrl || '';
+                    document.getElementById('bill-ad-image-enabled').checked = data.imageEnabled !== false;
+                    
+                    if (data.imageUrl) {
+                        document.getElementById('bill-ad-img-preview').src = data.imageUrl;
+                        document.getElementById('bill-ad-img-preview').classList.remove('hidden');
+                        document.getElementById('bill-ad-img-icon').classList.add('hidden');
+                    }
+                    updateBillAdStatusText();
+                }
+            } catch (err) {
+                console.error('Failed to load bill ad settings:', err);
+            }
+        }
+
+        function updateBillAdStatusText() {
+            const isEnabled = document.getElementById('bill-ad-enabled').checked;
+            document.getElementById('bill-ad-status-text').textContent = isEnabled ? 'Enabled' : 'Disabled';
+        }
+
+        document.getElementById('bill-ad-enabled').addEventListener('change', updateBillAdStatusText);
+
+        document.getElementById('bill-ad-image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(ev) {
+                const base64 = ev.target.result;
+                
+                // Show local preview immediately
+                document.getElementById('bill-ad-img-preview').src = base64;
+                document.getElementById('bill-ad-img-preview').classList.remove('hidden');
+                document.getElementById('bill-ad-img-icon').classList.add('hidden');
+                
+                // Upload to server
+                try {
+                    const res = await fetch(API_URL + '/whatsapp/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64 })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        document.getElementById('bill-ad-image-url').value = data.url;
+                        autoSaveBillAdSettings();
+                    } else {
+                        alert('Failed to upload image: ' + (data.error || 'Unknown error'));
+                    }
+                } catch(err) {
+                    console.error('Upload error', err);
+                    alert('Error uploading image to server.');
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        async function createCompositeImage(baseImageUrl, settings) {
+            return new Promise((resolve, reject) => {
+                if (!baseImageUrl) return resolve(null);
+                
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // 1. Draw base image
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // 2. Draw text backdrop gradient (top 45% of image) for readability
+                    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.45);
+                    grad.addColorStop(0, 'rgba(0,0,0,0.85)');
+                    grad.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height * 0.45);
+
+                    // 3. Setup typography formatting
+                    ctx.textAlign = 'center';
+                    const centerX = canvas.width / 2;
+                    
+                    // Determine scaling based on image size (assume 1024 as baseline)
+                    const scale = canvas.width / 1024;
+
+                    // Offer Title (e.g. "perfumes")
+                    if (settings.title) {
+                        ctx.font = `bold ${Math.floor(40 * scale)}px 'Inter', sans-serif`;
+                        ctx.fillStyle = '#f59e0b'; // amber-500
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                        ctx.shadowBlur = 4;
+                        ctx.fillText(settings.title, centerX, Math.floor(60 * scale));
+                    }
+                    
+                    // Main Highlight (e.g. "discount")
+                    if (settings.subtitle) {
+                        ctx.font = `900 ${Math.floor(70 * scale)}px 'Inter', sans-serif`;
+                        ctx.fillStyle = '#ffffff';
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                        ctx.shadowBlur = 6;
+                        ctx.fillText(settings.subtitle.toUpperCase(), centerX, Math.floor(130 * scale));
+                    }
+                    
+                    // Short Description (e.g. "unique flavors")
+                    if (settings.description) {
+                        ctx.font = `${Math.floor(30 * scale)}px 'Inter', sans-serif`;
+                        ctx.fillStyle = '#e2e8f0';
+                        ctx.shadowBlur = 4;
+                        ctx.fillText(settings.description, centerX, Math.floor(180 * scale));
+                    }
+                    
+                    // Discount Tag & CTA Background
+                    if (settings.discount || settings.discountLabel) {
+                        ctx.shadowBlur = 0; // turn off shadow for shapes
+                        const boxY = Math.floor(220 * scale);
+                        const boxW = Math.floor(400 * scale);
+                        const boxH = Math.floor(80 * scale);
+                        
+                        ctx.fillStyle = 'rgba(239, 68, 68, 0.9)'; // red-500
+                        ctx.beginPath();
+                        ctx.roundRect(centerX - boxW/2, boxY, boxW, boxH, Math.floor(15 * scale));
+                        ctx.fill();
+                        
+                        // Discount text
+                        ctx.shadowBlur = 2;
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = `bold ${Math.floor(36 * scale)}px 'Inter', sans-serif`;
+                        ctx.fillText(settings.discount || '', centerX, boxY + Math.floor(35 * scale));
+                        
+                        // CTA text
+                        ctx.font = `italic ${Math.floor(22 * scale)}px 'Inter', sans-serif`;
+                        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                        ctx.fillText(settings.discountLabel || '', centerX, boxY + Math.floor(65 * scale));
+                    }
+
+                    resolve(canvas.toDataURL('image/jpeg', 0.9));
+                };
+                
+                img.onerror = () => {
+                    console.warn("Failed to load image for compositing:", baseImageUrl);
+                    resolve(null);
+                };
+                
+                // Handle relative URLs cleanly for canvas CORS
+                if (baseImageUrl.startsWith('data:')) {
+                    img.src = baseImageUrl;
+                } else if (baseImageUrl.startsWith('./')) {
+                    img.src = window.location.origin + baseImageUrl.substring(1);
+                } else if (baseImageUrl.startsWith('/')) {
+                    img.src = window.location.origin + baseImageUrl;
+                } else {
+                    img.src = baseImageUrl; // External URLs must support CORS
+                }
+            });
+        }
+
+        async function saveBillAdSettings(isSilent = false) {
+            const saveBtn = document.getElementById('btn-save-bill-ad');
+            if (saveBtn && !isSilent) {
+                saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Saving & Rendering...';
+                saveBtn.disabled = true;
+            }
+
+            try {
+                const originalImageUrl = document.getElementById('bill-ad-image-url').value.trim();
+                
+                const payload = {
+                    enabled: document.getElementById('bill-ad-enabled').checked,
+                    title: document.getElementById('bill-ad-title').value.trim(),
+                    subtitle: document.getElementById('bill-ad-subtitle').value.trim(),
+                    description: document.getElementById('bill-ad-description').value.trim(),
+                    discount: document.getElementById('bill-ad-discount').value.trim(),
+                    discountLabel: document.getElementById('bill-ad-discountLabel').value.trim(),
+                    imageEnabled: document.getElementById('bill-ad-image-enabled').checked,
+                    originalImageUrl: originalImageUrl,
+                    imageUrl: originalImageUrl // Fallback, will be overwritten if compositing succeeds
+                };
+
+                // Composite the image if an image is provided
+                if (originalImageUrl) {
+                    try {
+                        const compositedBase64 = await createCompositeImage(originalImageUrl, payload);
+                        if (compositedBase64) {
+                            // Upload the newly composited image to the server
+                            const uploadRes = await fetch(API_URL + '/whatsapp/upload', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ 
+                                    image: compositedBase64,
+                                    filenameOverride: 'marketing_composite_' + Date.now() + '.jpeg'
+                                })
+                            });
+                            
+                            if (uploadRes.ok) {
+                                const uploadData = await uploadRes.json();
+                                if (uploadData.url) {
+                                    payload.imageUrl = uploadData.url; // Use the composited URL for the actual messages!
+                                }
+                            }
+                        }
+                    } catch (compositeErr) {
+                        console.error("Image compositing failed, falling back to raw image.", compositeErr);
+                    }
+                }
+
+                // Save all settings (including the new composited URL)
+                const res = await fetch(API_URL + '/marketing/bill-ad', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (res.ok) {
+                    if (!isSilent) alert('Settings saved and image composited successfully!');
+                    if (saveBtn && !isSilent) {
+                        saveBtn.innerHTML = '<i class="fa-solid fa-check mr-2"></i> Saved';
+                        setTimeout(() => {
+                            saveBtn.innerHTML = '<i class="fa-solid fa-save mr-2"></i> Save Welcome Settings';
+                            saveBtn.disabled = false;
+                        }, 2000);
+                    }
+                    if (payload.originalImageUrl) saveToGeneralImageHistory(payload.originalImageUrl);
+                } else {
+                    throw new Error("Failed to save to backend.");
+                }
+            } catch (err) {
+                console.error(err);
+                if (!isSilent) alert('Error saving settings.');
+                if (saveBtn && !isSilent) {
+                    saveBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i> Error';
+                    setTimeout(() => {
+                        saveBtn.innerHTML = '<i class="fa-solid fa-save mr-2"></i> Save Welcome Settings';
+                        saveBtn.disabled = false;
+                    }, 2000);
+                }
+            }
+        }
+
+        let billAdSaveTimeout = null;
+        function autoSaveBillAdSettings() {
+            // Auto-save disabled as per user request
+            // Only saves when the "Save Bill Ad Settings" button is clicked
+        }
+
+        // Attach listeners for autosave
+        ['bill-ad-enabled', 'bill-ad-image-enabled', 'bill-ad-title', 'bill-ad-subtitle', 'bill-ad-description', 'bill-ad-discount', 'bill-ad-discountLabel'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.addEventListener('input', autoSaveBillAdSettings);
+                el.addEventListener('change', autoSaveBillAdSettings);
+            }
+        });
+
+        // --- AI Image Generator Logic ---
+        let currentAiImageUrl = null;
+
+        async function generateAiImage() {
+            const promptInput = document.getElementById('ai-generator-prompt').value.trim();
+            if (!promptInput) {
+                alert('Please enter a description for the image.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-generate-ai');
+            const loading = document.getElementById('ai-loading');
+            const emptyState = document.getElementById('ai-empty-state');
+            const placeholderIcon = document.getElementById('ai-placeholder-icon');
+            const placeholderText = document.getElementById('ai-placeholder-text');
+            const generatedImg = document.getElementById('ai-generated-image');
+            const btnApply = document.getElementById('btn-apply-ai');
+            const btnApplyWelcome = document.getElementById('btn-apply-welcome-ai');
+            const descEl = document.getElementById('ai-generated-description');
+
+            btn.disabled = true;
+            loading.classList.remove('hidden');
+            generatedImg.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            
+            // Reset empty state in case it was an error before
+            placeholderIcon.className = 'fa-solid fa-robot text-2xl text-slate-600';
+            placeholderText.innerHTML = 'Your AI generated masterpiece will appear here.';
+            
+            if (btnApply) {
+                btnApply.disabled = true;
+                btnApply.classList.add('bg-slate-700', 'text-slate-400');
+                btnApply.classList.remove('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+            }
+            if (btnApplyWelcome) {
+                btnApplyWelcome.disabled = true;
+                btnApplyWelcome.classList.add('bg-slate-700', 'text-slate-400');
+                btnApplyWelcome.classList.remove('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+            }
+            if (descEl) descEl.classList.add('hidden');
+
+            try {
+                // Enhance the prompt with salon context to ensure relevant image generation.
+                // Added strict negative instructions to prevent the AI from drawing text that clashes with the canvas overlay.
+                const enhancedPrompt = promptInput + ", luxurious beauty salon context, highly detailed, professional photography, aesthetic, elegant, welcoming, NO TEXT, NO LETTERS, NO TYPOGRAPHY, NO WORDS, clean background";
+                const encodedPrompt = encodeURIComponent(enhancedPrompt);
+                const seed = Math.floor(Math.random() * 1000000);
+                const aiUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=400&height=400&nologo=true&seed=${seed}`;
+                
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 90000); // 90-second timeout to handle high server load
+
+                let res;
+                try {
+                    res = await fetch(aiUrl, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                } catch (fetchError) {
+                    console.error("AI API Fetch Error:", fetchError);
+                    if (fetchError.name === 'AbortError') {
+                        throw new Error("Image generation timed out after 30 seconds.");
+                    }
+                    throw new Error("Failed to connect to the image generation service.");
+                }
+
+                console.log("Raw AI API Response Status:", res.status, res.statusText);
+
+                if (!res.ok) {
+                    let errText = await res.text().catch(()=>"");
+                    console.error("AI API Error Response Body:", errText);
+                    throw new Error(`API returned an error (${res.status}): ${res.statusText}`);
+                }
+
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                currentAiImageUrl = blobUrl;
+                
+                generatedImg.onload = () => {
+                    generatedImg.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+
+                    if (btnApply) {
+                        btnApply.disabled = false;
+                        btnApply.classList.remove('bg-slate-700', 'text-slate-400');
+                        btnApply.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+                    }
+                    
+                    if (btnApplyWelcome) {
+                        btnApplyWelcome.disabled = false;
+                        btnApplyWelcome.classList.remove('bg-slate-700', 'text-slate-400');
+                        btnApplyWelcome.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+                    }
+
+                    saveToAiHistory(currentAiImageUrl);
+                    btn.disabled = false;
+                    loading.classList.add('hidden');
+                    
+                    // Automatically apply to welcome images as requested
+                    applyAiImageToWelcome();
+                };
+
+                generatedImg.onerror = () => {
+                    // Force the error catch block to handle UI state
+                    generatedImg.dispatchEvent(new Event('generation-error'));
+                };
+                
+                // Set up a listener for the custom error event to keep logic in the catch block
+                generatedImg.addEventListener('generation-error', () => {
+                    throw new Error('Failed to render the downloaded image.');
+                }, { once: true });
+
+                generatedImg.src = currentAiImageUrl;
+
+                if (descEl) {
+                    descEl.innerText = 'Generating description...';
+                    descEl.classList.remove('hidden');
+                    const descPrompt = encodeURIComponent(`Describe this image in exactly 2 short lines based on this prompt: ${promptInput}`);
+                    fetch(`https://text.pollinations.ai/prompt/${descPrompt}`)
+                        .then(res => res.text())
+                        .then(text => { descEl.innerText = text; })
+                        .catch(err => { descEl.classList.add('hidden'); });
+                }
+            } catch (err) {
+                console.error("AI Generation Process Error:", err);
+                loading.classList.add('hidden');
+                btn.disabled = false;
+                
+                // Show Error State with Retry Button
+                generatedImg.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                placeholderIcon.className = 'fa-solid fa-triangle-exclamation text-2xl text-red-500/80';
+                placeholderText.innerHTML = `
+                    <span class="text-red-400 font-bold block mb-1">Image generation failed</span>
+                    <span class="text-xs text-slate-500 block mb-4 max-w-[200px] mx-auto">${err.message || "Please try again."}</span>
+                    <button onclick="generateAiImage()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2 rounded-lg text-xs font-bold shadow-md transition-all duration-300 border border-slate-700 flex items-center justify-center gap-2 mx-auto">
+                        <i class="fa-solid fa-rotate-right"></i> Retry
+                    </button>
+                `;
+            }
+        }
+
+        async function applyAiImageToBillAd() {
+            if (!currentAiImageUrl) return;
+            const btnApply = document.getElementById('btn-apply-ai');
+            const originalText = btnApply.innerHTML;
+            btnApply.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Applying...';
+            btnApply.disabled = true;
+
+            try {
+                // Fetch the blob from the object URL
+                const res = await fetch(currentAiImageUrl);
+                const blob = await res.blob();
+                
+                const reader = new FileReader();
+                reader.onload = async function(ev) {
+                    const base64 = ev.target.result;
+                    
+                    // Show local preview immediately
+                    document.getElementById('bill-ad-img-preview').src = base64;
+                    document.getElementById('bill-ad-img-preview').classList.remove('hidden');
+                    document.getElementById('bill-ad-img-icon').classList.add('hidden');
+                    
+                    // Upload to server
+                    const uploadRes = await fetch(API_URL + '/whatsapp/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64 })
+                    });
+                    const data = await uploadRes.json();
+                    
+                    if (data.success && data.url) {
+                        document.getElementById('bill-ad-image-url').value = data.url;
+                        // Trigger autosave to stably save the image automatically
+                        autoSaveBillAdSettings();
+                    } else {
+                        alert('Upload failed: ' + (data.error || 'Unknown error'));
+                    }
+                };
+                reader.readAsDataURL(blob);
+            } catch (err) {
+                console.error(err);
+                alert('Failed to apply AI image.');
+            } finally {
+                btnApply.innerHTML = originalText;
+                btnApply.disabled = false;
+            }
+        }
+
+        async function applyAiImageToWelcome() {
+            if (!currentAiImageUrl) return;
+            const btnApply = document.getElementById('btn-apply-welcome-ai');
+            if (btnApply) {
+                const originalText = btnApply.innerHTML;
+                btnApply.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Applying...';
+                btnApply.disabled = true;
+            }
+
+            try {
+                const res = await fetch(currentAiImageUrl);
+                const blob = await res.blob();
+                const reader = new FileReader();
+                reader.onload = async function(ev) {
+                    const base64 = ev.target.result;
+                    
+                    // Show local preview in the Welcome Settings area immediately
+                    const previewImg = document.getElementById('bill-ad-img-preview');
+                    const previewIcon = document.getElementById('bill-ad-img-icon');
+                    if (previewImg) {
+                        previewImg.src = base64;
+                        previewImg.classList.remove('hidden');
+                    }
+                    if (previewIcon) {
+                        previewIcon.classList.add('hidden');
+                    }
+                    
+                    // Upload to server
+                    const uploadRes = await fetch(API_URL + '/whatsapp/upload', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64 })
+                    });
+                    const data = await uploadRes.json();
+                    
+                    if (data.url) {
+                        // Update the marketing settings
+                        const urlInput = document.getElementById('bill-ad-image-url');
+                        const toggleInput = document.getElementById('bill-ad-image-enabled');
+                        if (urlInput) urlInput.value = data.url;
+                        if (toggleInput) toggleInput.checked = true;
+                        
+                        // Save the settings silently
+                        if (typeof saveBillAdSettings === 'function') {
+                            await saveBillAdSettings(true);
+                        }
+                    }
+                };
+                reader.readAsDataURL(blob);
+            } catch (err) {
+                console.error("Failed to automatically apply AI image to Welcome Settings:", err);
+            } finally {
+                if (btnApply) {
+                    btnApply.innerHTML = '<i class="fa-solid fa-check text-emerald-500/70"></i> <span>Applied to Welcome</span>';
+                    btnApply.disabled = false;
+                    setTimeout(() => {
+                        btnApply.innerHTML = '<i class="fa-solid fa-door-open text-emerald-500/70"></i> <span>Use in Welcome</span>';
+                    }, 3000);
+                }
+            }
+        }
+
+        // --- General Image History Logic ---
+        function saveToGeneralImageHistory(url) {
+            let history = JSON.parse(localStorage.getItem('generalImageHistory') || '[]');
+            if (!history.includes(url) && url.trim() !== '') {
+                history.unshift(url);
+                if (history.length > 10) history = history.slice(0, 10);
+                localStorage.setItem('generalImageHistory', JSON.stringify(history));
+            }
+            renderGeneralImageHistory();
+        }
+
+        function loadGeneralHistoryFromClick(url) {
+            document.getElementById('bill-ad-image-url').value = url;
+            document.getElementById('bill-ad-img-preview').src = url;
+            document.getElementById('bill-ad-img-preview').classList.remove('hidden');
+            document.getElementById('bill-ad-img-icon').classList.add('hidden');
+            autoSaveBillAdSettings();
+        }
+
+        function renderGeneralImageHistory() {
+            let history = JSON.parse(localStorage.getItem('generalImageHistory') || '[]');
+            const section = document.getElementById('general-image-history-section');
+            const gallery = document.getElementById('general-image-history-gallery');
+            
+            if (history.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+            
+            section.classList.remove('hidden');
+            gallery.innerHTML = history.map((url, index) => `
+                <div class="relative w-14 h-14 rounded-lg overflow-hidden border border-slate-700 flex-shrink-0 cursor-pointer hover:border-amber-500 transition shadow-sm hover:shadow-amber-500/20 bg-slate-900 group">
+                    <img src="${url}" onclick="loadGeneralHistoryFromClick('${url}')" class="w-full h-full object-cover" loading="lazy">
+                    <button onclick="removeGeneralHistoryImage(${index}, event)" class="absolute top-0 right-0 bg-red-500/90 text-white w-5 h-5 text-[10px] flex items-center justify-center rounded-bl-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeGeneralHistoryImage(index, event) {
+            event.stopPropagation();
+            let history = JSON.parse(localStorage.getItem('generalImageHistory') || '[]');
+            history.splice(index, 1);
+            localStorage.setItem('generalImageHistory', JSON.stringify(history));
+            renderGeneralImageHistory();
+        }
+
+        // --- AI History Logic ---
+        function saveToAiHistory(url) {
+            let history = JSON.parse(localStorage.getItem('aiImageHistory') || '[]');
+            if (!history.includes(url)) {
+                history.unshift(url);
+                if (history.length > 10) history = history.slice(0, 10);
+                localStorage.setItem('aiImageHistory', JSON.stringify(history));
+            }
+            renderAiHistory();
+        }
+
+        function loadAiHistoryFromClick(url) {
+            currentAiImageUrl = url;
+            const generatedImg = document.getElementById('ai-generated-image');
+            generatedImg.src = url;
+            
+            document.getElementById('ai-placeholder-icon').classList.add('hidden');
+            document.getElementById('ai-placeholder-text').classList.add('hidden');
+            generatedImg.classList.remove('hidden');
+            
+            const btnApply = document.getElementById('btn-apply-ai');
+            btnApply.disabled = false;
+            btnApply.classList.remove('bg-slate-700', 'text-slate-400');
+            btnApply.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+        }
+
+        function renderAiHistory() {
+            let history = JSON.parse(localStorage.getItem('aiImageHistory') || '[]');
+            const section = document.getElementById('ai-history-section');
+            const gallery = document.getElementById('ai-history-gallery');
+            
+            if (history.length === 0) {
+                section.classList.add('hidden');
+                return;
+            }
+            
+            section.classList.remove('hidden');
+            gallery.innerHTML = history.map((url, index) => `
+                <div class="relative w-14 h-14 rounded-lg overflow-hidden border border-slate-700 flex-shrink-0 cursor-pointer hover:border-purple-500 transition shadow-sm hover:shadow-purple-500/20 bg-slate-900 group">
+                    <img src="${url}" onclick="loadAiHistoryFromClick('${url}')" class="w-full h-full object-cover" loading="lazy">
+                    <button onclick="removeAiHistoryImage(${index}, event)" class="absolute top-0 right-0 bg-red-500/90 text-white w-5 h-5 text-[10px] flex items-center justify-center rounded-bl-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeAiHistoryImage(index, event) {
+            event.stopPropagation();
+            let history = JSON.parse(localStorage.getItem('aiImageHistory') || '[]');
+            history.splice(index, 1);
+            localStorage.setItem('aiImageHistory', JSON.stringify(history));
+            renderAiHistory();
+        }
+
+        // Load settings on boot
+        window.addEventListener('DOMContentLoaded', () => {
+            loadBillAdSettings();
+            renderAiHistory();
+            renderGeneralImageHistory();
         });
     </script>
 </body>

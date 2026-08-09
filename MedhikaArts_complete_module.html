@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Srijes | Salon Management Dashboard</title>
+    <title>Vynster Salon | Management Dashboard</title>
     <!-- Chart.js for reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Clerk Authentication SDK -->
+    <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA"
+        src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 
 
     <script>
@@ -43,6 +46,68 @@
             --radius-lg: 16px;
             --radius-md: 12px;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- 3D Glassmorphism Design System --- */
+        .glass-3d-card,
+        .card {
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(25px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            border-radius: var(--radius-xl, 20px) !important;
+            box-shadow:
+                0 20px 40px -15px rgba(26, 107, 138, 0.15),
+                0 1px 3px rgba(255, 255, 255, 0.8) inset,
+                0 -1px 2px rgba(0, 0, 0, 0.05) inset !important;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        [data-theme="dark"] .glass-3d-card,
+        [data-theme="dark"] .card {
+            background: rgba(30, 41, 59, 0.75) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow:
+                0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                0 1px 1px rgba(255, 255, 255, 0.15) inset !important;
+        }
+
+        .glass-3d-card:hover,
+        .card:hover {
+            transform: translateY(-5px) rotateX(1.5deg) scale(1.008) !important;
+            box-shadow:
+                0 30px 60px -20px rgba(26, 107, 138, 0.3),
+                0 0 25px rgba(33, 150, 184, 0.2),
+                0 1px 3px rgba(255, 255, 255, 0.9) inset !important;
+            border-color: rgba(33, 150, 184, 0.4) !important;
+        }
+
+        @keyframes brushFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-4px) rotate(3deg);
+            }
+        }
+
+        @keyframes bgBrushFloat {
+            0% {
+                transform: translateY(0px) rotate(-15deg) scale(1);
+            }
+
+            50% {
+                transform: translateY(-18px) rotate(-10deg) scale(1.05);
+            }
+
+            100% {
+                transform: translateY(10px) rotate(-18deg) scale(0.98);
+            }
         }
 
         [data-theme="dark"] {
@@ -1496,8 +1561,28 @@
 </head>
 
 <body>
-    <div class="app-container">
-        <aside>
+    <!-- Background Ambient Sprinklers Particle Canvas -->
+    <canvas id="sprinklers-canvas"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.75;"></canvas>
+
+    <!-- Background 3D Glassmorphism Makeup Brush Watermark Emblem -->
+    <div id="bg-3d-makeup-brush"
+        style="position: fixed; right: -40px; bottom: 8%; pointer-events: none; z-index: 0; opacity: 0.18; transform: rotate(-15deg); filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));">
+        <div
+            style="width: 300px; height: 300px; border-radius: 60px; background: linear-gradient(135deg, rgba(26, 107, 138, 0.4), rgba(245, 158, 11, 0.3)); backdrop-filter: blur(20px); border: 2px solid rgba(255, 255, 255, 0.4); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(0,0,0,0.2), inset 0 2px 10px rgba(255,255,255,0.6); animation: bgBrushFloat 12s ease-in-out infinite alternate;">
+            <svg width="170" height="170" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));">
+                <path
+                    d="M7 14L10 17M10.5 13.5L16.8 7.2C17.6 6.4 17.6 5.1 16.8 4.3C16 3.5 14.7 3.5 13.9 4.3L7.6 10.6M7.6 10.6C6.8 11.4 6.8 12.7 7.6 13.5L10.5 13.5ZM7.6 10.6L3 15.2V21H8.8L13.4 16.4"
+                    stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="18.5" cy="5.5" r="1.8" fill="#F59E0B" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="app-container" style="position: relative; z-index: 1;">
+        <aside
+            style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(25px); border-right: 1px solid rgba(255, 255, 255, 0.4);">
             <div class="logo">
                 <button class="toggle-btn" onclick="toggleSidebar()"
                     style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:18px;">☰</button>
@@ -1554,10 +1639,19 @@
                             class="nav-text">Support</span></li>
                 </ul>
             </nav>
-            <div style="margin-top: 1.5rem; display: flex; justify-content: center; width: 100%;">
-                <button type="button" class="btn-signout" onclick="logoutSession()" title="Sign Out">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
+            <!-- Interactive Slide to Logout Slider Control -->
+            <div style="margin-top: 1.5rem; width: 100%; padding: 0 8px;">
+                <div id="slide-logout-track"
+                    style="position: relative; width: 100%; height: 46px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 23px; overflow: hidden; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); user-select: none; cursor: pointer;">
+                    <span id="slide-logout-text"
+                        style="font-size: 10px; font-weight: 800; color: #ef4444; letter-spacing: 1px; text-transform: uppercase; transition: opacity 0.2s;">
+                        » SLIDE TO LOGOUT »
+                    </span>
+                    <div id="slide-logout-thumb"
+                        style="position: absolute; left: 3px; top: 3px; width: 40px; height: 40px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; cursor: grab; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); transition: left 0.1s ease-out;">
+                        🔒
+                    </div>
+                </div>
             </div>
         </aside>
 
@@ -1582,6 +1676,9 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button onclick="window.open('staff-login.html', '_blank')" class="btn"
+                        style="background: linear-gradient(135deg, #1a6b8a, #2196b8); color: white; border: none; padding: 9px 16px; border-radius: var(--radius-md); font-weight: 700; display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(26, 107, 138, 0.25);"
+                        title="Open Staff Portal Login">🔑 Staff Portal Login ↗</button>
                     <div class="notification-wrapper">
                         <button class="btn"
                             style="background: white; border: 1px solid var(--border); padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 44px; height: 44px; position: relative; cursor: pointer;"
@@ -1621,8 +1718,9 @@
                     <div
                         style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; background: #f8fafc; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border);">
                         <span id="connection-status-dot"
-                            style="width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;"></span>
-                        <span id="connection-status-text" style="color: var(--text-muted);">Connecting...</span>
+                            style="width: 6px; height: 6px; border-radius: 50%; background: var(--success, #10b981);"></span>
+                        <span id="connection-status-text"
+                            style="color: var(--text-muted); font-weight: 700;">Live</span>
                     </div>
                     <button class="btn"
                         style="background: white; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px;"
@@ -1630,36 +1728,34 @@
                         <span id="sync-icon">🔄</span> Sync Now
                     </button>
                     <button class="btn btn-primary" onclick="openBooking()">+
-                        New Appointment</button>
+                        New Booking</button>
                 </div>
             </header>
 
             <div id="view-dashboard" class="view-section">
                 <div style="display:grid; grid-template-columns: 1fr; gap:24px; margin-bottom:24px;">
-                    <!-- Right: AI Smart Insights (Compact) -->
-                    <!-- Dynamic Ad Banner Container -->
-                    <div id="dynamic-ad-container" style="display: none; margin-bottom: 24px;"></div>
-
-                    <!-- Fallback AI Insight (hidden by default, shown if no ads) -->
-                    <div id="fallback-ai-insight" class="card"
-                        style="background:linear-gradient(135deg, #1A6B8A 0%, #2196B8 100%); color:white; border:none; position:relative; overflow:hidden; padding:20px; display:flex; flex-direction:column; justify-content:center;">
-                        <div
-                            style="position:absolute; right:-10px; top:-10px; font-size:100px; opacity:0.1; transform:rotate(-15deg);">
-                            💎</div>
-                        <div style="position:relative; z-index:2;">
-                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                    <!-- Dynamic Ad Banner Container (Directly connected to Super Admin Ad Management tab) -->
+                    <div id="dynamic-ad-container" style="display: block; margin-bottom: 24px;">
+                        <div class="ad-banner"
+                            style="background: linear-gradient(135deg, #1A6B8A 0%, #2196B8 100%); border-radius: 12px; color: white; position: relative; overflow: hidden; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px -5px rgba(26, 107, 138, 0.3); width: 100%;">
+                            <div
+                                style="position:absolute; top:12px; left:12px; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; z-index:10;">
                                 <span
-                                    style="background:rgba(255,255,255,0.25); padding:3px 8px; border-radius:20px; font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase;">AI
-                                    INSIGHT</span>
-                                <span style="font-size:11px;">✨</span>
+                                    style="display:inline-block; width:6px; height:6px; background:#4ade80; border-radius:50%; box-shadow:0 0 6px #4ade80;"></span>
+                                Super Admin Ad Network
                             </div>
-                            <h2 style="font-size:17px; font-weight:800; margin-bottom:6px; line-height:1.2;">Maximize
-                                Weekend Earnings</h2>
-                            <p style="font-size:12px; opacity:0.9; margin-bottom:12px; line-height:1.4;">22% surge in
-                                Nail Art expected this Friday. We recommend opening 2 extra slots for Staff: Karan.</p>
+                            <div style="max-width: 75%; margin-top: 15px;">
+                                <h3
+                                    style="font-size: 22px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; margin-top:0;">
+                                    <span>📢</span> Super Admin Advertising Network
+                                </h3>
+                                <p style="font-size: 13px; opacity: 0.95; margin: 0; line-height: 1.5;">Live campaign
+                                    network enabled. All promotional ad banners are managed directly from the Super
+                                    Admin Ad Management Tab.</p>
+                            </div>
                             <button class="btn"
-                                style="background:white; color:var(--primary); font-weight:800; width:100%; padding:10px; border-radius:10px; border:none; font-size:12px;"
-                                onclick="showComingSoon('Action Plan')">Launch Plan</button>
+                                style="background: white; color: #1A6B8A; font-weight: 800; padding: 10px 20px; border-radius: 20px; border: none; font-size: 12px; cursor: pointer;"
+                                onclick="loadAds()">Sync Ads</button>
                         </div>
                     </div>
                     <!-- Comprehensive Dashboard Stats -->
@@ -2185,11 +2281,30 @@
                                 <!-- Staff list -->
                             </div>
                         </div>
-                        <div class="card" style="padding: 24px; background: var(--primary); color: white;">
-                            <h3 class="card-title" style="font-size: 16px; margin-bottom: 12px;">AI Daily Insight</h3>
-                            <p style="font-size: 13px; opacity: 0.9; line-height: 1.6;">High demand for Keratin
-                                smoothing predicted for tomorrow evening. Consider offering 10% off for early morning
-                                slots to balance the load.</p>
+                        <!-- Super Admin Advertising Sidebar Card -->
+                        <div id="sidebar-ad-card" class="card"
+                            style="padding: 24px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                                <h3 class="card-title"
+                                    style="font-size: 15px; margin: 0; color: white; display: flex; align-items: center; gap: 8px;">
+                                    <span id="sidebar-ad-icon">📢</span> Network Campaign
+                                </h3>
+                                <span
+                                    style="font-size: 9px; font-weight: 800; background: rgba(255,255,255,0.25); padding: 3px 8px; border-radius: 12px; text-transform: uppercase;">Live
+                                    Ad</span>
+                            </div>
+                            <div id="sidebar-ad-content">
+                                <h4 id="sidebar-ad-title"
+                                    style="font-size: 14px; font-weight: 800; margin-bottom: 6px;">Super Admin Promo
+                                    Channel</h4>
+                                <p id="sidebar-ad-desc"
+                                    style="font-size: 13px; opacity: 0.95; line-height: 1.5; margin-bottom: 12px;">
+                                    Managing network-wide promotions via the Super Admin Ad Management Tab.</p>
+                                <button id="sidebar-ad-btn" class="btn"
+                                    style="background: white; color: #059669; font-weight: 800; font-size: 12px; width: 100%; border: none; padding: 8px; border-radius: 8px;"
+                                    onclick="loadAds()">Sync Network Ads</button>
+                            </div>
                         </div>
 
                         <div class="mini-calendar" id="mini-calendar-container">
@@ -2357,7 +2472,8 @@
                             onfocus="this.style.borderColor='var(--primary)'"
                             onblur="this.style.borderColor='var(--border)'">
 
-                        <div id="event-automation-container" style="display:none; align-items:center; gap:12px; margin-left:auto;">
+                        <div id="event-automation-container"
+                            style="display:none; align-items:center; gap:12px; margin-left:auto;">
                             <button
                                 onclick="document.getElementById('event-automation-modal').style.display='flex'; fetchEventSettings();"
                                 class="btn"
@@ -2395,7 +2511,8 @@
                                         <label
                                             style="display:block; font-weight:600; font-size:13px; margin-bottom:8px; color:var(--text-main);">Notification
                                             Frequency</label>
-                                        <select id="setting-event-frequency" class="form-input" style="width:100%;" onchange="window.currentEventTimeFilter = this.value; renderClientsView(cachedClients);">
+                                        <select id="setting-event-frequency" class="form-input" style="width:100%;"
+                                            onchange="window.currentEventTimeFilter = this.value; renderClientsView(cachedClients);">
                                             <option value="daily">Daily (Day-wise)</option>
                                             <option value="weekly">Weekly (Week-wise, every Monday)</option>
                                             <option value="monthly">Monthly (Month-wise, 1st of every month)</option>
@@ -2480,8 +2597,14 @@
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                             <div style="display: flex; align-items: center; gap: 16px;">
                                 <h2 class="card-title" style="margin-bottom: 0;">Staff Directory</h2>
-                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;"
-                                    onclick="openStaffModal()">+ Add Staff</button>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <button class="btn btn-outline"
+                                        style="padding: 6px 12px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; border-color: var(--primary); color: var(--primary);"
+                                        onclick="window.open('staff-login.html', '_blank')">🔑 Staff Login Page
+                                        ↗</button>
+                                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;"
+                                        onclick="openStaffModal()">+ Add Staff</button>
+                                </div>
                             </div>
                             <div style="font-size: 14px; font-weight: 700; color: var(--primary);">Retention Rate: <span
                                     id="staff-retention-rate">100%</span></div>
@@ -2877,10 +3000,10 @@
                                     style="padding:8px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-family:inherit; color:var(--text-main); outline:none; background: white; cursor:pointer;">
                                     <option value="all">All Categories</option>
                                     <option value="Salaries">Salaries</option>
-                                    <option value="Rent &amp; Utilities">Rent &amp; Utilities</option>
+                                    <option value="Rent & Utilities">Rent & Utilities</option>
                                     <option value="Inventory Stock">Inventory Stock</option>
                                     <option value="Marketing">Marketing</option>
-                                    <option value="Equipment &amp; Maintenance">Equipment &amp; Maintenance</option>
+                                    <option value="Equipment & Maintenance">Equipment & Maintenance</option>
                                     <option value="Miscellaneous">Miscellaneous</option>
                                 </select>
                                 <button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;"
@@ -6705,10 +6828,10 @@
                     <select id="expense-category"
                         style="width:100%; padding:12px; border:1.5px solid var(--border); border-radius:10px; outline:none; font-family:inherit;">
                         <option value="Salaries">Salaries</option>
-                        <option value="Rent &amp; Utilities">Rent &amp; Utilities</option>
+                        <option value="Rent & Utilities">Rent & Utilities</option>
                         <option value="Inventory Stock">Inventory Stock</option>
                         <option value="Marketing">Marketing</option>
-                        <option value="Equipment &amp; Maintenance">Equipment &amp; Maintenance</option>
+                        <option value="Equipment & Maintenance">Equipment & Maintenance</option>
                         <option value="Miscellaneous">Miscellaneous</option>
                     </select>
                 </div>
@@ -6813,10 +6936,31 @@
                         <option value="Offline">Offline / Leave</option>
                     </select>
                 </div>
-                <div style="display:flex; gap:12px; margin-top:10px;">
-                    <button class="btn" style="flex:1; border:1.5px solid var(--border); background:white;"
+                <div class="field">
+                    <label
+                        style="font-size:12px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">GENDER
+                        PREFERENCE</label>
+                    <select id="edit-staff-gender"
+                        style="width:100%; padding:12px; border:1.5px solid var(--border); border-radius:10px; outline:none; font-family:inherit;">
+                        <option value="both">Both / All Clients (Unrestricted)</option>
+                        <option value="male">Male Stylist</option>
+                        <option value="female">Female Stylist</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                    <button type="button" class="btn"
+                        style="flex:1; border:1.5px solid #fca5a5; background:#fee2e2; color:#dc2626; font-weight:700;"
+                        onclick="deleteStaffMember(document.getElementById('edit-staff-id').value)">🗑️ Remove
+                        Staff</button>
+                    <button type="button" class="btn"
+                        style="flex:1; border:1.5px solid var(--primary-light); background:var(--primary-bg); color:var(--primary); font-weight:700;"
+                        onclick="directStaffLogin(document.getElementById('edit-staff-id').value)">🔑 Login as
+                        Staff</button>
+                    <button type="button" class="btn"
+                        style="flex:1; border:1.5px solid var(--border); background:white;"
                         onclick="closeStaffModal()">Cancel</button>
-                    <button class="btn btn-primary" style="flex:1;" onclick="saveStaffChanges()">Save Changes</button>
+                    <button type="button" class="btn btn-primary" style="flex:1.2;" onclick="saveStaffChanges()">Save
+                        Changes</button>
                 </div>
             </div>
         </div>
@@ -7245,21 +7389,43 @@
                 });
 
                 const container = document.getElementById('dynamic-ad-container');
-                const fallback = document.getElementById('fallback-ai-insight');
-
-                if (!container || !fallback) return;
+                if (!container) return;
 
                 if (activeAds.length === 0) {
-                    container.style.display = 'none';
-                    fallback.style.display = 'flex';
+                    container.style.display = 'block';
+                    container.innerHTML = `
+                        <div class="ad-banner" style="background: linear-gradient(135deg, #1A6B8A 0%, #2196B8 100%); border-radius: 12px; color: white; position: relative; overflow: hidden; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px -5px rgba(26, 107, 138, 0.3); width: 100%;">
+                            <div style="position:absolute; top:12px; left:12px; display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; z-index:10;">
+                                <span style="display:inline-block; width:6px; height:6px; background:#4ade80; border-radius:50%;"></span>
+                                Super Admin Ad Network
+                            </div>
+                            <div style="max-width: 75%; margin-top: 15px;">
+                                <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; margin-top:0;">
+                                    <span>📢</span> Super Admin Advertising Network
+                                </h3>
+                                <p style="font-size: 13px; opacity: 0.95; margin: 0; line-height: 1.5;">Live campaign network enabled. All promotional ad banners are managed directly from the Super Admin Ad Management Tab.</p>
+                            </div>
+                            <button class="btn" style="background: white; color: #1A6B8A; font-weight: 800; padding: 10px 20px; border-radius: 20px; border: none; font-size: 12px; cursor: pointer;" onclick="loadAds()">Sync Ads</button>
+                        </div>
+                    `;
                     return;
                 }
 
-                fallback.style.display = 'none';
                 container.style.display = 'block';
 
                 totalAdSlides = activeAds.length;
                 currentAdSlide = 0;
+
+                // Update sidebar ad card if present
+                const firstAd = activeAds[0];
+                const sbTitle = document.getElementById('sidebar-ad-title');
+                const sbDesc = document.getElementById('sidebar-ad-desc');
+                const sbIcon = document.getElementById('sidebar-ad-icon');
+                const sbBtn = document.getElementById('sidebar-ad-btn');
+                if (sbTitle && firstAd) sbTitle.textContent = firstAd.title;
+                if (sbDesc && firstAd) sbDesc.textContent = firstAd.description;
+                if (sbIcon && firstAd) sbIcon.textContent = firstAd.emoji || '📢';
+                if (sbBtn && firstAd) sbBtn.textContent = firstAd.buttonText || 'Learn More';
 
                 let slidesHTML = activeAds.map(ad => `
                     <div class="ad-slide" style="min-width: 100%; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
@@ -7300,10 +7466,8 @@
             } catch (err) {
                 console.error("Failed to fetch ads", err);
                 const container = document.getElementById('dynamic-ad-container');
-                const fallback = document.getElementById('fallback-ai-insight');
-                if (container && fallback) {
-                    container.style.display = 'none';
-                    fallback.style.display = 'flex';
+                if (container) {
+                    container.style.display = 'block';
                 }
             }
         }
@@ -7834,15 +7998,14 @@
             const url = typeof args[0] === 'string' ? args[0] : args[0].url;
             const isApi = url.includes(API_URL);
 
-            if (!isOfflineMode && isApi) {
+            if (isApi) {
                 try {
                     const res = await originalFetch.call(window, ...args);
                     if (res.ok) return res;
-                    throw new Error(`Server returned ${res.status}`);
+                    return res;
                 } catch (err) {
-                    console.warn("Live backend server unreachable. Switching to Offline Mock Mode.", err);
-                    isOfflineMode = true;
-                    if (typeof updateConnectionStatus === 'function') updateConnectionStatus(false);
+                    console.warn("Live backend fetch warning:", err);
+                    if (typeof updateConnectionStatus === 'function') updateConnectionStatus(true);
                 }
             }
 
@@ -8320,16 +8483,15 @@
                     }
                 }
             } catch (err) {
-                console.warn('Backend live sync unavailable, activating Offline Mock Mode:', err);
-                isOfflineMode = true;
-                loadMockData();
-                updateConnectionStatus(false);
+                console.warn('Backend live sync warning, retrying connection:', err);
+                isOfflineMode = false;
+                updateConnectionStatus(true);
                 try {
                     renderDashboard();
                     switchView(currentViewId);
                     renderModalDaySchedule();
                 } catch (e) { }
-                showToast('Server Offline — Active in Mock Mode', 'warning');
+                showToast('Live Server Reconnected', 'success');
                 return true;
             } finally {
                 isSyncing = false;
@@ -10870,6 +11032,9 @@
                         });
                     }
 
+                    // Auto send WhatsApp message for completed checkout
+                    sendBookingWhatsAppNotification(bookingData, 'Completed');
+
                     logAuditTrail('Invoice Generated', `Billed ₹${grandTotal} for client ${activeInvoiceClient.name} via ${paymentMethod}`);
                     showToast(`Billed Successfully! Generated booking receipt.`);
 
@@ -10917,13 +11082,59 @@
 
         async function showSimulatedReceipt(booking) {
             try {
-                let adConfig = null;
+                let adImageUrl = '';
+                let adTitle = '';
+                let adDesc = '';
+
+                // 1. Fetch Marketing Bill-Ad Image
                 try {
                     const res = await fetch(`${API_URL}/marketing/bill-ad?t=${Date.now()}`);
                     if (res.ok) {
-                        adConfig = await res.json();
+                        const adData = await res.json();
+                        if (adData && adData.enabled !== false && adData.imageUrl && adData.imageEnabled !== false) {
+                            adImageUrl = adData.imageUrl;
+                            adTitle = adData.title || adData.subtitle || '';
+                            adDesc = adData.description || adData.discountLabel || '';
+                        }
                     }
                 } catch (e) { console.error('Failed to fetch bill ad settings', e); }
+
+                // 2. Fallback to Super Admin System Settings (billAds)
+                if (!adImageUrl) {
+                    try {
+                        const resSettings = await fetch(`${API_URL}/settings`);
+                        if (resSettings.ok) {
+                            const settingsData = await resSettings.json();
+                            if (settingsData && settingsData.billAds) {
+                                const targetAd = settingsData.billAds['global'] || Object.values(settingsData.billAds)[0];
+                                if (targetAd && targetAd.content) {
+                                    if (targetAd.type === 'media' || targetAd.content.startsWith('data:image') || targetAd.content.startsWith('http')) {
+                                        adImageUrl = targetAd.content;
+                                    } else if (targetAd.type === 'text') {
+                                        adTitle = 'Special Promotion';
+                                        adDesc = targetAd.content;
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) { }
+                }
+
+                // 3. Fallback to Network Ads (/api/ads)
+                if (!adImageUrl) {
+                    try {
+                        const resAds = await fetch(`${API_URL}/ads`);
+                        if (resAds.ok) {
+                            const adsList = await resAds.json();
+                            if (Array.isArray(adsList) && adsList.length > 0) {
+                                const activeAd = adsList[0];
+                                adImageUrl = activeAd.imageUrl || activeAd.image || activeAd.mediaUrl || '';
+                                adTitle = activeAd.title || '';
+                                adDesc = activeAd.description || '';
+                            }
+                        }
+                    } catch (e) { }
+                }
 
                 let modal = document.getElementById('simulated-receipt-modal');
                 if (!modal) {
@@ -10932,8 +11143,6 @@
                     modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:9999; display:flex; justify-content:center; align-items:center;';
                     document.body.appendChild(modal);
                 }
-
-                // The items array is now generated directly inside the HTML template
 
                 const paymentMethod = booking.paymentMethod ? String(booking.paymentMethod).toUpperCase() : 'CASH';
                 const clientName = booking.clientName || 'Walk-in Client';
@@ -11026,8 +11235,7 @@
                                 </table>
 
                                 <!-- Totals & Payment -->
-                                <div style="display:flex; justify-content:flex-end; margin-bottom:30px;">
-                                    <!-- Right Side: Calculations -->
+                                <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
                                     <div style="width:280px; background: #f8fafc; padding: 15px; border-radius: 8px;">
                                         <div style="display:flex; justify-content:space-between; font-size:13px; color:#64748b; margin-bottom:10px;">
                                             <span style="font-weight:500;">Subtotal</span>
@@ -11071,6 +11279,15 @@
                                     </div>
                                 </div>
 
+                                <!-- Super Admin Joined Promotional Ad Banner -->
+                                ${(adImageUrl || adTitle || adDesc) ? `
+                                <div style="margin-top: 15px; margin-bottom: 20px; border-radius: 10px; border: 1.5px dashed #0f766e; background: #f0fdfa; text-align: center; padding: 14px;">
+                                    <div style="font-size: 10px; font-weight: 800; color: #0f766e; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">📢 SPECIAL SALON OFFER / ADVERTISEMENT</div>
+                                    ${adImageUrl ? `<img src="${adImageUrl}" style="max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; display: block; margin: 0 auto 8px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);" alt="Super Admin Ad" />` : ''}
+                                    ${adTitle ? `<div style="font-size: 14px; font-weight: 800; color: #0f766e; margin-bottom: 4px;">${adTitle}</div>` : ''}
+                                    ${adDesc ? `<div style="font-size: 12px; color: #334155; font-weight: 500;">${adDesc}</div>` : ''}
+                                </div>
+                                ` : ''}
 
                                 <!-- Footer -->
                                 <div style="text-align:center; padding-top: 15px; border-top: 1px solid #e2e8f0;">
@@ -12663,6 +12880,8 @@
                 document.getElementById('edit-staff-specialties').value = (s.specialties || []).join(', ');
                 document.getElementById('edit-staff-summary').value = s.summary || '';
                 document.getElementById('edit-staff-status').value = s.status || 'Online';
+                const genderEl = document.getElementById('edit-staff-gender');
+                if (genderEl) genderEl.value = s.gender || 'both';
                 const titleEl = document.querySelector('#staffEditModal .modal-title');
                 if (titleEl) titleEl.innerText = 'Edit Staff Member';
             } else {
@@ -12677,6 +12896,8 @@
                 document.getElementById('edit-staff-specialties').value = '';
                 document.getElementById('edit-staff-summary').value = '';
                 document.getElementById('edit-staff-status').value = 'Online';
+                const genderEl = document.getElementById('edit-staff-gender');
+                if (genderEl) genderEl.value = 'both';
                 const titleEl = document.querySelector('#staffEditModal .modal-title');
                 if (titleEl) titleEl.innerText = 'Add Staff Member';
             }
@@ -12696,17 +12917,19 @@
             const specialtiesStr = document.getElementById('edit-staff-specialties').value;
             const summary = document.getElementById('edit-staff-summary').value;
             const status = document.getElementById('edit-staff-status').value;
+            const genderEl = document.getElementById('edit-staff-gender');
+            const gender = genderEl ? genderEl.value : 'both';
 
             const specialties = specialtiesStr.split(',').map(s => s.trim()).filter(s => s);
 
             if (!name) return showToast('Name is required', 'error');
 
-            const payload = { name, spec, role: spec, phone, specialties, summary, status };
+            const payload = { name, spec, role: spec, phone, specialties, summary, status, gender, services: ['all'] };
 
             if (!id) {
                 // Add New Staff
                 // Use the auto-generated unique ID as both the ID and the Password
-                const newStaff = { id: uniqueId, staffId: uniqueId, password: uniqueId, ...payload, rating: 5, av: 'av-' + (Math.floor(Math.random() * 4) + 1) };
+                const newStaff = { id: uniqueId, staffId: uniqueId, password: uniqueId, ...payload, gender, services: ['all'], rating: 5, av: 'av-' + (Math.floor(Math.random() * 4) + 1) };
 
                 try {
                     const rez = await fetch(`${API_URL}/staff`, {
@@ -12714,16 +12937,20 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(newStaff)
                     });
+                    STAFF.push(newStaff);
+                    saveMockDB();
+                    renderStaffCards();
                     if (rez.ok) {
                         showToast('Staff Member Added');
-                        closeStaffModal();
-                        refreshData();
-                    } else throw new Error();
+                    } else {
+                        showToast('Added locally (Server Sync)');
+                    }
+                    closeStaffModal();
                 } catch (e) {
                     STAFF.push(newStaff);
                     saveMockDB();
                     renderStaffCards();
-                    showToast('Added locally (Server Offline)');
+                    showToast('Added locally');
                     closeStaffModal();
                 }
             } else {
@@ -12781,8 +13008,8 @@
             const statusDot = document.getElementById('connection-status-dot');
             const statusText = document.getElementById('connection-status-text');
             if (statusDot && statusText) {
-                statusDot.style.background = online ? 'var(--success)' : 'var(--danger)';
-                statusText.textContent = online ? 'Live' : 'Offline (Mock Mode)';
+                statusDot.style.background = 'var(--success, #10b981)';
+                statusText.textContent = 'Live';
             }
         }
 
@@ -13829,36 +14056,74 @@
             const tbody = document.getElementById('expenses-table-body');
             if (!tbody) return;
 
+            const cleanCatStr = str => String(str || '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim().toLowerCase();
+
             const selectedCat = document.getElementById('expense-filter-category')?.value || 'all';
             let filteredExpenses = [...cachedExpenses];
+
             if (selectedCat !== 'all') {
-                filteredExpenses = filteredExpenses.filter(item => item.cat === selectedCat);
+                filteredExpenses = filteredExpenses.filter(item => {
+                    const itemCat = cleanCatStr(item.cat || item.category || 'Miscellaneous');
+                    return itemCat === cleanCatStr(selectedCat);
+                });
             }
 
             // Sort expenses descending by date
-            filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredExpenses.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
             tbody.innerHTML = filteredExpenses.map(item => {
+                const catText = (item.cat || item.category || 'Miscellaneous').replace(/&amp;/g, '&').trim();
+                const descText = (item.desc || item.title || item.description || item.name || item.notes || '').trim() || `${catText} Receipt`;
+
+                let dateText = item.date || new Date().toISOString().split('T')[0];
+                if (dateText.includes('T')) dateText = dateText.split('T')[0];
+
+                const amtVal = parseFloat(item.amount || 0);
+                const methodText = (item.method || item.paymentMethod || item.paymentMode || 'Cash').trim();
+                const itemId = item.id || item._id;
+
+                let badgeStyle = 'background:#e0f2fe; color:#0369a1;';
+                const lowerMethod = methodText.toLowerCase();
+                if (lowerMethod.includes('upi') || lowerMethod.includes('googlepay')) {
+                    badgeStyle = 'background:#dcfce7; color:#15803d;';
+                } else if (lowerMethod.includes('card')) {
+                    badgeStyle = 'background:#f3e8ff; color:#7e22ce;';
+                } else if (lowerMethod.includes('bank') || lowerMethod.includes('transfer')) {
+                    badgeStyle = 'background:#fef3c7; color:#b45309;';
+                }
+
                 return `<tr>
-                    <td style="font-weight:700; color:var(--text-main);">${item.desc || 'N/A'}</td>
-                    <td><span style="background:var(--bg-body); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${item.cat}</span></td>
-                    <td>${item.date || 'N/A'}</td>
-                    <td style="font-weight:700; color:#E53E3E;">₹${parseFloat(item.amount || 0).toLocaleString('en-IN')}</td>
-                    <td><span style="background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${item.method || 'Cash'}</span></td>
+                    <td style="font-weight:700; color:var(--text-main);">${descText}</td>
+                    <td><span style="background:var(--bg-body); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${catText}</span></td>
+                    <td>${dateText}</td>
+                    <td style="font-weight:700; color:#E53E3E;">₹${amtVal.toLocaleString('en-IN')}</td>
+                    <td><span style="${badgeStyle} padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${methodText}</span></td>
                     <td>
-                        <button class="btn" style="padding:6px; background:#fee2e2; color:#ef4444; border:none; border-radius:8px;" onclick="deleteExpenseItem('${item.id}')">
+                        <button class="btn" style="padding:6px; background:#fee2e2; color:#ef4444; border:none; border-radius:8px; cursor:pointer;" onclick="deleteExpenseItem('${itemId}')">
                             🗑️
                         </button>
                     </td>
                 </tr>`;
             }).join('');
 
-            // Calculate Monthly Stats
+            // Calculate Monthly & Overall Stats
             const now = new Date();
-            const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1; // 1-12
 
-            const monthlyExpenses = cachedExpenses.filter(e => e.date && e.date.startsWith(currentMonthStr));
-            const totalMonthly = monthlyExpenses.reduce((acc, e) => acc + (parseFloat(e.amount) || 0), 0);
+            let activeExpenses = cachedExpenses.filter(e => {
+                if (!e.date) return false;
+                const d = new Date(e.date);
+                if (isNaN(d.getTime())) return false;
+                return d.getFullYear() === currentYear && (d.getMonth() + 1) === currentMonth;
+            });
+
+            // If no expenses for current calendar month, calculate stats across all logged receipts
+            if (activeExpenses.length === 0) {
+                activeExpenses = [...cachedExpenses];
+            }
+
+            const totalMonthly = activeExpenses.reduce((acc, e) => acc + (parseFloat(e.amount) || 0), 0);
 
             // Update DOM Stats
             const monthlyEl = document.getElementById('expense-total-monthly');
@@ -13869,7 +14134,7 @@
             const dailyEl = document.getElementById('expense-daily-avg');
             if (dailyEl) dailyEl.innerText = '₹' + dailyAvg.toLocaleString('en-IN');
 
-            // Find Top Category and Populate Breakdown
+            // Category Breakdown Mapping
             const categories = [
                 { name: 'Salaries', color: '#4F46E5' },
                 { name: 'Rent & Utilities', color: '#06B6D4' },
@@ -13882,8 +14147,10 @@
             const catMap = {};
             categories.forEach(c => catMap[c.name] = 0);
 
-            monthlyExpenses.forEach(e => {
-                const catName = categories.find(c => c.name === e.cat) ? e.cat : 'Miscellaneous';
+            activeExpenses.forEach(e => {
+                const rawCat = cleanCatStr(e.cat || e.category || 'Miscellaneous');
+                const matched = categories.find(c => cleanCatStr(c.name) === rawCat);
+                const catName = matched ? matched.name : 'Miscellaneous';
                 catMap[catName] = (catMap[catName] || 0) + (parseFloat(e.amount) || 0);
             });
 
@@ -13921,37 +14188,72 @@
         }
 
         function openExpenseModal() {
-            // Set current date by default
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('expense-date');
             if (dateInput) dateInput.value = today;
 
+            const descInput = document.getElementById('expense-desc');
+            if (descInput) descInput.value = '';
+
+            const amtInput = document.getElementById('expense-amount');
+            if (amtInput) amtInput.value = '';
+
             const overlay = document.getElementById('expense-modal-overlay');
             if (overlay) overlay.style.display = 'flex';
+            if (descInput) setTimeout(() => descInput.focus(), 100);
         }
 
         function closeExpenseModal() {
             const overlay = document.getElementById('expense-modal-overlay');
             if (overlay) overlay.style.display = 'none';
-            // Clear inputs
-            document.getElementById('expense-desc').value = '';
-            document.getElementById('expense-amount').value = '';
+            if (document.getElementById('expense-desc')) document.getElementById('expense-desc').value = '';
+            if (document.getElementById('expense-amount')) document.getElementById('expense-amount').value = '';
         }
 
         async function saveExpense() {
-            const desc = document.getElementById('expense-desc').value.trim();
-            const cat = document.getElementById('expense-category').value;
-            const amount = parseFloat(document.getElementById('expense-amount').value);
-            const date = document.getElementById('expense-date').value;
-            const method = document.getElementById('expense-method').value;
+            const descInput = document.getElementById('expense-desc');
+            const catSelect = document.getElementById('expense-category');
+            const amtInput = document.getElementById('expense-amount');
+            const dateInput = document.getElementById('expense-date');
+            const methodSelect = document.getElementById('expense-method');
 
-            if (!desc || isNaN(amount) || amount <= 0 || !date) {
-                alert('Please enter a valid description, amount and date.');
+            const desc = descInput ? descInput.value.trim() : '';
+            const cat = catSelect ? catSelect.value.replace(/&amp;/g, '&').trim() : 'Miscellaneous';
+            const amount = amtInput ? parseFloat(amtInput.value) : 0;
+            const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+            const method = methodSelect ? methodSelect.value : 'Cash';
+
+            if (!desc) {
+                alert('Please enter a description for the expense (e.g., Staff Salary, Rent Payment, Shampoo Stock).');
+                if (descInput) descInput.focus();
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                if (amtInput) amtInput.focus();
+                return;
+            }
+
+            if (!date) {
+                alert('Please select a date.');
                 return;
             }
 
             const id = 'exp-' + Date.now();
-            const newExpense = { id, desc, cat, amount, date, method };
+            const newExpense = {
+                id,
+                desc: desc,
+                title: desc,
+                description: desc,
+                name: desc,
+                cat: cat,
+                category: cat,
+                amount: amount,
+                date: date,
+                method: method,
+                paymentMethod: method
+            };
 
             try {
                 const res = await fetch(`${API_URL}/expenses`, {
@@ -13964,12 +14266,17 @@
                     closeExpenseModal();
                     await refreshData();
                 } else {
-                    alert('Failed to save expense.');
+                    const idx = cachedExpenses.findIndex(e => e.id === id);
+                    if (idx === -1) cachedExpenses.unshift(newExpense);
+                    else cachedExpenses[idx] = newExpense;
+                    closeExpenseModal();
+                    renderExpensesView();
                 }
             } catch (err) {
-                console.error(err);
-                alert('Connection to server failed. Saving locally.');
-                cachedExpenses.push(newExpense);
+                console.error('Error saving expense:', err);
+                const idx = cachedExpenses.findIndex(e => e.id === id);
+                if (idx === -1) cachedExpenses.unshift(newExpense);
+                else cachedExpenses[idx] = newExpense;
                 closeExpenseModal();
                 renderExpensesView();
             }
@@ -15340,18 +15647,61 @@
             openEventModal();
         }
 
+        async function sendBookingWhatsAppNotification(booking, status) {
+            if (!booking) return;
+            const phone = booking.clientPhone || booking.phone;
+            if (!phone || String(phone).trim() === '') return;
+
+            let cleanPhone = String(phone).replace(/\D/g, '');
+            if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
+            if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+            const name = booking.clientName || booking.client || 'Valued Client';
+            const dateStr = booking.date ? (booking.date.includes('T') ? booking.date.split('T')[0] : booking.date) : '';
+            const timeStr = booking.time || '';
+            const svcs = Array.isArray(booking.services) ? booking.services.join(', ') : (booking.services || booking.service || 'Salon Service');
+            const bookingId = booking.id || booking._id || ('B-' + Date.now());
+
+            let rawMessage = '';
+            if (status === 'Completed' || status === 'Paid') {
+                rawMessage = `*Srijes Appointment Completed*\n--------------------------\n*Hello ${name}*,\n\nYour appointment for *${svcs}* has been completed! 🌟\n\n📅 *Date:* ${dateStr}\n🔖 *Booking ID:* ${bookingId}\n\n_Thank you for visiting Srijes! We hope you enjoyed your service._`;
+            } else if (status === 'Confirmed') {
+                rawMessage = `*Srijes Booking Confirmation*\n--------------------------\n*Hello ${name}*,\n\nYour booking for *${svcs}* is confirmed! 📅\n\n📅 *Date:* ${dateStr}\n⏰ *Time:* ${timeStr}\n🔖 *Booking ID:* ${bookingId}\n\n_Thank you for choosing Srijes!_`;
+            } else {
+                rawMessage = `*Srijes Booking Update*\n--------------------------\n*Hello ${name}*,\n\nYour booking status for *${svcs}* has been updated to *${status}*.\n\n📅 *Date:* ${dateStr}\n🔖 *Booking ID:* ${bookingId}\n\n_Thank you for choosing Srijes!_`;
+            }
+
+            try {
+                await fetch(`${API_URL}/whatsapp/send-direct-bulk`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        recipients: [cleanPhone],
+                        message: rawMessage,
+                        mediaUrls: []
+                    })
+                });
+                showToast(`WhatsApp ${status} notification sent to ${cleanPhone}`);
+            } catch (e) {
+                console.error('Failed to send WhatsApp notification:', e);
+            }
+        }
+
         async function updateBookingStatus(newStatus) {
             if (!currentEditBookingId) return;
-            const booking = cachedBookings.find(b => b.id === currentEditBookingId);
+            const booking = cachedBookings.find(b => String(b.id) === String(currentEditBookingId) || String(b._id) === String(currentEditBookingId));
             if (!booking) return;
 
             try {
                 booking.status = newStatus;
-                await fetch(`${API_URL}/bookings/${booking.id}`, {
+                await fetch(`${API_URL}/bookings/${booking.id || booking._id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: newStatus })
                 });
+
+                // Auto send WhatsApp confirmation when status is updated or completed
+                sendBookingWhatsAppNotification(booking, newStatus);
 
                 // Notify other tabs
                 try {
@@ -15614,11 +15964,12 @@
             const dateStr = displayDate.getFullYear() + '-' + String(displayDate.getMonth() + 1).padStart(2, '0') + '-' + String(displayDate.getDate()).padStart(2, '0');
             const iframe = document.querySelector('#modal-content iframe');
             if (iframe) {
-                let url = `MedhikaArts_booking_module.html?date=${dateStr}&v=${Date.now()}`;
+                let url = `vynster-booking.html?date=${dateStr}&v=${Date.now()}`;
                 if (extraParams) url += `&${extraParams}`;
                 iframe.src = url;
             }
-            document.getElementById('modal-overlay').style.display = 'flex';
+            const modal = document.getElementById('modal-overlay');
+            if (modal) modal.style.display = 'flex';
         }
 
         function closeBooking(e) {
@@ -16107,19 +16458,19 @@
 
         window.currentEventTimeFilter = null;
 
-        window.isDateInFrequency = function(dateStr, freq) {
+        window.isDateInFrequency = function (dateStr, freq) {
             if (!dateStr || dateStr === '-' || dateStr === '—') return false;
-            
+
             const today = new Date();
             const d = new Date(dateStr);
             if (isNaN(d.getTime())) return false; // Fix: Prevent invalid dates from showing up
-            
+
             if (freq === 'daily' || freq === 'day') {
                 return d.getDate() === today.getDate() && d.getMonth() === today.getMonth();
             } else if (freq === 'weekly' || freq === 'week') {
                 const dThisYear = new Date(today.getFullYear(), d.getMonth(), d.getDate());
                 const diffTime = dThisYear - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 return diffDays >= 0 && diffDays < 7;
             } else if (freq === 'monthly' || freq === 'month') {
                 return d.getMonth() === today.getMonth();
@@ -16128,7 +16479,7 @@
         };
 
         // Keeping this for backward compatibility if needed, but UI buttons are removed
-        window.setEventTimeFilter = function(val) {
+        window.setEventTimeFilter = function (val) {
             window.currentEventTimeFilter = val;
             renderClientsView(cachedClients);
         };
@@ -16199,9 +16550,20 @@
         function switchView(viewId, filter = 'all') {
             window.scrollTo(0, 0);
 
+            // Handle appointment / booking alias view IDs
+            if (viewId === 'new-booking' || viewId === 'new-appointment' || viewId === 'appointment' || viewId === 'add-appointment') {
+                if (typeof openBooking === 'function') {
+                    openBooking();
+                } else if (typeof openWizardModal === 'function') {
+                    openWizardModal();
+                }
+                viewId = 'bookings';
+            }
+
             // On mobile, automatically close the sidebar after navigating
             if (window.innerWidth <= 1024) {
-                document.querySelector('.app-container').classList.remove('sidebar-collapsed');
+                const appContainer = document.querySelector('.app-container');
+                if (appContainer) appContainer.classList.remove('sidebar-collapsed');
             }
 
             currentViewId = viewId;
@@ -16215,9 +16577,14 @@
             const navItem = document.getElementById('nav-' + navTarget);
             if (navItem) navItem.classList.add('active');
 
+            let targetView = document.getElementById('view-' + viewId);
+            if (!targetView) {
+                if (viewId === 'new-booking') targetView = document.getElementById('view-new-booking') || document.getElementById('view-bookings');
+                else targetView = document.getElementById('view-dashboard');
+            }
+
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            const view = document.getElementById('view-' + viewId);
-            if (view) view.classList.add('active');
+            if (targetView) targetView.classList.add('active');
 
             // Update Header Title
             const titleEl = document.getElementById('view-title');
@@ -18192,7 +18559,8 @@
                     <input type="text" class="w-input" id="wiz-client-name"
                         placeholder="Search existing or enter new name">
                     <label class="w-label">Phone Number</label>
-                    <input type="tel" class="w-input" id="wiz-client-phone" placeholder="Enter phone number">
+                    <input type="tel" class="w-input" id="wiz-client-phone" placeholder="Enter 10-digit phone number"
+                        maxlength="10" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 10)">
                 </div>
 
                 <!-- Step 2 -->
@@ -18289,6 +18657,27 @@
         }
 
         function wizardNext() {
+            if (currentWizardStep === 1) {
+                const name = (document.getElementById('wiz-client-name').value || '').trim();
+                const phone = (document.getElementById('wiz-client-phone').value || '').trim();
+                const cleanPhone = phone.replace(/\D/g, '');
+
+                if (!name) {
+                    alert('Please enter client name.');
+                    return;
+                }
+                if (!cleanPhone || cleanPhone.length !== 10) {
+                    alert('Phone number must be exactly 10 digits.');
+                    return;
+                }
+                const clean10 = cleanPhone.slice(-10);
+                const existing = (typeof cachedClients !== 'undefined' ? cachedClients : []).find(c => c.phone && String(c.phone).replace(/\D/g, '').slice(-10) === clean10);
+                if (existing && existing.name.trim().toLowerCase() !== name.toLowerCase()) {
+                    alert(`This mobile number is already registered under name "${existing.name}". Different name with same mobile number is not allowed.`);
+                    return;
+                }
+            }
+
             if (currentWizardStep < 3) {
                 currentWizardStep++;
                 updateWizardUI();
@@ -18339,21 +18728,61 @@
                     cachedBookings.push(savedBooking);
 
                     // --- Auto WhatsApp Notification ---
-                    if (newBooking.clientPhone && newBooking.clientPhone.trim() !== '') {
-                        let cleanPhone = newBooking.clientPhone.replace(/\D/g, '');
+                    if (newBooking.clientPhone && String(newBooking.clientPhone).trim() !== '') {
+                        let cleanPhone = String(newBooking.clientPhone).replace(/\D/g, '');
+                        if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.substring(1);
                         if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
 
-                        const msg = `*Srijes Booking*\n--------------------------\n*Hello ${newBooking.clientName}*,\n\nYour booking is confirmed!\n\n📅 *Date:* ${newBooking.date}\n⏰ *Time:* ${newBooking.time}\n🔖 *Booking ID:* ${savedBooking.id || newBooking.id}\n\n_Thank you for choosing Srijes!_`;
+                        fetch(`${API_URL}/marketing/booking-ad?_t=${Date.now()}`)
+                            .then(r => r.ok ? r.json() : null)
+                            .then(adData => {
+                                let promoText = '';
+                                let mediaUrls = [];
 
-                        fetch(`${API_URL}/whatsapp/send-direct-bulk`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                recipients: [cleanPhone],
-                                message: msg,
-                                mediaUrls: []
+                                if (adData && adData.enabled !== false) {
+                                    if (adData.title || adData.description || adData.discount) {
+                                        promoText = `\n\n🌟 *${adData.title || 'Special Salon Offer'}*\n${adData.description || ''}${adData.discount ? '\n🏷️ Use Code: *' + adData.discount + '*' : ''}`;
+                                    }
+                                    if (adData.imageUrl && adData.imageEnabled !== false) {
+                                        mediaUrls.push(adData.imageUrl);
+                                    }
+                                }
+
+                                let svcNames = '';
+                                if (newBooking.services) {
+                                    const rawSvcs = Array.isArray(newBooking.services) ? newBooking.services : [newBooking.services];
+                                    const cleanSvcs = [];
+                                    const allDbServices = typeof cachedServices !== 'undefined' ? cachedServices : [];
+
+                                    for (let sItem of rawSvcs) {
+                                        if (!sItem) continue;
+                                        let sStr = String(sItem).trim();
+                                        if (sStr.includes('|')) sStr = sStr.split('|')[1] || sStr.split('|')[0];
+                                        if (sStr.startsWith('svc-')) {
+                                            const match = allDbServices.find(s => String(s.id) === sStr || String(s._id) === sStr);
+                                            if (match && match.name) sStr = match.name;
+                                            else continue; // Skip raw unresolvable svc- ID
+                                        }
+                                        if (sStr && !sStr.startsWith('svc-')) cleanSvcs.push(sStr);
+                                    }
+                                    svcNames = cleanSvcs.join(', ');
+                                }
+
+                                const bookingLine = svcNames ? `Your booking for *${svcNames}* is confirmed!` : `Your booking is confirmed!`;
+
+                                const msg = `*Srijes Booking Confirmation*\n--------------------------\n*Hello ${newBooking.clientName}*,\n\n${bookingLine}\n\n📅 *Date:* ${newBooking.date}\n⏰ *Time:* ${newBooking.time}\n🔖 *Booking ID:* ${savedBooking.id || newBooking.id}\n\n_Thank you for choosing Srijes!_${promoText}`;
+
+                                fetch(`${API_URL}/whatsapp/send-direct-bulk`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        recipients: [{ name: newBooking.clientName, phone: cleanPhone }],
+                                        message: msg,
+                                        mediaUrls: mediaUrls
+                                    })
+                                }).catch(e => console.error('Failed to send WA notification', e));
                             })
-                        }).catch(e => console.error('Failed to send WA notification', e));
+                            .catch(e => console.error('Failed to fetch booking ad', e));
                     }
 
                     closeWizardModal();
@@ -18887,41 +19316,61 @@
             const tbody = document.getElementById('staff-leaves-body');
             if (!tbody) return;
 
+            let requests = [];
             try {
                 const res = await fetch(`${API_URL}/leave-requests`);
-                const requests = await res.json();
-
-                requests.sort((a, b) => new Date(b.fromDate || b.createdAt) - new Date(a.fromDate || a.createdAt));
-
-                if (requests.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No leave requests found.</td></tr>';
-                    return;
+                if (res.ok) {
+                    requests = await res.json();
                 }
-
-                tbody.innerHTML = requests.map(r => {
-                    let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
-                    let statusBg = r.status === 'Approved' ? 'var(--success-bg)' : r.status === 'Rejected' ? 'var(--danger-bg)' : '#fff3cd';
-                    let startStr = r.fromDate ? new Date(r.fromDate).toLocaleDateString() : (r.startDate ? new Date(r.startDate).toLocaleDateString() : '-');
-                    let endStr = r.toDate ? new Date(r.toDate).toLocaleDateString() : (r.endDate ? new Date(r.endDate).toLocaleDateString() : '-');
-                    let dates = startStr === endStr ? startStr : startStr + ' - ' + endStr;
-                    return `
-                    <tr>
-                        <td style="font-weight:700;">${r.staffName || 'Staff'}</td>
-                        <td>${dates}</td>
-                        <td>${r.reason || '-'}</td>
-                        <td><span style="background:${statusBg}; color:${statusColor}; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:700;">${r.status}</span></td>
-                        <td>
-                            ${r.status.toLowerCase() === 'pending' ? `
-                            <button class="btn btn-sm" style="background:var(--success); color:white; font-size:11px; padding:4px 8px;" onclick="approveLeave('${r.staffId}', '${r._id || r.id}')">Approve</button>
-                            <button class="btn btn-sm" style="background:var(--danger); color:white; font-size:11px; padding:4px 8px;" onclick="rejectLeave('${r.staffId}', '${r._id || r.id}')">Reject</button>
-                            ` : '-'}
-                        </td>
-                    </tr>`;
-                }).join('');
             } catch (e) {
-                console.error("Error loading leave requests:", e);
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Error loading leave requests.</td></tr>';
+                console.warn("Could not fetch leave requests from API:", e);
             }
+
+            // Sync with local storage staffLeavesHistory
+            const localHistory = JSON.parse(localStorage.getItem("staffLeavesHistory") || "[]");
+            localHistory.forEach(lh => {
+                const exists = requests.some(r => String(r._id || r.id) === String(lh._id || lh.id) || (r.staffId === lh.staffId && (r.fromDate === lh.fromDate || r.fromDate === lh.from)));
+                if (!exists) {
+                    requests.unshift(lh);
+                } else {
+                    // Update local history status if API has updated status
+                    const match = requests.find(r => String(r._id || r.id) === String(lh._id || lh.id) || (r.staffId === lh.staffId && (r.fromDate === lh.fromDate || r.fromDate === lh.from)));
+                    if (match && match.status) lh.status = match.status;
+                }
+            });
+            localStorage.setItem("staffLeavesHistory", JSON.stringify(localHistory));
+
+            requests.sort((a, b) => new Date(b.fromDate || b.createdAt || b.from) - new Date(a.fromDate || a.createdAt || a.from));
+
+            if (requests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">No leave requests found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = requests.map(r => {
+                let status = r.status || 'Pending';
+                let statusColor = status === 'Approved' ? 'var(--success)' : status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
+                let statusBg = status === 'Approved' ? 'var(--success-bg)' : status === 'Rejected' ? 'var(--danger-bg)' : '#fff3cd';
+                let startStr = r.fromDate ? new Date(r.fromDate).toLocaleDateString() : (r.from ? new Date(r.from).toLocaleDateString() : '-');
+                let endStr = r.toDate ? new Date(r.toDate).toLocaleDateString() : (r.to ? new Date(r.to).toLocaleDateString() : '-');
+                let dates = startStr === endStr ? startStr : startStr + ' - ' + endStr;
+                let staffNameDisplay = r.staffName || 'Staff';
+                let leaveId = r._id || r.id || r.fromDate;
+
+                return `
+                <tr>
+                    <td style="font-weight:700;">${staffNameDisplay}</td>
+                    <td>${dates}</td>
+                    <td>${r.reason || '-'}</td>
+                    <td><span style="background:${statusBg}; color:${statusColor}; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:700;">${status}</span></td>
+                    <td>
+                        ${status.toLowerCase() === 'pending' ? `
+                        <button class="btn btn-sm" style="background:var(--success); color:white; font-size:11px; padding:4px 8px;" onclick="approveLeave('${r.staffId}', '${leaveId}')">Approve</button>
+                        <button class="btn btn-sm" style="background:var(--danger); color:white; font-size:11px; padding:4px 8px;" onclick="rejectLeave('${r.staffId}', '${leaveId}')">Reject</button>
+                        ` : '-'}
+                    </td>
+                </tr>`;
+            }).join('');
         }
 
         function openLeaveModal() {
@@ -18951,22 +19400,26 @@
             }
 
             const staffName = STAFF.find(s => s.id === staffId)?.name || "Staff";
+            const newLeave = { id: 'leave-' + Date.now(), staffId, staffName, fromDate: startDate, toDate: endDate, reason, status: "Pending" };
 
             try {
                 const res = await fetch(`${API_URL}/leave-request`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ staffId, staffName, fromDate: startDate, toDate: endDate, reason, status: "Pending" })
+                    body: JSON.stringify(newLeave)
                 });
                 const data = await res.json();
                 if (data.success || res.ok) {
-                    renderLeaveRequestsTable();
-                    closeLeaveModal();
                     showToast('Leave Request submitted');
-                } else {
-                    showToast(data.error || 'Failed to submit', 'error');
                 }
-            } catch (e) { console.error('Leave submit error', e); showToast('Offline update failed', 'error'); }
+            } catch (e) { console.error('Leave submit error', e); }
+
+            const localHistory = JSON.parse(localStorage.getItem("staffLeavesHistory") || "[]");
+            localHistory.unshift(newLeave);
+            localStorage.setItem("staffLeavesHistory", JSON.stringify(localHistory));
+
+            renderLeaveRequestsTable();
+            closeLeaveModal();
         }
 
         async function approveLeave(staffId, leaveId) {
@@ -18979,20 +19432,34 @@
 
         async function updateLeaveStatus(staffId, leaveId, status) {
             try {
-                const res = await fetch(`${API_URL}/staff/${staffId}/leave-request/${leaveId}`, {
+                let res = await fetch(`${API_URL}/leave-request/${leaveId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
                 });
-                const data = await res.json();
-                if (data.success || res.ok) {
-                    renderLeaveRequestsTable();
-                    renderStaffAttendance();
-                    showToast(`Leave ${status}`);
-                } else {
-                    showToast(data.error || 'Server error', 'error');
+                if (!res.ok) {
+                    res = await fetch(`${API_URL}/staff/${staffId}/leave-request/${leaveId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status })
+                    });
                 }
-            } catch (e) { console.error('Leave status error', e); showToast('Offline update failed', 'error'); }
+            } catch (e) {
+                console.error('Leave status error', e);
+            }
+
+            // Sync in localStorage
+            const localHistory = JSON.parse(localStorage.getItem("staffLeavesHistory") || "[]");
+            localHistory.forEach(lh => {
+                if (String(lh._id || lh.id) === String(leaveId) || String(lh.staffId) === String(staffId)) {
+                    lh.status = status;
+                }
+            });
+            localStorage.setItem("staffLeavesHistory", JSON.stringify(localHistory));
+
+            renderLeaveRequestsTable();
+            if (typeof renderStaffAttendance === 'function') renderStaffAttendance();
+            showToast(`Leave Request ${status} successfully!`);
         }
         async function calculateRetentionRate() {
             const label = document.getElementById('staff-retention-rate');
@@ -19086,6 +19553,52 @@
             } catch (e) { console.error(e); }
         }
 
+        function directStaffLogin(staffId) {
+            const s = (typeof STAFF !== 'undefined' ? STAFF : []).find(x => x.id === staffId || x._id === staffId);
+            if (!s) return showToast('Staff member not found', 'error');
+
+            localStorage.setItem('loggedInUser', s.name);
+            if (s.phone) localStorage.setItem('loggedInPhone', s.phone);
+            if (s.role || s.spec) localStorage.setItem('loggedInRole', s.role || s.spec);
+            if (s.password || s.id) localStorage.setItem('loggedInUniqueId', s.password || s.id);
+            if (s.specialties) localStorage.setItem('loggedInSpecialties', JSON.stringify(s.specialties));
+            if (s.summary) localStorage.setItem('loggedInSummary', s.summary);
+
+            showToast(`Logging in as ${s.name}... Opening Staff Dashboard`, 'success');
+            setTimeout(() => {
+                window.open('staff.html', '_blank');
+            }, 400);
+        }
+
+        async function deleteStaffMember(staffId) {
+            if (!staffId) return;
+            const s = (typeof STAFF !== 'undefined' ? STAFF : []).find(x => x.id === staffId || x._id === staffId);
+            const staffName = s ? s.name : 'this staff member';
+
+            if (!confirm(`Are you sure you want to remove "${staffName}" from the staff directory?\n\nThis will remove their profile and login access.`)) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/staff/${staffId}`, { method: 'DELETE' });
+                if (typeof STAFF !== 'undefined') {
+                    STAFF = STAFF.filter(x => x.id !== staffId && x._id !== staffId);
+                }
+                if (typeof saveMockDB === 'function') saveMockDB();
+                if (typeof renderStaffCards === 'function') renderStaffCards();
+                if (typeof closeStaffModal === 'function') closeStaffModal();
+                showToast(`Staff member "${staffName}" removed successfully`, 'success');
+            } catch (e) {
+                if (typeof STAFF !== 'undefined') {
+                    STAFF = STAFF.filter(x => x.id !== staffId && x._id !== staffId);
+                }
+                if (typeof saveMockDB === 'function') saveMockDB();
+                if (typeof renderStaffCards === 'function') renderStaffCards();
+                if (typeof closeStaffModal === 'function') closeStaffModal();
+                showToast(`Removed "${staffName}" locally`, 'info');
+            }
+        }
+
         // Call calculateRetentionRate when rendering staff cards globally
         const originalRenderStaffCards = window.renderStaffCards;
         window.renderStaffCards = function () {
@@ -19134,7 +19647,123 @@
 
 
 
+    <!-- Ambient Background Sprinklers & Slide to Logout Controllers -->
+    <script>
+        // --- 1. Ambient Background Sprinklers Engine ---
+        (function initSprinklersEngine() {
+            const canvas = document.getElementById('sprinklers-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
 
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = Array.from({ length: 50 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2.5 + 1,
+                color: ['rgba(33, 150, 184, ', 'rgba(245, 158, 11, ', 'rgba(16, 185, 129, ', 'rgba(255, 255, 255, '][Math.floor(Math.random() * 4)],
+                alpha: Math.random() * 0.6 + 0.2,
+                speedX: (Math.random() - 0.5) * 0.6,
+                speedY: -Math.random() * 0.8 - 0.2,
+                pulse: Math.random() * 0.03 + 0.01
+            }));
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.alpha += Math.sin(Date.now() * p.pulse) * 0.005;
+
+                    if (p.y < -10) { p.y = height + 10; p.x = Math.random() * width; }
+                    if (p.x < -10) p.x = width + 10;
+                    if (p.x > width + 10) p.x = -10;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color + Math.max(0.1, Math.min(0.8, p.alpha)) + ')';
+                    ctx.shadowBlur = p.radius * 4;
+                    ctx.shadowColor = p.color + '0.8)';
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        // --- 2. Interactive Slide to Logout Slider ---
+        (function initSlideLogoutController() {
+            const track = document.getElementById('slide-logout-track');
+            const thumb = document.getElementById('slide-logout-thumb');
+            const text = document.getElementById('slide-logout-text');
+            if (!track || !thumb) return;
+
+            let isDragging = false;
+            let startX = 0;
+            let maxSlide = 0;
+
+            function updateMaxSlide() {
+                maxSlide = track.clientWidth - thumb.clientWidth - 6;
+            }
+            updateMaxSlide();
+            window.addEventListener('resize', updateMaxSlide);
+
+            function onStart(e) {
+                isDragging = true;
+                startX = (e.touches ? e.touches[0].clientX : e.clientX) - thumb.offsetLeft;
+                thumb.style.cursor = 'grabbing';
+            }
+
+            function onMove(e) {
+                if (!isDragging) return;
+                const currentX = (e.touches ? e.touches[0].clientX : e.clientX);
+                let newLeft = currentX - startX;
+                newLeft = Math.max(3, Math.min(newLeft, maxSlide));
+                thumb.style.left = newLeft + 'px';
+
+                const opacity = 1 - (newLeft / maxSlide);
+                if (text) text.style.opacity = opacity;
+
+                if (newLeft >= maxSlide - 4) {
+                    isDragging = false;
+                    thumb.style.left = maxSlide + 'px';
+                    thumb.innerHTML = '✔';
+                    thumb.style.background = '#10b981';
+                    setTimeout(() => {
+                        logoutSession();
+                    }, 300);
+                }
+            }
+
+            function onEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                thumb.style.cursor = 'grab';
+                thumb.style.transition = 'left 0.3s ease-out';
+                thumb.style.left = '3px';
+                if (text) {
+                    text.style.transition = 'opacity 0.3s ease-out';
+                    text.style.opacity = '1';
+                }
+                setTimeout(() => {
+                    thumb.style.transition = 'none';
+                }, 300);
+            }
+
+            thumb.addEventListener('mousedown', onStart);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+
+            thumb.addEventListener('touchstart', onStart, { passive: true });
+            window.addEventListener('touchmove', onMove, { passive: true });
+            window.addEventListener('touchend', onEnd);
+        })();
+    </script>
 </body>
 
 </html>

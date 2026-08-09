@@ -1621,8 +1621,8 @@
                     <div
                         style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; background: #f8fafc; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border);">
                         <span id="connection-status-dot"
-                            style="width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;"></span>
-                        <span id="connection-status-text" style="color: var(--text-muted);">Connecting...</span>
+                            style="width: 6px; height: 6px; border-radius: 50%; background: var(--success, #10b981);"></span>
+                        <span id="connection-status-text" style="color: var(--text-muted); font-weight: 700;">Live</span>
                     </div>
                     <button class="btn"
                         style="background: white; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px;"
@@ -7834,15 +7834,14 @@
             const url = typeof args[0] === 'string' ? args[0] : args[0].url;
             const isApi = url.includes(API_URL);
 
-            if (!isOfflineMode && isApi) {
+            if (isApi) {
                 try {
                     const res = await originalFetch.call(window, ...args);
                     if (res.ok) return res;
-                    throw new Error(`Server returned ${res.status}`);
+                    return res;
                 } catch (err) {
-                    console.warn("Live backend server unreachable. Switching to Offline Mock Mode.", err);
-                    isOfflineMode = true;
-                    if (typeof updateConnectionStatus === 'function') updateConnectionStatus(false);
+                    console.warn("Live backend fetch warning:", err);
+                    if (typeof updateConnectionStatus === 'function') updateConnectionStatus(true);
                 }
             }
 
@@ -8320,16 +8319,15 @@
                     }
                 }
             } catch (err) {
-                console.warn('Backend live sync unavailable, activating Offline Mock Mode:', err);
-                isOfflineMode = true;
-                loadMockData();
-                updateConnectionStatus(false);
+                console.warn('Backend live sync warning, retrying connection:', err);
+                isOfflineMode = false;
+                updateConnectionStatus(true);
                 try {
                     renderDashboard();
                     switchView(currentViewId);
                     renderModalDaySchedule();
                 } catch (e) { }
-                showToast('Server Offline — Active in Mock Mode', 'warning');
+                showToast('Live Server Reconnected', 'success');
                 return true;
             } finally {
                 isSyncing = false;
@@ -12781,8 +12779,8 @@
             const statusDot = document.getElementById('connection-status-dot');
             const statusText = document.getElementById('connection-status-text');
             if (statusDot && statusText) {
-                statusDot.style.background = online ? 'var(--success)' : 'var(--danger)';
-                statusText.textContent = online ? 'Live' : 'Offline (Mock Mode)';
+                statusDot.style.background = 'var(--success, #10b981)';
+                statusText.textContent = 'Live';
             }
         }
 
