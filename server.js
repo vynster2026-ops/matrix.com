@@ -31,7 +31,11 @@ io.on('connection', (socket) => {
 });
 app.use(cors()); // Permissive CORS for local development
 app.use(express.json({ limit: '50mb' }));
-app.use(express.static(__dirname));
+app.use(express.static(__dirname, { index: false }));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'landing.html'));
+});
 
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
