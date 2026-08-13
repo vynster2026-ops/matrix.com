@@ -1433,6 +1433,7 @@ app.get('/api/my-appointments', async (req, res) => {
         if (isConnected) {
             if (staffId) {
                 const searchRegex = new RegExp(`^${staffId}$`, 'i');
+                // First try direct ID match
                 bookings = await Booking.find({
                     $or: [
                         { staffId: staffId },
@@ -1442,6 +1443,27 @@ app.get('/api/my-appointments', async (req, res) => {
                         { additionalStaff: { $in: [staffId] } }
                     ]
                 });
+                // If no results, try resolving staffId via the Staff collection (name or phone match)
+                if (!bookings || bookings.length === 0) {
+                    const cleanPhone = String(staffId).replace(/\D/g, '');
+                    const matchedStaff = await Staff.findOne({
+                        $or: [
+                            { name: { $regex: new RegExp(staffId, 'i') } },
+                            ...(cleanPhone.length >= 7 ? [{ phone: { $regex: cleanPhone } }] : [])
+                        ]
+                    });
+                    if (matchedStaff) {
+                        const resolvedId = matchedStaff.id || matchedStaff.staffId || String(matchedStaff._id);
+                        bookings = await Booking.find({
+                            $or: [
+                                { staffId: resolvedId },
+                                { staffId: { $in: [resolvedId] } },
+                                { additionalStaff: resolvedId },
+                                { additionalStaff: { $in: [resolvedId] } }
+                            ]
+                        });
+                    }
+                }
             } else {
                 bookings = await Booking.find({});
             }
@@ -1449,10 +1471,23 @@ app.get('/api/my-appointments', async (req, res) => {
             let list = localDb.bookings || [];
             if (staffId) {
                 const sLower = String(staffId).toLowerCase();
+                const cleanPhone = sLower.replace(/\D/g, '');
+                // Also try to resolve by name/phone via local staff list
+                let resolvedIds = [sLower];
+                if (localDb.staff) {
+                    const matchedLocal = localDb.staff.find(s =>
+                        (s.name || '').toLowerCase() === sLower ||
+                        (cleanPhone.length >= 7 && (s.phone || '').replace(/\D/g, '').includes(cleanPhone))
+                    );
+                    if (matchedLocal) {
+                        const rId = String(matchedLocal.id || matchedLocal.staffId || '').toLowerCase();
+                        if (rId) resolvedIds.push(rId);
+                    }
+                }
                 list = list.filter(b => {
                     const sId = Array.isArray(b.staffId) ? b.staffId.map(x=>String(x).toLowerCase()) : [String(b.staffId).toLowerCase()];
                     const addId = Array.isArray(b.additionalStaff) ? b.additionalStaff.map(x=>String(x).toLowerCase()) : [String(b.additionalStaff).toLowerCase()];
-                    return sId.includes(sLower) || addId.includes(sLower);
+                    return resolvedIds.some(id => sId.includes(id) || addId.includes(id));
                 });
             }
             bookings = list;
@@ -2338,6 +2373,7 @@ function initWhatsAppClient() {
     whatsappClient = new WAClient({
         authStrategy: new LocalAuth({ clientId: 'srijes-salon-master' }),
         puppeteer: {
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
             headless: true,
             args: [
                 '--no-sandbox', 

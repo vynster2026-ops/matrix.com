@@ -2204,6 +2204,7 @@ function initWhatsAppClient() {
     whatsappClient = new WAClient({
         authStrategy: new LocalAuth({ clientId: 'srijes-salon-master' }),
         puppeteer: {
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
             headless: true,
             args: [
                 '--no-sandbox', 
