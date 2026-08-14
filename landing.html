@@ -58,20 +58,167 @@
         /* Bright Mode Theme Overrides */
         html.theme-bright, body.theme-bright {
             background-color: #F4F7FA !important;
-            color: #1E293B !important;
+            color: #0F172A !important;
         }
 
         .theme-bright .brand-text { color: #0F172A !important; }
-        .theme-bright .nav-link { color: #334155 !important; }
+        .theme-bright .nav-link { color: #1E293B !important; }
         .theme-bright .nav-link:hover { color: #F40606 !important; }
         .theme-bright .section-title { color: #0F172A !important; }
-        .theme-bright .section-copy { color: #475569 !important; }
+        .theme-bright .section-copy { color: #334155 !important; }
         .theme-bright .section-pull { color: #0F172A !important; }
-        .theme-bright .hero-sub { color: #475569 !important; }
+        .theme-bright .hero-sub { color: #334155 !important; }
+
+        .theme-bright h1, 
+        .theme-bright h2, 
+        .theme-bright h3, 
+        .theme-bright h4, 
+        .theme-bright h5, 
+        .theme-bright h6 {
+            color: #0F172A !important;
+        }
+
+        .theme-bright p, 
+        .theme-bright dd, 
+        .theme-bright dt, 
+        .theme-bright label,
+        .theme-bright li {
+            color: #334155 !important;
+        }
+
+        .theme-bright .text-white:not(a.bg-gradient-to-r):not(button.bg-gradient-to-r):not(.bg-gradient-to-r *):not(#portalModalOverlay *):not(footer *) {
+            color: #0F172A !important;
+        }
+
+        .theme-bright .text-\[\#D7E2EA\]:not(#portalModalOverlay *):not(footer *) {
+            color: #334155 !important;
+        }
+
         .theme-bright .button-secondary { 
-            background: rgba(255, 255, 255, 0.85) !important; 
+            background: rgba(255, 255, 255, 0.9) !important; 
             color: #0F172A !important; 
-            border-color: rgba(15, 23, 42, 0.2) !important;
+            border-color: rgba(15, 23, 42, 0.25) !important;
+        }
+        .theme-bright .button-secondary:hover {
+            color: #F40606 !important;
+            border-color: #F40606 !important;
+        }
+
+        /* Light Theme Client Portal & Super Admin Buttons */
+        html.theme-bright .client-portal-btn,
+        .theme-bright .client-portal-btn,
+        html.theme-bright .client-portal-btn *,
+        .theme-bright .client-portal-btn * {
+            color: #0F172A !important;
+            -webkit-text-fill-color: #0F172A !important;
+        }
+
+        html.theme-bright .client-portal-btn,
+        .theme-bright .client-portal-btn {
+            background-color: rgba(244, 6, 6, 0.08) !important;
+            border: 1.5px solid rgba(244, 6, 6, 0.6) !important;
+            font-weight: 700 !important;
+            box-shadow: 0 2px 8px rgba(244, 6, 6, 0.1) !important;
+        }
+
+        html.theme-bright .client-portal-btn:hover,
+        .theme-bright .client-portal-btn:hover {
+            background-color: #F40606 !important;
+            border-color: #F40606 !important;
+        }
+
+        html.theme-bright .client-portal-btn:hover *,
+        .theme-bright .client-portal-btn:hover * {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        /* Light Theme Super Admin Button */
+        html.theme-bright .superadmin-btn,
+        .theme-bright .superadmin-btn,
+        html.theme-bright .superadmin-btn *,
+        .theme-bright .superadmin-btn * {
+            color: #4C1D95 !important;
+            -webkit-text-fill-color: #4C1D95 !important;
+        }
+
+        html.theme-bright .superadmin-btn,
+        .theme-bright .superadmin-btn {
+            background-color: rgba(139, 92, 246, 0.12) !important;
+            border: 1.5px solid rgba(139, 92, 246, 0.45) !important;
+            font-weight: 700 !important;
+        }
+
+        html.theme-bright .superadmin-btn:hover,
+        .theme-bright .superadmin-btn:hover {
+            background-color: #7C3AED !important;
+            border-color: #7C3AED !important;
+        }
+
+        html.theme-bright .superadmin-btn:hover *,
+        .theme-bright .superadmin-btn:hover * {
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+
+        .theme-bright .glass-card {
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-color: rgba(15, 23, 42, 0.12) !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+        }
+        .theme-bright .glass-card:hover {
+            background: rgba(255, 255, 255, 0.98) !important;
+            border-color: rgba(244, 6, 6, 0.45) !important;
+            box-shadow: 0 18px 40px rgba(244, 6, 6, 0.12) !important;
+        }
+        .theme-bright .glass-panel {
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-color: rgba(15, 23, 42, 0.12) !important;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .theme-bright footer {
+            background-color: #02050E !important;
+            color: #D7E2EA !important;
+        }
+        .theme-bright footer .text-white {
+            color: #FFFFFF !important;
+        }
+        .theme-bright footer p, 
+        .theme-bright footer span, 
+        .theme-bright footer a, 
+        .theme-bright footer button {
+            color: #D7E2EA !important;
+        }
+        .theme-bright footer a:hover, 
+        .theme-bright footer button:hover {
+            color: #FFFFFF !important;
+        }
+
+        .theme-bright a.bg-gradient-to-r,
+        .theme-bright button.bg-gradient-to-r,
+        .theme-bright .bg-gradient-to-r .text-white,
+        .theme-bright a.bg-gradient-to-r span,
+        .theme-bright button.bg-gradient-to-r span,
+        .theme-bright button[type="submit"] span {
+            color: #FFFFFF !important;
+        }
+
+        .theme-bright #portalModalOverlay .glass-panel {
+            background: #040D21 !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            color: #D7E2EA !important;
+        }
+        .theme-bright #portalModalOverlay h3,
+        .theme-bright #portalModalOverlay .text-white {
+            color: #FFFFFF !important;
+        }
+        .theme-bright #portalModalOverlay p,
+        .theme-bright #portalModalOverlay a span {
+            color: #D7E2EA !important;
+        }
+        .theme-bright #portalModalOverlay a:hover span {
+            color: #FFFFFF !important;
         }
 
         /* Hero Heading Gradient */
@@ -282,9 +429,9 @@
             <!-- FROSTED GLASS NAVBAR -->
             <div class="w-full z-30 px-4 sm:px-8 md:px-12 pt-5 md:pt-7 flex justify-center">
                 <nav class="glass-pill rounded-full px-5 sm:px-8 py-3 flex items-center justify-between gap-3 sm:gap-6 md:gap-10 max-w-5xl w-full">
-                    <!-- Left Brand Badge -->
-                    <a href="landing.html" class="flex items-center gap-2.5 sm:gap-3">
-                        <img src="vynster-logo.png" alt="Vynster Symbol" class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[0_0_10px_rgba(244,6,6,0.4)] brightness-105 contrast-110" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <!-- Left Brand Badge -> Opens Super Admin Login on click -->
+                    <a href="superadmin_login.html" class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group" title="Super Admin Portal">
+                        <img src="vynster-logo.png" alt="Vynster Symbol" class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[0_0_10px_rgba(244,6,6,0.4)] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <svg class="w-8 h-8 sm:w-9 sm:h-9 hidden" viewBox="0 0 220 220">
                             <circle cx="110" cy="110" r="92" fill="none" stroke="#2B2140" stroke-width="10" />
                             <path d="M44.2,72 L110,186 L175.8,72" fill="none" stroke="#FF6F59" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
@@ -309,32 +456,35 @@
                             Our Work
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
                         </a>
-                        <a href="#brands" class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
-                            Partners
-                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
-                        </a>
+
                         <a href="#contact" class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
                             Contact
                             <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
                         </a>
                     </div>
 
-                    <!-- Right CTAs (Interactive Theme Toggle Switch + Client Login) -->
-                    <div class="flex items-center gap-3 sm:gap-4">
-                        <!-- Sleek Sliding Pill Theme Toggle Switch -->
-                        <button id="themeToggleBtn" onclick="toggleAppTheme()" 
-                            class="relative flex items-center w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/80 hover:border-[#F40606]" 
-                            aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
-                            <span class="text-[11px] absolute left-2 select-none opacity-60">☀️</span>
-                            <span class="text-[11px] absolute right-2 select-none opacity-60">🌙</span>
-                            <span id="themeToggleKnob" class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-6 flex items-center justify-center text-xs">
-                                🌙
-                            </span>
+                    <!-- Right CTAs (Super Admin Button + Salon Portal Button + Theme Toggle) -->
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <!-- Super Admin Gateway Button -->
+                        <a href="superadmin_login.html" class="superadmin-btn text-[11px] sm:text-xs font-semibold tracking-wide px-3 sm:px-4 py-2 rounded-full border border-purple-500/40 bg-purple-900/20 text-purple-200 hover:text-white hover:border-purple-400 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer shadow-sm hover:scale-105 flex items-center gap-1.5" title="Access Master Super Admin Portal">
+                            <span>👑</span>
+                            <span class="hidden sm:inline">SUPER</span> ADMIN
+                        </a>
+
+                        <!-- Salon Login Button -->
+                        <button onclick="navigateToSalonPortal(event)" class="client-portal-btn text-[11px] sm:text-xs font-semibold tracking-wide px-3.5 sm:px-5 py-2 rounded-full border border-[#F40606]/50 bg-[#F40606]/15 text-white hover:border-[#F40606] hover:bg-[#F40606] transition-all duration-300 cursor-pointer shadow-sm hover:scale-105 flex items-center gap-1.5">
+                            <span>💼</span> SALON PORTAL
                         </button>
 
-                        <!-- Client Login Button -->
-                        <button onclick="openPortalModal()" class="text-xs sm:text-sm font-semibold tracking-wide px-4 sm:px-5 py-2 rounded-full border border-white/20 bg-white/5 text-white hover:border-[#F40606] hover:bg-[#F40606]/20 transition-all duration-300 cursor-pointer shadow-sm hover:scale-105">
-                            CLIENT PORTAL
+                        <!-- Sleek Sliding Pill Theme Toggle Switch -->
+                        <button id="themeToggleBtn" onclick="toggleAppTheme()" 
+                            class="relative flex items-center w-12 sm:w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/80 hover:border-[#F40606]" 
+                            aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
+                            <span class="text-[10px] absolute left-2 select-none opacity-60">☀️</span>
+                            <span class="text-[10px] absolute right-2 select-none opacity-60">🌙</span>
+                            <span id="themeToggleKnob" class="w-5 sm:w-6 h-5 sm:h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-5 sm:translate-x-6 flex items-center justify-center text-[10px] sm:text-xs">
+                                🌙
+                            </span>
                         </button>
                     </div>
                 </nav>
@@ -412,7 +562,7 @@
 
                 <div class="reveal mt-8 flex flex-wrap justify-center items-center gap-4">
                     <!-- Partner / Launch CTA Button with Animated Sheen -->
-                    <a href="staff-login.html" class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[0_10px_35px_rgba(244,6,6,0.5)]">
+                    <a href="login.html" onclick="navigateToSalonPortal(event)" class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[0_10px_35px_rgba(244,6,6,0.55)] cursor-pointer">
                         <span class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 animate-sheen pointer-events-none"></span>
                         <span class="relative z-10 flex items-center gap-2">
                             <span>Open Management Dashboard</span>
@@ -480,8 +630,8 @@
                     </div>
                 </div>
                 <div class="reveal mt-10">
-                    <button onclick="openPortalModal()" class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg">
-                        <span>Partner with us</span>
+                    <button onclick="navigateToSalonPortal(event)" class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer">
+                        <span>Open Salon Portal</span>
                         <span>→</span>
                     </button>
                 </div>
@@ -832,7 +982,8 @@
                             <h5 class="font-mono text-xs font-semibold tracking-widest text-[#F40606] uppercase mb-4">Company</h5>
                             <ul class="space-y-2.5 text-sm font-light opacity-80">
                                 <li><span>vynster2026@gmail.com</span></li>
-                                <li><button onclick="openPortalModal()" class="hover:text-white transition-colors underline cursor-pointer">Client Portal</button></li>
+                                <li><button onclick="navigateToSalonPortal(event)" class="hover:text-white transition-colors underline cursor-pointer">Salon Portal</button></li>
+                                <li><a href="superadmin_login.html" class="hover:text-white transition-colors underline cursor-pointer">Super Admin Portal</a></li>
                             </ul>
                         </div>
                     </div>
@@ -859,10 +1010,17 @@
             <p class="text-xs sm:text-sm mb-6 opacity-75">Access your engagement dashboard and applications.</p>
 
             <div class="space-y-3">
-                <a href="vynster-salon.html" class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                <a href="login.html" class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
                     <span class="flex items-center gap-3">
                         <span>✨</span>
                         <span>Management Dashboard</span>
+                    </span>
+                    <span>→</span>
+                </a>
+                <a href="superadmin_login.html" class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                    <span class="flex items-center gap-3">
+                        <span>👑</span>
+                        <span>Super Admin Portal</span>
                     </span>
                     <span>→</span>
                 </a>
@@ -1028,25 +1186,15 @@
         }
 
 
-        // Portal Selection Modal
-        const portalModal = document.getElementById('portalModalOverlay');
-        function openPortalModal() {
-            if (portalModal) portalModal.classList.remove('hidden');
-            if (portalModal) portalModal.classList.add('flex');
+        // Salon Portal Navigation — always requires login first
+        function navigateToSalonPortal(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            window.location.href = 'login.html';
         }
-        function closePortalModal() {
-            if (portalModal) portalModal.classList.add('hidden');
-            if (portalModal) portalModal.classList.remove('flex');
-        }
-        if (portalModal) {
-            portalModal.addEventListener('click', (e) => {
-                if (e.target === portalModal) closePortalModal();
-            });
-        }
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closePortalModal();
-        });
 
+        function openPortalModal() {
+            navigateToSalonPortal();
+        }
 
         // Footer Year
         document.getElementById('footerYear').textContent = '© ' + new Date().getFullYear() + ' Vynster. All rights reserved.';

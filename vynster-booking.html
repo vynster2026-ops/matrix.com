@@ -8,6 +8,9 @@
   <!-- Clerk Authentication SDK -->
   <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA"
     src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+  <!-- Real-Time Socket.IO & Sync Engine -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="vynster-sync.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -1301,6 +1304,9 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(booking)
             });
+            if (typeof window.vynsterSyncEmit === 'function') {
+              window.vynsterSyncEmit('newAppointment', booking);
+            }
           }
         }
       } catch (err) {
@@ -1806,6 +1812,9 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(booking)
         });
+        if (typeof window.vynsterSyncEmit === 'function') {
+          window.vynsterSyncEmit('newAppointment', booking);
+        }
       } catch (err) {
         console.error('Save to DB Error:', err);
         alert('Error saving booking or client data: ' + err.message);

@@ -547,6 +547,30 @@ app.post('/api/auth/login', async (req, res) => {
         });
         saveLocal();
     }
+    if (!localDb.admins.some(a => a.email.toLowerCase() === 'manager@vynster.com')) {
+        localDb.admins.push({
+            email: 'manager@vynster.com',
+            password: 'manager123',
+            name: 'Salon Manager',
+            role: 'manager',
+            tier: 2,
+            status: 'Active',
+            branchId: 'b1'
+        });
+        saveLocal();
+    }
+    if (!localDb.admins.some(a => a.email.toLowerCase() === 'manager@branch.com')) {
+        localDb.admins.push({
+            email: 'manager@branch.com',
+            password: 'manager',
+            name: 'Branch Manager',
+            role: 'manager',
+            tier: 2,
+            status: 'Active',
+            branchId: 'b1'
+        });
+        saveLocal();
+    }
 
     let admin = null;
     if (isConnected) {
@@ -563,6 +587,17 @@ app.post('/api/auth/login', async (req, res) => {
             role: 'super',
             tier: 1,
             status: 'Active'
+        };
+    }
+    if (!admin && (cleanEmail === 'manager@vynster.com' && cleanPassword === 'manager123') || (cleanEmail === 'manager@branch.com' && cleanPassword === 'manager')) {
+        admin = {
+            email: cleanEmail,
+            password: cleanPassword,
+            name: cleanEmail === 'manager@vynster.com' ? 'Salon Manager' : 'Branch Manager',
+            role: 'manager',
+            tier: 2,
+            status: 'Active',
+            branchId: 'b1'
         };
     }
 

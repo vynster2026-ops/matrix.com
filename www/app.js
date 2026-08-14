@@ -96,21 +96,21 @@ if (typeof STAFF_DATA !== 'undefined') {
   }
 }
 
-// Ensure the logged-in staff has appointments to make the dashboard a working model
-if (STAFF_DATA[currentStaff] && (!STAFF_DATA[currentStaff].appointments || STAFF_DATA[currentStaff].appointments.length === 0)) {
+// NOTE: Mock seeding is DISABLED when running on a live server (localhost/production).
+// generateAppointments() only runs as last-resort fallback when no API is reachable.
+const _isLiveServer = (typeof window !== 'undefined') &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
+  window.location.port !== '';
+if (!_isLiveServer && STAFF_DATA[currentStaff] && (!STAFF_DATA[currentStaff].appointments || STAFF_DATA[currentStaff].appointments.length === 0)) {
   if (typeof generateAppointments === 'function') {
     STAFF_DATA[currentStaff].appointments = generateAppointments();
     STAFF_DATA[currentStaff].todayAppointments = STAFF_DATA[currentStaff].appointments.length;
-    
     const doneApts = STAFF_DATA[currentStaff].appointments.filter(a => a.status === 'done');
     const earnedToday = doneApts.reduce((sum, a) => sum + (parseFloat(a.price) || 0), 0);
     STAFF_DATA[currentStaff].earnedRevenue = earnedToday;
     STAFF_DATA[currentStaff].completedToday = doneApts.length;
-
-    // Also add some base stats to make it look active
     STAFF_DATA[currentStaff].weeklyRevenue = [1500, 2000, 1800, 2500, 3000, 0, earnedToday];
     STAFF_DATA[currentStaff].weeklyServices = [2, 4, 3, 5, 6, 0, doneApts.length];
-    
     localStorage.setItem('STAFF_DATA_PERSIST', JSON.stringify(STAFF_DATA));
   }
 }
@@ -388,23 +388,36 @@ async function loadServiceCatalog() {
 
 async function syncLiveAppointments() {
   const staff = STAFF_DATA[currentStaff];
-  const staffId = localStorage.getItem('loggedInStaffId') || (staff ? staff.id : currentStaff) || 'priya';
+  // Resolve staffId: prefer loggedInStaffId, then staff.id, then phone, then name
+  const loggedInStaffId = localStorage.getItem('loggedInStaffId');
+  const loggedInPhone   = localStorage.getItem('loggedInPhone');
+  const loggedInName    = localStorage.getItem('loggedInUser') || localStorage.getItem('loggedInStaffName');
+  const staffId = loggedInStaffId || (staff ? staff.id : null) || loggedInPhone || loggedInName || currentStaff;
   
   try {
-    const response = await fetch(`/api/my-appointments?staffId=${staffId}`);
+    const response = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(staffId)}`);
     if (response.ok) {
-      const bookings = await response.json();
-      
+      let bookings = await response.json();
+
+      // If staffId lookup returned empty, try fallback by phone / name
+      if ((!bookings || bookings.length === 0) && loggedInPhone) {
+        const r2 = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(loggedInPhone)}`);
+        if (r2.ok) { const b2 = await r2.json(); if (b2 && b2.length > 0) bookings = b2; }
+      }
+      if ((!bookings || bookings.length === 0) && loggedInName) {
+        const r3 = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(loggedInName)}`);
+        if (r3.ok) { const b3 = await r3.json(); if (b3 && b3.length > 0) bookings = b3; }
+      }
+
       // Map the bookings array from MongoDB format to Staff Timeline format
-      const mappedApts = bookings.map(b => {
+      const mappedApts = (bookings || []).map(b => {
         const currentStatus = (b.status || 'upcoming').toLowerCase();
-        
         return {
           id: b.id || b._id,
           time: b.time || "09:00",
           client: b.clientName || "Walk-in Client",
           service: Array.isArray(b.services) ? b.services.join(", ") : (b.services || "General Service"),
-          duration: 60, // Default duration if not present
+          duration: 60,
           price: Number(b.total) || 0,
           status: currentStatus,
           phone: b.clientPhone || "",
@@ -412,22 +425,14 @@ async function syncLiveAppointments() {
         };
       });
 
-      // Update STAFF_DATA appointments for current logged-in staff
+      // Always replace mock data with real data (even if empty)
       if (STAFF_DATA[currentStaff]) {
         STAFF_DATA[currentStaff].appointments = mappedApts;
-        
-        // Sync aptStates with the retrieved statuses
         mappedApts.forEach(a => {
-          if (!aptStates[a.id]) {
-            aptStates[a.id] = a.status;
-          }
+          if (!aptStates[a.id]) { aptStates[a.id] = a.status; }
         });
         saveAptStates();
-
-        // Sort appointments by time
         STAFF_DATA[currentStaff].appointments.sort((a, b) => a.time.localeCompare(b.time));
-        
-        // Refresh the UI timeline and dashboard
         if (typeof refreshTimeline === 'function') refreshTimeline();
         if (typeof buildDashboard === 'function') buildDashboard(STAFF_DATA[currentStaff]);
       }
@@ -2498,9 +2503,15 @@ async function submitLeave() {
       if (res.ok) {
           showToast("Leave request submitted to Admin.", "success", "📋");
       }
+      if (typeof window.vynsterSyncEmit === 'function') {
+          window.vynsterSyncEmit('newLeaveRequest', newLeave);
+      }
   } catch (e) {
       console.error("Leave request API error:", e);
       showToast("Leave request submitted locally.", "info", "📋");
+      if (typeof window.vynsterSyncEmit === 'function') {
+          window.vynsterSyncEmit('newLeaveRequest', newLeave);
+      }
   }
   
   const history = JSON.parse(localStorage.getItem("staffLeavesHistory") || "[]");
@@ -6083,10 +6094,16 @@ window.submitLeave = async function() {
     } else {
       throw new Error('Server returned error');
     }
+    if (typeof window.vynsterSyncEmit === 'function') {
+      window.vynsterSyncEmit('newLeaveRequest', payload);
+    }
   } catch (e) {
     showToast('Leave request submitted!', 'success');
     if (document.getElementById('leaveForm')) document.getElementById('leaveForm').classList.add('hidden');
     window.loadLeaves();
+    if (typeof window.vynsterSyncEmit === 'function') {
+      window.vynsterSyncEmit('newLeaveRequest', payload);
+    }
   }
 };
 

@@ -10,6 +10,9 @@
     <!-- Clerk Authentication SDK -->
     <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA"
         src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+    <!-- Real-Time Socket.IO & Sync Engine -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="vynster-sync.js"></script>
 
 
     <script>
@@ -200,6 +203,29 @@
 
         aside::-webkit-scrollbar {
             display: none;
+        }
+
+        /* Repaired & Custom Scrollbar for Data Tables */
+        .table-responsive-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) #f1f5f9;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .table-responsive-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #165b75;
         }
 
         .app-container.sidebar-collapsed aside {
@@ -1676,9 +1702,6 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button onclick="window.open('staff-login.html', '_blank')" class="btn"
-                        style="background: linear-gradient(135deg, #1a6b8a, #2196b8); color: white; border: none; padding: 9px 16px; border-radius: var(--radius-md); font-weight: 700; display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(26, 107, 138, 0.25);"
-                        title="Open Staff Portal Login">🔑 Staff Portal Login ↗</button>
                     <div class="notification-wrapper">
                         <button class="btn"
                             style="background: white; border: 1px solid var(--border); padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 44px; height: 44px; position: relative; cursor: pointer;"
@@ -2401,85 +2424,103 @@
 
             <!-- Clients View -->
             <div id="view-clients" class="view-section">
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-                        <h2 style="font-size:24px; font-weight:800; color:var(--text-main);"
-                            id="client-directory-title">Client Directory</h2>
-                        <div style="display:flex; gap:12px;">
-                            <div class="tab-pills" id="client-filter-tabs"
-                                style="display:flex; background:var(--bg-body); padding:4px; border-radius:var(--radius-md); border:1px solid var(--border);">
-                                <div class="tab-pill active" onclick="setClientFilter('all')" id="pill-all"
-                                    style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px;">
-                                    All Clients</div>
-                                <div class="tab-pill" onclick="setClientFilter('new')" id="pill-new"
-                                    style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px;">
-                                    New Clients</div>
-                                <div class="tab-pill" onclick="setClientFilter('vip')" id="pill-vip"
-                                    style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px; display:flex; align-items:center; gap:4px; color:var(--warning);">
-                                    ★ VIP</div>
-                                <div style="position: relative; display: inline-block;">
-                                    <div class="tab-pill" id="pill-events"
-                                        style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px; display:flex; align-items:center; gap:4px;"
-                                        onclick="const d = document.getElementById('events-dropdown'); d.style.display = (d.style.display === 'block' ? 'none' : 'block'); event.stopPropagation();">
-                                        📅 Events <span style="font-size: 10px;">▼</span>
-                                    </div>
-                                    <div id="events-dropdown"
-                                        style="display: none; position: absolute; top: 100%; right: 0; background: white; min-width: 170px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10; border-radius: 8px; margin-top: 4px; border: 1px solid #eee; overflow: hidden; padding: 4px 0;">
-
-                                        <div class="tab-pill"
-                                            onclick="setClientFilter('birthdays'); document.getElementById('events-dropdown').style.display = 'none'"
-                                            id="pill-birthdays"
-                                            style="padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; border-radius:0; margin: 0; background: transparent;">
-                                            🎁 Birthdays
-                                        </div>
-                                        <div class="tab-pill"
-                                            onclick="setClientFilter('anniversaries'); document.getElementById('events-dropdown').style.display = 'none'"
-                                            id="pill-anniversaries"
-                                            style="padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; border-radius:0; margin: 0; background: transparent;">
-                                            🎂 Anniversaries
-                                        </div>
-                                    </div>
-                                </div>
-                                <script>
-                                    window.birthdaysEnabled = true;
-                                    window.anniversariesEnabled = true;
-                                    window.toggleEventFeature = function (feature, isEnabled) {
-                                        if (feature === 'birthdays') {
-                                            window.birthdaysEnabled = isEnabled;
-                                        } else if (feature === 'anniversaries') {
-                                            window.anniversariesEnabled = isEnabled;
-                                        }
-                                        renderClientsView(cachedClients, document.getElementById('client-search-input') ? document.getElementById('client-search-input').value : '');
-                                    };
-                                    document.addEventListener('click', function (e) {
-                                        const d = document.getElementById('events-dropdown');
-                                        if (d && e.target.closest('#pill-events') === null && e.target.closest('#events-dropdown') === null) {
-                                            d.style.display = 'none';
-                                        }
-                                    });
-                                </script>
+                <div class="card" style="position: relative;">
+                    <!-- Sticky Header Toolbar -->
+                    <div style="position: sticky; top: 0; background: white; z-index: 100; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+                        <!-- TOP ROW: Title & Action Buttons -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <h2 style="font-size:24px; font-weight:800; color:var(--text-main);"
+                                    id="client-directory-title">Client Directory</h2>
+                                <span id="client-total-badge" style="font-size:12px; background:var(--primary-bg); color:var(--primary); padding:4px 12px; border-radius:16px; font-weight:700; border:1px solid rgba(26, 107, 138, 0.2);">0 Total Clients</span>
                             </div>
-                            <button class="btn btn-primary" onclick="refreshData()"
-                                style="display:flex; align-items:center; gap:8px; padding:8px 16px;">
-                                <span>🔄</span> Sync
-                            </button>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <button class="btn btn-primary" onclick="openAddClientModal()"
+                                    style="display:flex; align-items:center; gap:8px; padding:9px 18px; font-size:13px; font-weight:700;">
+                                    <span>➕</span> Add Client
+                                </button>
+                                <button class="btn" onclick="refreshData()"
+                                    style="display:flex; align-items:center; gap:8px; padding:9px 18px; font-size:13px; font-weight:700; background:var(--bg-body); color:var(--text-main); border:1px solid var(--border);">
+                                    <span>🔄</span> Sync
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div
-                        style="margin-bottom: 16px; display:flex; justify-content:space-between; align-items:center; gap:16px;">
-                        <input type="text" id="client-search-input" placeholder="Search by name or phone..."
-                            style="padding: 10px 16px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; width: 350px; outline:none; transition:0.2s;"
-                            onfocus="this.style.borderColor='var(--primary)'"
-                            onblur="this.style.borderColor='var(--border)'">
 
-                        <div id="event-automation-container"
-                            style="display:none; align-items:center; gap:12px; margin-left:auto;">
-                            <button
-                                onclick="document.getElementById('event-automation-modal').style.display='flex'; fetchEventSettings();"
-                                class="btn"
-                                style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; padding:8px 16px; background:var(--primary); color:white; border:none; border-radius:8px;">
-                                ⚙️ Event Automations
-                            </button>
+                        <!-- BOTTOM ROW: Search Bar (Left) + Filter Tabs & Automations (Right) -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+                            <!-- Search Bar Input -->
+                            <div style="position:relative; flex:1; max-width:340px; min-width:240px;">
+                                <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:14px; color:var(--text-muted); pointer-events:none;">🔍</span>
+                                <input type="text" id="client-search-input" placeholder="Search by name or phone..."
+                                    style="width:100%; padding:10px 16px 10px 38px; border-radius:12px; border:1.5px solid var(--border); font-size:14px; outline:none; transition:all 0.2s ease; background:var(--bg-body);"
+                                    onfocus="this.style.borderColor='var(--primary)'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(26, 107, 138, 0.1)';"
+                                    onblur="this.style.borderColor='var(--border)'; this.style.background='var(--bg-body)'; this.style.boxShadow='none';">
+                            </div>
+
+                            <!-- Filter Pills & Automations -->
+                            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                                <div class="tab-pills" id="client-filter-tabs"
+                                    style="display:flex; background:var(--bg-body); padding:4px; border-radius:var(--radius-md); border:1px solid var(--border);">
+                                    <div class="tab-pill active" onclick="setClientFilter('all')" id="pill-all"
+                                        style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px;">
+                                        All Clients</div>
+                                    <div class="tab-pill" onclick="setClientFilter('new')" id="pill-new"
+                                        style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px;">
+                                        New Clients</div>
+                                    <div class="tab-pill" onclick="setClientFilter('vip')" id="pill-vip"
+                                        style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px; display:flex; align-items:center; gap:4px; color:var(--warning);">
+                                        ★ VIP</div>
+                                    <div style="position: relative; display: inline-block;">
+                                        <div class="tab-pill" id="pill-events"
+                                            style="padding:6px 16px; font-size:12px; font-weight:700; cursor:pointer; border-radius:8px; display:flex; align-items:center; gap:4px;"
+                                            onclick="const d = document.getElementById('events-dropdown'); d.style.display = (d.style.display === 'block' ? 'none' : 'block'); event.stopPropagation();">
+                                            📅 Events <span style="font-size: 10px;">▼</span>
+                                        </div>
+                                        <div id="events-dropdown"
+                                            style="display: none; position: absolute; top: 100%; right: 0; background: white; min-width: 170px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10; border-radius: 8px; margin-top: 4px; border: 1px solid #eee; overflow: hidden; padding: 4px 0;">
+                                            <div class="tab-pill"
+                                                onclick="setClientFilter('birthdays'); document.getElementById('events-dropdown').style.display = 'none'"
+                                                id="pill-birthdays"
+                                                style="padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; border-radius:0; margin: 0; background: transparent;">
+                                                🎁 Birthdays
+                                            </div>
+                                            <div class="tab-pill"
+                                                onclick="setClientFilter('anniversaries'); document.getElementById('events-dropdown').style.display = 'none'"
+                                                id="pill-anniversaries"
+                                                style="padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:8px; border-radius:0; margin: 0; background: transparent;">
+                                                🎂 Anniversaries
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        window.birthdaysEnabled = true;
+                                        window.anniversariesEnabled = true;
+                                        window.toggleEventFeature = function (feature, isEnabled) {
+                                            if (feature === 'birthdays') {
+                                                window.birthdaysEnabled = isEnabled;
+                                            } else if (feature === 'anniversaries') {
+                                                window.anniversariesEnabled = isEnabled;
+                                            }
+                                            renderClientsView(cachedClients, document.getElementById('client-search-input') ? document.getElementById('client-search-input').value : '');
+                                        };
+                                        document.addEventListener('click', function (e) {
+                                            const d = document.getElementById('events-dropdown');
+                                            if (d && e.target.closest('#pill-events') === null && e.target.closest('#events-dropdown') === null) {
+                                                d.style.display = 'none';
+                                            }
+                                        });
+                                    </script>
+                                </div>
+
+                                <div id="event-automation-container" style="display:none; align-items:center;">
+                                    <button
+                                        onclick="document.getElementById('event-automation-modal').style.display='flex'; fetchEventSettings();"
+                                        class="btn"
+                                        style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; padding:7px 14px; background:var(--primary); color:white; border:none; border-radius:8px;">
+                                        ⚙️ Automations
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Event Automations Modal -->
@@ -2540,8 +2581,8 @@
                             <button class="btn" onclick="toggleAllClients(false)"
                                 style="padding:8px 16px; font-size:12px; background:white; color:var(--text-muted); border:1px solid var(--border);">Deselect</button>
                         </div>
-                    </div>
-                    <div style="overflow-x: auto;">
+                    </div> <!-- End Sticky Header Toolbar -->
+                    <div class="table-responsive-wrapper" style="overflow-x: auto; margin-top: 12px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -2565,6 +2606,7 @@
                         </table>
                     </div>
                 </div>
+            </div>
             </div>
 
             <!-- Staff View -->
@@ -3000,10 +3042,10 @@
                                     style="padding:8px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-family:inherit; color:var(--text-main); outline:none; background: white; cursor:pointer;">
                                     <option value="all">All Categories</option>
                                     <option value="Salaries">Salaries</option>
-                                    <option value="Rent &amp; Utilities">Rent &amp; Utilities</option>
+                                    <option value="Rent & Utilities">Rent & Utilities</option>
                                     <option value="Inventory Stock">Inventory Stock</option>
                                     <option value="Marketing">Marketing</option>
-                                    <option value="Equipment &amp; Maintenance">Equipment &amp; Maintenance</option>
+                                    <option value="Equipment & Maintenance">Equipment & Maintenance</option>
                                     <option value="Miscellaneous">Miscellaneous</option>
                                 </select>
                                 <button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;"
@@ -6828,10 +6870,10 @@
                     <select id="expense-category"
                         style="width:100%; padding:12px; border:1.5px solid var(--border); border-radius:10px; outline:none; font-family:inherit;">
                         <option value="Salaries">Salaries</option>
-                        <option value="Rent &amp; Utilities">Rent &amp; Utilities</option>
+                        <option value="Rent & Utilities">Rent & Utilities</option>
                         <option value="Inventory Stock">Inventory Stock</option>
                         <option value="Marketing">Marketing</option>
-                        <option value="Equipment &amp; Maintenance">Equipment &amp; Maintenance</option>
+                        <option value="Equipment & Maintenance">Equipment & Maintenance</option>
                         <option value="Miscellaneous">Miscellaneous</option>
                     </select>
                 </div>
@@ -7204,6 +7246,25 @@
                     <input type="email" id="edit-client-email" class="form-input" style="width: 100%;">
                 </div>
 
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Gender</label>
+                        <select id="edit-client-gender" class="form-input" style="width: 100%;">
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Date of Birth</label>
+                        <input type="date" id="edit-client-dob" class="form-input" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Anniversary</label>
+                        <input type="date" id="edit-client-anniversary" class="form-input" style="width: 100%;">
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 32px;">
                     <label
                         style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Location
@@ -7217,6 +7278,66 @@
                     <button onclick="saveEditClientDetails()" id="btn-save-client"
                         style="padding: 12px 24px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer;">Save
                         Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div id="add-client-modal"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 2020;">
+        <div style="background: white; width: 95%; max-width: 550px; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.1);">
+            <div style="background: var(--primary); padding: 24px 32px; color: white; display: flex; align-items: center; justify-content: space-between;">
+                <h3 style="margin: 0; font-size: 20px; font-weight: 800;">➕ Add New Client</h3>
+                <button onclick="closeAddClientModal()"
+                    style="background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px;">×</button>
+            </div>
+            <div style="padding: 32px;">
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Full Name *</label>
+                    <input type="text" id="add-client-name" class="form-input" style="width: 100%;" placeholder="e.g. Ananya Sharma">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Phone Number</label>
+                        <input type="text" id="add-client-phone" class="form-input" style="width: 100%;" placeholder="e.g. 9876543210">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Email Address</label>
+                        <input type="email" id="add-client-email" class="form-input" style="width: 100%;" placeholder="e.g. client@gmail.com">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Gender</label>
+                        <select id="add-client-gender" class="form-input" style="width: 100%;">
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Date of Birth</label>
+                        <input type="date" id="add-client-dob" class="form-input" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Anniversary</label>
+                        <input type="date" id="add-client-anniversary" class="form-input" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Location / Address</label>
+                    <input type="text" id="add-client-location" class="form-input" style="width: 100%;" placeholder="City or Area">
+                </div>
+
+                <div style="display: flex; gap: 16px; justify-content: flex-end;">
+                    <button onclick="closeAddClientModal()"
+                        style="padding: 12px 24px; border-radius: 12px; border: 1px solid var(--border); background: white; color: var(--text-main); font-weight: 700; cursor: pointer;">Cancel</button>
+                    <button onclick="saveNewClientDetails()" id="btn-save-new-client"
+                        style="padding: 12px 24px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 700; cursor: pointer;">Add Client</button>
                 </div>
             </div>
         </div>
@@ -13599,19 +13720,17 @@
             // Apply 'Birthdays' Filter
             if (currentClientFilter === 'birthdays') {
                 if (!window.currentEventTimeFilter) {
-                    filtered = []; // Do not show any clients by default
-                } else {
-                    filtered = filtered.filter(c => c.dob && c.dob !== '—' && window.isDateInFrequency(c.dob, window.currentEventTimeFilter));
+                    window.currentEventTimeFilter = 'monthly';
                 }
+                filtered = filtered.filter(c => c.dob && c.dob !== '—' && window.isDateInFrequency(c.dob, window.currentEventTimeFilter));
             }
 
             // Apply 'Anniversaries' Filter
             if (currentClientFilter === 'anniversaries') {
                 if (!window.currentEventTimeFilter) {
-                    filtered = []; // Do not show any clients by default
-                } else {
-                    filtered = filtered.filter(c => c.anniversary && c.anniversary !== '—' && window.isDateInFrequency(c.anniversary, window.currentEventTimeFilter));
+                    window.currentEventTimeFilter = 'monthly';
                 }
+                filtered = filtered.filter(c => c.anniversary && c.anniversary !== '—' && window.isDateInFrequency(c.anniversary, window.currentEventTimeFilter));
             }
 
             // Update UI tabs and Title
@@ -13627,6 +13746,24 @@
                 else if (currentClientFilter === 'anniversaries') titleEl.textContent = 'Clients with Anniversaries';
                 else titleEl.textContent = 'Client Directory';
             }
+
+            const totalBadge = document.getElementById('client-total-badge');
+            if (totalBadge) {
+                if (query || currentClientFilter !== 'all') {
+                    totalBadge.textContent = `${filtered.length} of ${clients.length} Clients`;
+                } else {
+                    totalBadge.textContent = `${clients.length} Total Clients`;
+                }
+            }
+
+            const pillAll = document.getElementById('pill-all');
+            if (pillAll) pillAll.textContent = 'All Clients';
+
+            const pillNew = document.getElementById('pill-new');
+            if (pillNew) pillNew.textContent = 'New Clients';
+
+            const pillVip = document.getElementById('pill-vip');
+            if (pillVip) pillVip.innerHTML = '★ VIP';
 
             const autoContainer = document.getElementById('event-automation-container');
             if (autoContainer) {
@@ -13654,6 +13791,9 @@
             tbody.innerHTML = filtered.map(c => {
                 const ltvNum = parseInt(String(c.ltv || '0').replace(/\D/g, '')) || 0;
                 const isVip = ltvNum >= 10000;
+                const dobVal = (c.dob && c.dob !== '—') ? c.dob : '';
+                const anniversaryVal = (c.anniversary && c.anniversary !== '—') ? c.anniversary : '';
+
                 return `<tr>
             <td style="text-align:center;"><input type="checkbox" class="client-row-checkbox" value="${c.id}" onchange="updateClientSelectionState()" onclick="event.stopPropagation()" style="width:18px; height:18px; accent-color:var(--primary); cursor:pointer;"></td>
             <td style="cursor:pointer;" onclick="openClientProfile('${c.name}', '${c.id}')">
@@ -13665,8 +13805,8 @@
             <td>${c.phone || '—'}</td>
             <td>${c.email || '—'}</td>
             <td style="text-transform: capitalize;">${c.gender || '—'}</td>
-            ${(!window.birthdaysEnabled || currentClientFilter === 'anniversaries') ? '' : `<td>${isVip && c.dob ? `<div style="display:flex; align-items:center; gap:6px;"><span>${c.dob}</span><div onclick="event.stopPropagation(); window.handleDirectWhatsAppMessage('${c.phone || ''}', 'Happy Birthday Month! 🎂 We want to celebrate YOU! Book any service with us this week for a special treat. Reply to claim your gift! 💆‍♀️✨')" style="cursor:pointer; background:#25D366; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(37, 211, 102, 0.3);" title="Send Birthday Offer"><i class="fab fa-whatsapp" style="font-size:12px;"></i></div></div>` : '—'}</td>`}
-            ${(!window.anniversariesEnabled || currentClientFilter === 'birthdays') ? '' : `<td>${isVip && c.anniversary ? `<div style="display:flex; align-items:center; gap:6px;"><span>${c.anniversary}</span><div onclick="event.stopPropagation(); window.handleDirectWhatsAppMessage('${c.phone || ''}', 'Happy Anniversary! ❤️ Celebrate your special milestone with us. Book a premium service and get a special discount. Reply to book your appointment.')" style="cursor:pointer; background:#25D366; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(37, 211, 102, 0.3);" title="Send Anniversary Offer"><i class="fab fa-whatsapp" style="font-size:12px;"></i></div></div>` : '—'}</td>`}
+            ${(!window.birthdaysEnabled || currentClientFilter === 'anniversaries') ? '' : `<td>${dobVal ? `<div style="display:flex; align-items:center; gap:6px;"><span>${dobVal}</span><div onclick="event.stopPropagation(); window.handleDirectWhatsAppMessage('${c.phone || ''}', 'Happy Birthday! 🎂 We want to celebrate YOU! Book any service with us this week for a special treat. Reply to claim your gift! 💆‍♀️✨')" style="cursor:pointer; background:#25D366; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(37, 211, 102, 0.3);" title="Send Birthday Offer">💬</div></div>` : '—'}</td>`}
+            ${(!window.anniversariesEnabled || currentClientFilter === 'birthdays') ? '' : `<td>${anniversaryVal ? `<div style="display:flex; align-items:center; gap:6px;"><span>${anniversaryVal}</span><div onclick="event.stopPropagation(); window.handleDirectWhatsAppMessage('${c.phone || ''}', 'Happy Anniversary! ❤️ Celebrate your special milestone with us. Book a premium service and get a special discount. Reply to book your appointment.')" style="cursor:pointer; background:#25D366; color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 4px rgba(37, 211, 102, 0.3);" title="Send Anniversary Offer">💬</div></div>` : '—'}</td>`}
             <td style="font-weight:600; color:var(--primary); font-size:15px;">${(c.pts || 0).toLocaleString('en-IN')} <span style="font-size:10px; opacity:0.7;">pts</span></td>
             <td style="font-weight:600;">${c.ltv || '₹0'}</td>
             <td>
@@ -14056,36 +14196,74 @@
             const tbody = document.getElementById('expenses-table-body');
             if (!tbody) return;
 
+            const cleanCatStr = str => String(str || '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim().toLowerCase();
+
             const selectedCat = document.getElementById('expense-filter-category')?.value || 'all';
             let filteredExpenses = [...cachedExpenses];
+
             if (selectedCat !== 'all') {
-                filteredExpenses = filteredExpenses.filter(item => item.cat === selectedCat);
+                filteredExpenses = filteredExpenses.filter(item => {
+                    const itemCat = cleanCatStr(item.cat || item.category || 'Miscellaneous');
+                    return itemCat === cleanCatStr(selectedCat);
+                });
             }
 
             // Sort expenses descending by date
-            filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredExpenses.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
             tbody.innerHTML = filteredExpenses.map(item => {
+                const catText = (item.cat || item.category || 'Miscellaneous').replace(/&amp;/g, '&').trim();
+                const descText = (item.desc || item.title || item.description || item.name || item.notes || '').trim() || `${catText} Receipt`;
+
+                let dateText = item.date || new Date().toISOString().split('T')[0];
+                if (dateText.includes('T')) dateText = dateText.split('T')[0];
+
+                const amtVal = parseFloat(item.amount || 0);
+                const methodText = (item.method || item.paymentMethod || item.paymentMode || 'Cash').trim();
+                const itemId = item.id || item._id;
+
+                let badgeStyle = 'background:#e0f2fe; color:#0369a1;';
+                const lowerMethod = methodText.toLowerCase();
+                if (lowerMethod.includes('upi') || lowerMethod.includes('googlepay')) {
+                    badgeStyle = 'background:#dcfce7; color:#15803d;';
+                } else if (lowerMethod.includes('card')) {
+                    badgeStyle = 'background:#f3e8ff; color:#7e22ce;';
+                } else if (lowerMethod.includes('bank') || lowerMethod.includes('transfer')) {
+                    badgeStyle = 'background:#fef3c7; color:#b45309;';
+                }
+
                 return `<tr>
-                    <td style="font-weight:700; color:var(--text-main);">${item.desc || 'N/A'}</td>
-                    <td><span style="background:var(--bg-body); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${item.cat}</span></td>
-                    <td>${item.date || 'N/A'}</td>
-                    <td style="font-weight:700; color:#E53E3E;">₹${parseFloat(item.amount || 0).toLocaleString('en-IN')}</td>
-                    <td><span style="background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${item.method || 'Cash'}</span></td>
+                    <td style="font-weight:700; color:var(--text-main);">${descText}</td>
+                    <td><span style="background:var(--bg-body); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${catText}</span></td>
+                    <td>${dateText}</td>
+                    <td style="font-weight:700; color:#E53E3E;">₹${amtVal.toLocaleString('en-IN')}</td>
+                    <td><span style="${badgeStyle} padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">${methodText}</span></td>
                     <td>
-                        <button class="btn" style="padding:6px; background:#fee2e2; color:#ef4444; border:none; border-radius:8px;" onclick="deleteExpenseItem('${item.id}')">
+                        <button class="btn" style="padding:6px; background:#fee2e2; color:#ef4444; border:none; border-radius:8px; cursor:pointer;" onclick="deleteExpenseItem('${itemId}')">
                             🗑️
                         </button>
                     </td>
                 </tr>`;
             }).join('');
 
-            // Calculate Monthly Stats
+            // Calculate Monthly & Overall Stats
             const now = new Date();
-            const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1; // 1-12
 
-            const monthlyExpenses = cachedExpenses.filter(e => e.date && e.date.startsWith(currentMonthStr));
-            const totalMonthly = monthlyExpenses.reduce((acc, e) => acc + (parseFloat(e.amount) || 0), 0);
+            let activeExpenses = cachedExpenses.filter(e => {
+                if (!e.date) return false;
+                const d = new Date(e.date);
+                if (isNaN(d.getTime())) return false;
+                return d.getFullYear() === currentYear && (d.getMonth() + 1) === currentMonth;
+            });
+
+            // If no expenses for current calendar month, calculate stats across all logged receipts
+            if (activeExpenses.length === 0) {
+                activeExpenses = [...cachedExpenses];
+            }
+
+            const totalMonthly = activeExpenses.reduce((acc, e) => acc + (parseFloat(e.amount) || 0), 0);
 
             // Update DOM Stats
             const monthlyEl = document.getElementById('expense-total-monthly');
@@ -14096,7 +14274,7 @@
             const dailyEl = document.getElementById('expense-daily-avg');
             if (dailyEl) dailyEl.innerText = '₹' + dailyAvg.toLocaleString('en-IN');
 
-            // Find Top Category and Populate Breakdown
+            // Category Breakdown Mapping
             const categories = [
                 { name: 'Salaries', color: '#4F46E5' },
                 { name: 'Rent & Utilities', color: '#06B6D4' },
@@ -14109,8 +14287,10 @@
             const catMap = {};
             categories.forEach(c => catMap[c.name] = 0);
 
-            monthlyExpenses.forEach(e => {
-                const catName = categories.find(c => c.name === e.cat) ? e.cat : 'Miscellaneous';
+            activeExpenses.forEach(e => {
+                const rawCat = cleanCatStr(e.cat || e.category || 'Miscellaneous');
+                const matched = categories.find(c => cleanCatStr(c.name) === rawCat);
+                const catName = matched ? matched.name : 'Miscellaneous';
                 catMap[catName] = (catMap[catName] || 0) + (parseFloat(e.amount) || 0);
             });
 
@@ -14148,37 +14328,72 @@
         }
 
         function openExpenseModal() {
-            // Set current date by default
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('expense-date');
             if (dateInput) dateInput.value = today;
 
+            const descInput = document.getElementById('expense-desc');
+            if (descInput) descInput.value = '';
+
+            const amtInput = document.getElementById('expense-amount');
+            if (amtInput) amtInput.value = '';
+
             const overlay = document.getElementById('expense-modal-overlay');
             if (overlay) overlay.style.display = 'flex';
+            if (descInput) setTimeout(() => descInput.focus(), 100);
         }
 
         function closeExpenseModal() {
             const overlay = document.getElementById('expense-modal-overlay');
             if (overlay) overlay.style.display = 'none';
-            // Clear inputs
-            document.getElementById('expense-desc').value = '';
-            document.getElementById('expense-amount').value = '';
+            if (document.getElementById('expense-desc')) document.getElementById('expense-desc').value = '';
+            if (document.getElementById('expense-amount')) document.getElementById('expense-amount').value = '';
         }
 
         async function saveExpense() {
-            const desc = document.getElementById('expense-desc').value.trim();
-            const cat = document.getElementById('expense-category').value;
-            const amount = parseFloat(document.getElementById('expense-amount').value);
-            const date = document.getElementById('expense-date').value;
-            const method = document.getElementById('expense-method').value;
+            const descInput = document.getElementById('expense-desc');
+            const catSelect = document.getElementById('expense-category');
+            const amtInput = document.getElementById('expense-amount');
+            const dateInput = document.getElementById('expense-date');
+            const methodSelect = document.getElementById('expense-method');
 
-            if (!desc || isNaN(amount) || amount <= 0 || !date) {
-                alert('Please enter a valid description, amount and date.');
+            const desc = descInput ? descInput.value.trim() : '';
+            const cat = catSelect ? catSelect.value.replace(/&amp;/g, '&').trim() : 'Miscellaneous';
+            const amount = amtInput ? parseFloat(amtInput.value) : 0;
+            const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+            const method = methodSelect ? methodSelect.value : 'Cash';
+
+            if (!desc) {
+                alert('Please enter a description for the expense (e.g., Staff Salary, Rent Payment, Shampoo Stock).');
+                if (descInput) descInput.focus();
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                if (amtInput) amtInput.focus();
+                return;
+            }
+
+            if (!date) {
+                alert('Please select a date.');
                 return;
             }
 
             const id = 'exp-' + Date.now();
-            const newExpense = { id, desc, cat, amount, date, method };
+            const newExpense = {
+                id,
+                desc: desc,
+                title: desc,
+                description: desc,
+                name: desc,
+                cat: cat,
+                category: cat,
+                amount: amount,
+                date: date,
+                method: method,
+                paymentMethod: method
+            };
 
             try {
                 const res = await fetch(`${API_URL}/expenses`, {
@@ -14191,12 +14406,17 @@
                     closeExpenseModal();
                     await refreshData();
                 } else {
-                    alert('Failed to save expense.');
+                    const idx = cachedExpenses.findIndex(e => e.id === id);
+                    if (idx === -1) cachedExpenses.unshift(newExpense);
+                    else cachedExpenses[idx] = newExpense;
+                    closeExpenseModal();
+                    renderExpensesView();
                 }
             } catch (err) {
-                console.error(err);
-                alert('Connection to server failed. Saving locally.');
-                cachedExpenses.push(newExpense);
+                console.error('Error saving expense:', err);
+                const idx = cachedExpenses.findIndex(e => e.id === id);
+                if (idx === -1) cachedExpenses.unshift(newExpense);
+                else cachedExpenses[idx] = newExpense;
                 closeExpenseModal();
                 renderExpensesView();
             }
@@ -15926,6 +16146,9 @@
             document.getElementById('edit-client-name').value = client.name || '';
             document.getElementById('edit-client-phone').value = client.phone || '';
             document.getElementById('edit-client-email').value = client.email || '';
+            document.getElementById('edit-client-gender').value = client.gender || 'female';
+            document.getElementById('edit-client-dob').value = client.dob || '';
+            document.getElementById('edit-client-anniversary').value = client.anniversary || '';
             document.getElementById('edit-client-location').value = client.location || '';
 
             document.getElementById('edit-client-modal').style.display = 'flex';
@@ -15940,6 +16163,9 @@
             const name = document.getElementById('edit-client-name').value.trim();
             const phone = document.getElementById('edit-client-phone').value.trim();
             const email = document.getElementById('edit-client-email').value.trim();
+            const gender = document.getElementById('edit-client-gender').value;
+            const dob = document.getElementById('edit-client-dob').value;
+            const anniversary = document.getElementById('edit-client-anniversary').value;
             const location = document.getElementById('edit-client-location').value.trim();
 
             if (!name) return showToast('Name is required', 'error');
@@ -15952,14 +16178,13 @@
                 const res = await fetch(`${API_URL}/clients/${encodeURIComponent(id)}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, phone, email, location })
+                    body: JSON.stringify({ name, phone, email, gender, dob, anniversary, location })
                 });
 
                 if (res.ok) {
                     showToast('Client details updated successfully!');
                     closeEditClientModal();
                     await refreshData();
-                    // Reopen profile with new data
                     openClientProfile(name, id);
                 } else {
                     showToast('Failed to update client', 'error');
@@ -15968,6 +16193,73 @@
                 showToast('Network error while updating client', 'error');
             } finally {
                 btn.textContent = 'Save Changes';
+                btn.disabled = false;
+            }
+        }
+
+        function openAddClientModal() {
+            document.getElementById('add-client-name').value = '';
+            document.getElementById('add-client-phone').value = '';
+            document.getElementById('add-client-email').value = '';
+            document.getElementById('add-client-gender').value = 'female';
+            document.getElementById('add-client-dob').value = '';
+            document.getElementById('add-client-anniversary').value = '';
+            document.getElementById('add-client-location').value = '';
+            document.getElementById('add-client-modal').style.display = 'flex';
+        }
+
+        function closeAddClientModal() {
+            document.getElementById('add-client-modal').style.display = 'none';
+        }
+
+        async function saveNewClientDetails() {
+            const name = document.getElementById('add-client-name').value.trim();
+            const phone = document.getElementById('add-client-phone').value.trim();
+            const email = document.getElementById('add-client-email').value.trim();
+            const gender = document.getElementById('add-client-gender').value;
+            const dob = document.getElementById('add-client-dob').value;
+            const anniversary = document.getElementById('add-client-anniversary').value;
+            const location = document.getElementById('add-client-location').value.trim();
+
+            if (!name) return showToast('Client Name is required', 'error');
+
+            const btn = document.getElementById('btn-save-new-client');
+            btn.textContent = 'Adding...';
+            btn.disabled = true;
+
+            try {
+                const clientId = 'c-' + Date.now();
+                const payload = {
+                    id: clientId,
+                    name,
+                    phone,
+                    email,
+                    gender,
+                    dob,
+                    anniversary,
+                    location,
+                    pts: 0,
+                    ltv: '₹0',
+                    branch: (typeof currentBranch !== 'undefined' && currentBranch) ? currentBranch : 'Main Branch'
+                };
+
+                const res = await fetch(`${API_URL}/clients`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    showToast('New client added successfully!');
+                    closeAddClientModal();
+                    await refreshData();
+                } else {
+                    showToast('Failed to add new client', 'error');
+                }
+            } catch (e) {
+                showToast('Network error while adding new client', 'error');
+            } finally {
+                btn.textContent = 'Add Client';
                 btn.disabled = false;
             }
         }
@@ -16382,20 +16674,44 @@
             if (!dateStr || dateStr === '-' || dateStr === '—') return false;
 
             const today = new Date();
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return false; // Fix: Prevent invalid dates from showing up
+            let month = -1, day = -1;
 
-            if (freq === 'daily' || freq === 'day') {
-                return d.getDate() === today.getDate() && d.getMonth() === today.getMonth();
+            if (typeof dateStr === 'string' && (dateStr.includes('-') || dateStr.includes('/'))) {
+                const parts = dateStr.split(/[-/]/).map(p => parseInt(p.trim(), 10));
+                if (parts.length >= 2) {
+                    if (parts[0] > 31) {
+                        // YYYY-MM-DD
+                        month = parts[1] - 1;
+                        day = parts[2];
+                    } else if (parts[1] <= 12) {
+                        // DD/MM/YYYY
+                        day = parts[0];
+                        month = parts[1] - 1;
+                    }
+                }
+            }
+
+            if (month === -1 || day === -1 || isNaN(month) || isNaN(day)) {
+                const d = new Date(dateStr);
+                if (!isNaN(d.getTime())) {
+                    day = d.getDate();
+                    month = d.getMonth();
+                } else {
+                    return false;
+                }
+            }
+
+            if (!freq || freq === 'all' || freq === 'monthly' || freq === 'month') {
+                return month === today.getMonth();
+            } else if (freq === 'daily' || freq === 'day') {
+                return day === today.getDate() && month === today.getMonth();
             } else if (freq === 'weekly' || freq === 'week') {
-                const dThisYear = new Date(today.getFullYear(), d.getMonth(), d.getDate());
+                const dThisYear = new Date(today.getFullYear(), month, day);
                 const diffTime = dThisYear - today;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                 return diffDays >= 0 && diffDays < 7;
-            } else if (freq === 'monthly' || freq === 'month') {
-                return d.getMonth() === today.getMonth();
             }
-            return false;
+            return true;
         };
 
         // Keeping this for backward compatibility if needed, but UI buttons are removed
@@ -16504,7 +16820,15 @@
             }
 
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            if (targetView) targetView.classList.add('active');
+            if (targetView) {
+                targetView.classList.add('active');
+                targetView.scrollTop = 0;
+            }
+            const mainContentEl = document.querySelector('.main-content');
+            if (mainContentEl) mainContentEl.scrollTop = 0;
+            const mainEl = document.querySelector('main');
+            if (mainEl) mainEl.scrollTop = 0;
+            window.scrollTo(0, 0);
 
             // Update Header Title
             const titleEl = document.getElementById('view-title');
@@ -17790,6 +18114,33 @@
         let aiFloatingChatHistory = [];
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Real-time synchronization
+            if (typeof window.vynsterSyncOn === 'function') {
+                window.vynsterSyncOn(['newAppointment', 'booking_created', 'bookingCreated', 'appointmentUpdated', 'booking_updated', 'data_updated'], (data) => {
+                    console.log('⚡ Real-time appointment update received in Salon Dashboard:', data);
+                    if (typeof refreshData === 'function') refreshData();
+                    if (typeof showToast === 'function') {
+                        showToast('⚡ Live Update: Schedule has been modified.', 'info');
+                    }
+                    try {
+                        new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play().catch(e=>console.log(e));
+                    } catch (e) {}
+                });
+
+                window.vynsterSyncOn('newLeaveRequest', (data) => {
+                    console.log('⚡ Real-time leave request received in Salon Dashboard:', data);
+                    if (typeof refreshData === 'function') refreshData();
+                    if (typeof showToast === 'function') {
+                        showToast(`New Leave Request from ${data.staffName || 'Staff'}`, 'warning');
+                    }
+                });
+                
+                window.vynsterSyncOn('attendanceUpdated', (data) => {
+                    console.log('⚡ Real-time attendance update received in Salon Dashboard:', data);
+                    if (typeof refreshData === 'function') refreshData();
+                });
+            }
+
             // Setup default greetings
             aiFullChatHistory = [
                 {
@@ -19375,6 +19726,11 @@
                 }
             });
             localStorage.setItem("staffLeavesHistory", JSON.stringify(localHistory));
+
+            // Emit real-time sync to notify Staff Hub
+            if (typeof window.vynsterSyncEmit === 'function') {
+                window.vynsterSyncEmit('leaveStatusUpdated', { staffId, leaveId, status });
+            }
 
             renderLeaveRequestsTable();
             if (typeof renderStaffAttendance === 'function') renderStaffAttendance();

@@ -96,21 +96,21 @@ if (typeof STAFF_DATA !== 'undefined') {
   }
 }
 
-// Ensure the logged-in staff has appointments to make the dashboard a working model
-if (STAFF_DATA[currentStaff] && (!STAFF_DATA[currentStaff].appointments || STAFF_DATA[currentStaff].appointments.length === 0)) {
+// NOTE: Mock seeding is DISABLED when running on a live server (localhost/production).
+// generateAppointments() only runs as last-resort fallback when no API is reachable.
+const _isLiveServer = (typeof window !== 'undefined') &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
+  window.location.port !== '';
+if (!_isLiveServer && STAFF_DATA[currentStaff] && (!STAFF_DATA[currentStaff].appointments || STAFF_DATA[currentStaff].appointments.length === 0)) {
   if (typeof generateAppointments === 'function') {
     STAFF_DATA[currentStaff].appointments = generateAppointments();
     STAFF_DATA[currentStaff].todayAppointments = STAFF_DATA[currentStaff].appointments.length;
-    
     const doneApts = STAFF_DATA[currentStaff].appointments.filter(a => a.status === 'done');
     const earnedToday = doneApts.reduce((sum, a) => sum + (parseFloat(a.price) || 0), 0);
     STAFF_DATA[currentStaff].earnedRevenue = earnedToday;
     STAFF_DATA[currentStaff].completedToday = doneApts.length;
-
-    // Also add some base stats to make it look active
     STAFF_DATA[currentStaff].weeklyRevenue = [1500, 2000, 1800, 2500, 3000, 0, earnedToday];
     STAFF_DATA[currentStaff].weeklyServices = [2, 4, 3, 5, 6, 0, doneApts.length];
-    
     localStorage.setItem('STAFF_DATA_PERSIST', JSON.stringify(STAFF_DATA));
   }
 }
@@ -388,23 +388,36 @@ async function loadServiceCatalog() {
 
 async function syncLiveAppointments() {
   const staff = STAFF_DATA[currentStaff];
-  const staffId = localStorage.getItem('loggedInStaffId') || (staff ? staff.id : currentStaff) || 'priya';
+  // Resolve staffId: prefer loggedInStaffId, then staff.id, then phone, then name
+  const loggedInStaffId = localStorage.getItem('loggedInStaffId');
+  const loggedInPhone   = localStorage.getItem('loggedInPhone');
+  const loggedInName    = localStorage.getItem('loggedInUser') || localStorage.getItem('loggedInStaffName');
+  const staffId = loggedInStaffId || (staff ? staff.id : null) || loggedInPhone || loggedInName || currentStaff;
   
   try {
-    const response = await fetch(`/api/my-appointments?staffId=${staffId}`);
+    const response = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(staffId)}`);
     if (response.ok) {
-      const bookings = await response.json();
-      
+      let bookings = await response.json();
+
+      // If staffId lookup returned empty, try fallback by phone / name
+      if ((!bookings || bookings.length === 0) && loggedInPhone) {
+        const r2 = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(loggedInPhone)}`);
+        if (r2.ok) { const b2 = await r2.json(); if (b2 && b2.length > 0) bookings = b2; }
+      }
+      if ((!bookings || bookings.length === 0) && loggedInName) {
+        const r3 = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(loggedInName)}`);
+        if (r3.ok) { const b3 = await r3.json(); if (b3 && b3.length > 0) bookings = b3; }
+      }
+
       // Map the bookings array from MongoDB format to Staff Timeline format
-      const mappedApts = bookings.map(b => {
+      const mappedApts = (bookings || []).map(b => {
         const currentStatus = (b.status || 'upcoming').toLowerCase();
-        
         return {
           id: b.id || b._id,
           time: b.time || "09:00",
           client: b.clientName || "Walk-in Client",
           service: Array.isArray(b.services) ? b.services.join(", ") : (b.services || "General Service"),
-          duration: 60, // Default duration if not present
+          duration: 60,
           price: Number(b.total) || 0,
           status: currentStatus,
           phone: b.clientPhone || "",
@@ -412,22 +425,14 @@ async function syncLiveAppointments() {
         };
       });
 
-      // Update STAFF_DATA appointments for current logged-in staff
+      // Always replace mock data with real data (even if empty)
       if (STAFF_DATA[currentStaff]) {
         STAFF_DATA[currentStaff].appointments = mappedApts;
-        
-        // Sync aptStates with the retrieved statuses
         mappedApts.forEach(a => {
-          if (!aptStates[a.id]) {
-            aptStates[a.id] = a.status;
-          }
+          if (!aptStates[a.id]) { aptStates[a.id] = a.status; }
         });
         saveAptStates();
-
-        // Sort appointments by time
         STAFF_DATA[currentStaff].appointments.sort((a, b) => a.time.localeCompare(b.time));
-        
-        // Refresh the UI timeline and dashboard
         if (typeof refreshTimeline === 'function') refreshTimeline();
         if (typeof buildDashboard === 'function') buildDashboard(STAFF_DATA[currentStaff]);
       }
@@ -436,23 +441,158 @@ async function syncLiveAppointments() {
     console.error("Unable to sync live appointments from Admin server:", error);
   }
 }
+// ── REAL-TIME SOCKET.IO & DATABASE SYNC ENGINE ─────────────────────
+let socketClient = null;
+function initRealtimeSocketSync() {
+  if (typeof io !== 'undefined') {
+    try {
+      socketClient = io(window.location.origin.includes('5503') || window.location.origin.includes('5500') || window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.origin);
+      
+      socketClient.on('connect', () => {
+        console.log('⚡ Real-time production socket connected to database engine:', socketClient.id);
+      });
 
+      socketClient.on('booking_created', (data) => {
+        console.log('⚡ Real-time booking created:', data);
+        if (typeof showToast === 'function') {
+          showToast(`New client booking received: ${data.clientName || 'Walk-in'}!`, 'info', '🔔');
+        }
+        fetchRealTimeDatabaseData();
+      });
 
+      socketClient.on('booking_updated', () => {
+        fetchRealTimeDatabaseData();
+      });
 
+      socketClient.on('data_updated', () => {
+        fetchRealTimeDatabaseData();
+      });
+    } catch (err) {
+      console.warn('Socket.IO connection warning:', err);
+    }
+  }
+}
 
-// ── TOAST NOTIFICATIONS ─────────────────────────────────────────
+async function fetchRealTimeDatabaseData() {
+  try {
+    // 1. Fetch Live Bookings
+    const resBookings = await fetch(`${API_BASE}/bookings`);
+    if (resBookings.ok) {
+      const liveBookings = await resBookings.json();
+      if (Array.isArray(liveBookings)) {
+        window.allBookings = liveBookings;
+        const staffKey = typeof currentStaff !== 'undefined' ? currentStaff : 'priya';
+        if (typeof STAFF_DATA !== 'undefined' && STAFF_DATA[staffKey]) {
+          const staffObj = STAFF_DATA[staffKey];
+          staffObj.appointments = liveBookings.map(b => ({
+            id: b.id || b._id,
+            clientName: b.clientName || b.client || 'Client',
+            clientPhone: b.clientPhone || b.phone || '+91 9876543210',
+            serviceName: Array.isArray(b.services) ? b.services.join(', ') : (b.serviceName || b.service || 'Service'),
+            time: b.time || '10:00 AM',
+            duration: b.duration ? `${b.duration} min` : '45 min',
+            price: b.total ? `₹${b.total}` : (b.price ? `₹${b.price}` : '₹500'),
+            status: b.status || 'upcoming'
+          }));
+          
+          if (typeof buildDashboard === 'function') buildDashboard(staffObj);
+          if (typeof buildStats === 'function') buildStats(staffObj);
+          if (typeof buildAnalytics === 'function') buildAnalytics();
+          if (typeof renderSummarySection === 'function') renderSummarySection();
+        }
+      }
+    }
+
+    // 2. Fetch Live Services
+    const resServices = await fetch(`${API_BASE}/services`);
+    if (resServices.ok) {
+      const liveServices = await resServices.json();
+      if (Array.isArray(liveServices) && liveServices.length > 0) {
+        if (typeof serviceCatalog !== 'undefined') {
+          serviceCatalog.length = 0;
+          serviceCatalog.push(...liveServices);
+        }
+        if (typeof renderServicesSection === 'function') renderServicesSection();
+      }
+    }
+
+    // 3. Fetch Live Clients
+    const resClients = await fetch(`${API_BASE}/clients`);
+    if (resClients.ok) {
+      const liveClients = await resClients.json();
+      if (Array.isArray(liveClients) && liveClients.length > 0) {
+        if (typeof CLIENTS !== 'undefined') {
+          CLIENTS.length = 0;
+          CLIENTS.push(...liveClients);
+        }
+        if (typeof renderClientsSection === 'function') renderClientsSection();
+      }
+    }
+
+    // 4. Fetch Live Staff Members
+    const resStaff = await fetch(`${API_BASE}/staff`);
+    if (resStaff.ok) {
+      const liveStaff = await resStaff.json();
+      if (Array.isArray(liveStaff) && liveStaff.length > 0) {
+        liveStaff.forEach(s => {
+          const key = (s.name || s.id || '').toLowerCase().split(' ')[0];
+          if (key && typeof STAFF_DATA !== 'undefined') {
+            STAFF_DATA[key] = {
+              id: s.id || s.staffId,
+              name: s.name,
+              role: s.role || 'Stylist',
+              phone: s.phone,
+              rating: s.rating || '4.9',
+              clientReturnRate: 88,
+              appointments: STAFF_DATA[key]?.appointments || []
+            };
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.log('Real-time database fetch completed:', err);
+  }
+}
+window.fetchRealTimeDatabaseData = fetchRealTimeDatabaseData;
+window.initRealtimeSocketSync = initRealtimeSocketSync;
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof initStaffTheme === 'function') initStaffTheme();
+    initRealtimeSocketSync();
+    fetchRealTimeDatabaseData();
+  });
+  if (typeof initStaffTheme === 'function') initStaffTheme();
+}// ── TOAST NOTIFICATIONS ─────────────────────────────────────────
 function showToast(message, type = "success", icon = "✅") {
-  const container = document.getElementById("toastContainer");
-  if (!container) return;
+  let container = document.getElementById("toastContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toastContainer";
+    container.style.cssText = "position: fixed; top: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 360px;";
+    document.body.appendChild(container);
+  }
+
+  // Cap at 2 active toasts to avoid clutter & overlap
+  while (container.children.length >= 2) {
+    container.removeChild(container.firstChild);
+  }
+
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
+  toast.style.cssText = "background: rgba(17, 24, 39, 0.92); backdrop-filter: blur(12px); color: #ffffff; padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); animation: slideInUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: auto;";
   toast.innerHTML = `<span style="font-size:18px">${icon}</span> <span>${message}</span>`;
   container.appendChild(toast);
+
   setTimeout(() => {
-    toast.classList.add("fade-out");
-    toast.addEventListener("animationend", () => toast.remove());
-  }, 3000);
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(30px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
 }
+window.showToast = showToast;
 
 // ── LOAD STAFF ───────────────────────────────────────────────────
 function loadStaff(id) {
@@ -984,6 +1124,7 @@ function buildStats(s) {
       sub: `${s.completedToday} completed`,
       bar: comp,
       barColor: "#2d9e6b",
+      onClick: "setSection('schedule')"
     },
     {
       icon: "⏳",
@@ -992,6 +1133,7 @@ function buildStats(s) {
       value: `${pending}`,
       sub: "Waiting or upcoming",
       bar: null,
+      onClick: "setSection('walkin')"
     },
     {
       icon: "👥",
@@ -1000,6 +1142,7 @@ function buildStats(s) {
       value: `${s.todayAppointments}`,
       sub: "Scheduled today",
       bar: null,
+      onClick: "setSection('clients')"
     },
     
     {
@@ -1009,6 +1152,7 @@ function buildStats(s) {
       value: `${workingHours} hrs`,
       sub: `Shift: ${s.shift}`,
       bar: null,
+      onClick: "setSection('attendance')"
     },
     {
       icon: "🔔",
@@ -1026,7 +1170,7 @@ function buildStats(s) {
   grid.innerHTML = cards
     .map(
       (c, i) => `
-    <div class="stat-card ripple" style="animation-delay:${i * 0.05}s; ${c.onClick ? 'cursor: pointer;' : ''}" ${c.onClick ? `onclick="${c.onClick}"` : ''}>
+    <div class="stat-card ripple" style="animation-delay:${i * 0.05}s; cursor: pointer;" onclick="${c.onClick}">
       <div class="stat-icon" style="background:${c.bg}">${c.icon}</div>
       <div class="stat-label">${c.label}</div>
       <div class="stat-value">${c.value}</div>
@@ -1368,102 +1512,144 @@ function confirmAddService() {
   closeAddServiceModal();
 }
 
-let checkoutPollInterval = null;
+let checkoutCamStream = null;
+let capturedCheckoutPhotoBase64 = '';
 
-function openCheckoutModal() {
+window.startCheckoutCamera = function() {
+  const video = document.getElementById('checkoutCameraVideo');
+  const preview = document.getElementById('checkoutPhotoPreview');
+  const placeholder = document.getElementById('checkoutCameraPlaceholder');
+  const btnStart = document.getElementById('btnStartCheckoutCam');
+  const btnSnap = document.getElementById('btnSnapCheckoutPhoto');
+
+  if (!video) return;
+
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: { ideal: 'environment' }, width: { ideal: 640 }, height: { ideal: 480 } }
+  }).then(stream => {
+    checkoutCamStream = stream;
+    video.srcObject = stream;
+    video.style.display = 'block';
+    if (preview) preview.style.display = 'none';
+    if (placeholder) placeholder.style.display = 'none';
+    if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Retake / Restart Cam';
+    if (btnSnap) btnSnap.style.display = 'inline-flex';
+  }).catch(err => {
+    console.error("Camera access error:", err);
+    if (typeof showToast === 'function') {
+      showToast('Camera access denied or unavailable.', 'error');
+    }
+  });
+};
+
+window.captureCheckoutPhoto = function() {
+  const video = document.getElementById('checkoutCameraVideo');
+  const canvas = document.getElementById('checkoutCameraCanvas');
+  const preview = document.getElementById('checkoutPhotoPreview');
+  const badge = document.getElementById('checkoutPhotoBadge');
+  const statusTxt = document.getElementById('coStatusText');
+
+  if (!video || !canvas) return;
+
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  capturedCheckoutPhotoBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+  if (preview) {
+    preview.src = capturedCheckoutPhotoBase64;
+    preview.style.display = 'block';
+  }
+  video.style.display = 'none';
+
+  if (checkoutCamStream) {
+    checkoutCamStream.getTracks().forEach(t => t.stop());
+    checkoutCamStream = null;
+  }
+
+  if (badge) badge.style.display = 'block';
+  if (statusTxt) {
+    statusTxt.innerHTML = '<span style="color: #10b981; font-weight: 700;">✅ Photo Confirmation Captured</span>';
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('Photo confirmation saved!', 'success', '📸');
+  }
+};
+
+window.openCheckoutModal = function() {
   const overlay = document.getElementById("checkoutModalOverlay");
   if (!overlay || !window.currentActiveApt) return;
-
   const apt = window.currentActiveApt;
-  document.getElementById("coClientName").textContent = apt.client;
-  document.getElementById("coServices").textContent = apt.service;
-  document.getElementById("coTotalAmount").textContent = "₹" + apt.price.toLocaleString("en-IN");
 
-  // Reset UI state
-  const btn = document.getElementById("coCompleteBtn");
-  const statusTxt = document.getElementById("coStatusText");
-  btn.style.opacity = '0.5';
-  btn.style.pointerEvents = 'none';
-  statusTxt.innerHTML = '⏳ Waiting for customer confirmation...';
-  statusTxt.style.color = '#f59e0b';
-  statusTxt.style.animation = 'pulse 2s infinite';
+  const nameEl = document.getElementById("coClientName");
+  const svcEl = document.getElementById("coServices");
+  const totalEl = document.getElementById("coTotalAmount");
+  if (nameEl) nameEl.textContent = apt.client || apt.clientName || "Tara Joshi";
+  if (svcEl) svcEl.textContent = apt.service || apt.serviceName || "Global Colour";
+  if (totalEl) totalEl.textContent = "₹" + (typeof apt.price === 'number' ? apt.price.toLocaleString("en-IN") : apt.price);
 
-  // Generate QR
-  // Force public tunnel URL so it works globally and bypasses firewall
-  const baseUrl = 'https://srijes-checkout-server.loca.lt';
-  const checkoutUrl = `${baseUrl}/customer-checkout.html?aptId=${apt.id}`;
+  // Reset photo states
+  const video = document.getElementById('checkoutCameraVideo');
+  const preview = document.getElementById('checkoutPhotoPreview');
+  const placeholder = document.getElementById('checkoutCameraPlaceholder');
+  const badge = document.getElementById('checkoutPhotoBadge');
+  const btnSnap = document.getElementById('btnSnapCheckoutPhoto');
+  const btnStart = document.getElementById('btnStartCheckoutCam');
+  const statusTxt = document.getElementById('coStatusText');
 
-  const qrImg = document.getElementById("checkoutQR");
-  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(checkoutUrl)}`;
-  qrImg.style.cursor = 'pointer';
-  qrImg.title = 'Click to open checkout in a new tab (for local testing)';
-  qrImg.onclick = () => window.open(checkoutUrl, '_blank');
+  if (video) video.style.display = 'none';
+  if (preview) preview.style.display = 'none';
+  if (placeholder) placeholder.style.display = 'block';
+  if (badge) badge.style.display = 'none';
+  if (btnSnap) btnSnap.style.display = 'none';
+  if (btnStart) btnStart.innerHTML = '<i class="fa-solid fa-camera"></i> Take Confirmation Photo';
+  if (statusTxt) statusTxt.innerHTML = '<span>📸 Service Photo Confirmation</span>';
 
-  // Start polling server API
-  fetch(`${baseUrl}/api/reset?aptId=${apt.id}`, { headers: { 'Bypass-Tunnel-Reminder': 'true' } }).catch(() => console.log('API not running'));
-  if (checkoutPollInterval) clearInterval(checkoutPollInterval);
-
-  checkoutPollInterval = setInterval(async () => {
-    try {
-      const res = await fetch(`${baseUrl}/api/status?aptId=${apt.id}`, {
-        cache: 'no-store',
-        headers: { 'Bypass-Tunnel-Reminder': 'true' }
-      });
-      const data = await res.json();
-      if (data.confirmed) {
-        clearInterval(checkoutPollInterval);
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-        statusTxt.innerHTML = '✅ Customer Confirmed!';
-        statusTxt.style.color = 'var(--success)';
-        statusTxt.style.animation = 'none';
-      }
-    } catch (e) {
-      // Fallback to localStorage logic if Python server isn't used
-      if (localStorage.getItem('checkoutConfirmed_' + apt.id) === 'true') {
-        clearInterval(checkoutPollInterval);
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-        statusTxt.innerHTML = '✅ Customer Confirmed!';
-        statusTxt.style.color = 'var(--success)';
-        statusTxt.style.animation = 'none';
-      }
-    }
-  }, 1000);
+  capturedCheckoutPhotoBase64 = '';
 
   overlay.classList.remove("hidden");
-}
+  overlay.style.display = "flex";
+};
 
-function manualConfirmCheckout() {
-  const btn = document.getElementById("coCompleteBtn");
-  const statusTxt = document.getElementById("coStatusText");
-
-  if (checkoutPollInterval) clearInterval(checkoutPollInterval);
-
-  btn.style.opacity = '1';
-  btn.style.pointerEvents = 'auto';
-  statusTxt.innerHTML = '✅ Manually Confirmed by Staff';
-  statusTxt.style.color = 'var(--success)';
-  statusTxt.style.animation = 'none';
-}
-
-function closeCheckoutModal() {
-  if (checkoutPollInterval) clearInterval(checkoutPollInterval);
+window.closeCheckoutModal = function() {
+  if (checkoutCamStream) {
+    checkoutCamStream.getTracks().forEach(t => t.stop());
+    checkoutCamStream = null;
+  }
   const overlay = document.getElementById("checkoutModalOverlay");
-  if (overlay) overlay.classList.add("hidden");
-}
+  if (overlay) {
+    overlay.classList.add("hidden");
+    overlay.style.display = "none";
+  }
+};
 
-function confirmCheckout() {
+window.confirmCheckoutCompletion = function() {
+  if (checkoutCamStream) {
+    checkoutCamStream.getTracks().forEach(t => t.stop());
+    checkoutCamStream = null;
+  }
   if (window.currentActiveApt) {
-    aptStates[window.currentActiveApt.id] = "done";
+    const apt = window.currentActiveApt;
+    aptStates[apt.id] = "done";
+    if (capturedCheckoutPhotoBase64) {
+      apt.proofPhoto = capturedCheckoutPhotoBase64;
+    }
     saveAptStates();
-    STAFF_DATA[currentStaff].completedToday = (STAFF_DATA[currentStaff].completedToday || 0) + 1;
-    STAFF_DATA[currentStaff].earnedRevenue = (STAFF_DATA[currentStaff].earnedRevenue || 0) + window.currentActiveApt.price;
-    showToast(`Checkout completed! ₹${window.currentActiveApt.price.toLocaleString("en-IN")} collected.`, "success", "💳");
-    if (typeof buildDashboard === 'function') buildDashboard(STAFF_DATA[currentStaff]);
+    if (typeof showToast === 'function') {
+      showToast(`Photo proof saved & billing complete for ${apt.client || 'Client'}! 🎉`, 'success', '💳');
+    }
   }
   closeCheckoutModal();
-}
+  const staff = STAFF_DATA[currentStaff];
+  if (staff) {
+    buildStats(staff);
+    buildDashboard(staff);
+  }
+};
+
 
 
 function buildDashboardTimeline(s) {
@@ -1502,16 +1688,16 @@ function buildDashboardTimeline(s) {
       : `<span style="font-size: 8px; background: #dcfce7; color: #166534; padding: 2px 5px; border-radius: 4px; margin-left: 6px; font-weight: 700;">🌳 Outdoor</span>`;
 
     return `
-      <div class="apt-item ${aptStates[a.id] || a.status}" onclick="window.location.href='schedule.html'">
-        <div class="apt-main" style="padding: 8px 12px;">
-          <div class="apt-time-col" style="width: 45px;">
-            <div class="apt-time-txt" style="font-size: 9px; white-space: nowrap;">${timeLabel}</div>
+      <div class="apt-item ${aptStates[a.id] || a.status}" onclick="selectTimelineClient('${a.id}')" style="cursor: pointer; transition: all 0.25s ease;" title="Click to view details in Next Up">
+        <div class="apt-main" style="padding: 10px 14px;">
+          <div class="apt-time-col" style="width: 50px;">
+            <div class="apt-time-txt" style="font-size: 10px; font-weight: 700; white-space: nowrap;">${timeLabel}</div>
           </div>
           <div class="apt-info">
-            <div class="apt-client" style="font-size: 12px; margin-bottom: 2px;">${a.client}</div>
+            <div class="apt-client" style="font-size: 13px; font-weight: 600; margin-bottom: 2px; color: var(--text-main);">${a.client}</div>
             <div class="apt-service" style="font-size: 11px; display: flex; align-items: center; color: var(--muted);">${a.service} ${typeBadge}</div>
           </div>
-          <div class="apt-badge ${aptStates[a.id] || a.status}" style="font-size: 9px; padding: 3px 8px;">
+          <div class="apt-badge ${aptStates[a.id] || a.status}" style="font-size: 10px; padding: 4px 10px; border-radius: 12px; font-weight: 700;">
             ${(aptStates[a.id] || a.status) === 'in-progress' ? 'Active' : 'Next'}
           </div>
         </div>
@@ -2317,9 +2503,15 @@ async function submitLeave() {
       if (res.ok) {
           showToast("Leave request submitted to Admin.", "success", "📋");
       }
+      if (typeof window.vynsterSyncEmit === 'function') {
+          window.vynsterSyncEmit('newLeaveRequest', newLeave);
+      }
   } catch (e) {
       console.error("Leave request API error:", e);
       showToast("Leave request submitted locally.", "info", "📋");
+      if (typeof window.vynsterSyncEmit === 'function') {
+          window.vynsterSyncEmit('newLeaveRequest', newLeave);
+      }
   }
   
   const history = JSON.parse(localStorage.getItem("staffLeavesHistory") || "[]");
@@ -2348,8 +2540,25 @@ function closeSidebar() {
   document.getElementById("sidebar").classList.remove("open");
   document.getElementById("overlay").classList.remove("show");
 }
-function setSection(sec, btn) {
+let sectionHistoryStack = ['dashboard'];
+
+function setSection(sec, btn, isBackNav = false) {
+  if (!sec) sec = 'dashboard';
+  if (!isBackNav) {
+    if (sectionHistoryStack[sectionHistoryStack.length - 1] !== sec) {
+      sectionHistoryStack.push(sec);
+    }
+  }
+
   // Update sidebar active state
+  if (!btn && sec) {
+    document.querySelectorAll(".nav-item").forEach((b) => {
+      if (b.getAttribute("onclick") && b.getAttribute("onclick").includes(`'${sec}'`)) {
+        btn = b;
+      }
+    });
+  }
+
   if (btn) {
     document.querySelectorAll(".nav-item").forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
@@ -2387,6 +2596,21 @@ function setSection(sec, btn) {
 
   const label = btn ? (btn.textContent.trim().replace(/[^a-zA-Z\s]/g, "").trim() || sec) : sec;
 }
+
+function goBackSection() {
+  if (typeof sectionHistoryStack !== 'undefined' && sectionHistoryStack.length > 1) {
+    sectionHistoryStack.pop();
+    const prevSec = sectionHistoryStack[sectionHistoryStack.length - 1];
+    setSection(prevSec, null, true);
+  } else {
+    if (window.history && window.history.length > 1) {
+      window.history.back();
+    } else {
+      setSection('dashboard', null, true);
+    }
+  }
+}
+
 
 // =========================================================================
 // STAFF PORTAL TAB RENDERERS & CONTROLLERS
@@ -2626,28 +2850,170 @@ function filterStaffServices(query) {
   });
 }
 
+// Dark Mode Toggle Logic for Staff Portal
+function toggleDark() {
+  const isDark = document.body.classList.toggle("dark-mode");
+  if (isDark) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  localStorage.setItem("staff_theme", isDark ? "dark" : "light");
+  if (typeof showToast === 'function') {
+    showToast(isDark ? "Switched to Dark Mode 🌙" : "Switched to Bright Mode ☀️", "info");
+  }
+}
+
+function initStaffTheme() {
+  const savedTheme = localStorage.getItem("staff_theme") || "light";
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    document.documentElement.setAttribute("data-theme", "dark");
+  } else {
+    document.body.classList.remove("dark-mode");
+    document.documentElement.removeAttribute("data-theme");
+  }
+}
+window.toggleDark = toggleDark;
+window.initStaffTheme = initStaffTheme;
+
 // 5. ANALYTICS SECTION
+function buildAnalytics() {
+  const periodSelect = document.getElementById('periodSelect');
+  const period = periodSelect ? periodSelect.value : 'month';
+  const staffId = typeof currentStaff !== 'undefined' ? currentStaff : 'priya';
+  const s = (typeof STAFF_DATA !== 'undefined' && STAFF_DATA[staffId]) ? STAFF_DATA[staffId] : { name: 'balaji', rating: 4.9, clientReturnRate: 88 };
+  const name = (localStorage.getItem('loggedInUser') || s.name || 'balaji').split(' ')[0];
+
+  const greetingEl = document.getElementById('greeting');
+  if (greetingEl) greetingEl.textContent = `Analytics — ${name} 📊`;
+
+  // Analytics data calculation based on selected period
+  const revData = period === 'week' ? [4200, 5800, 6400, 7900, 8500, 11200, 9800] :
+                  period === 'month' ? [28000, 34000, 42000, 48000] : [98000, 124000, 145000];
+  const labels = period === 'week' ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] :
+                 period === 'month' ? ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4'] : ['May', 'Jun', 'Jul'];
+
+  const totalRev = revData.reduce((a, b) => a + b, 0);
+  const fmt = v => `₹${v.toLocaleString('en-IN')}`;
+
+  // 1. Render KPIs
+  const kpisEl = document.getElementById('analyticsKPIs');
+  if (kpisEl) {
+    const kpis = [
+      { icon: '💰', label: 'Revenue', value: fmt(totalRev), color: '#1a6b8a' },
+      { icon: '✂️', label: 'Services Done', value: '42', color: '#2d9e6b' },
+      { icon: '⭐', label: 'Rating', value: s.rating || '4.9', color: '#f59e0b' },
+      { icon: '👥', label: 'Clients', value: '38', color: '#a04090' },
+      { icon: '📈', label: 'Return Rate', value: `${s.clientReturnRate || 88}%`, color: '#0891b2' },
+    ];
+    kpisEl.innerHTML = kpis.map((k, i) => `
+      <div class="card" style="text-align:center;padding:16px;border-radius:12px;background:var(--card, #ffffff);border:1px solid var(--border, #e2e8f0);">
+        <div style="font-size:24px;margin-bottom:4px;">${k.icon}</div>
+        <div style="font-size:20px;font-weight:800;color:${k.color};">${k.value}</div>
+        <div style="font-size:11px;color:var(--muted, #64748b);font-weight:600;margin-top:2px;">${k.label}</div>
+      </div>`).join('');
+  }
+
+  // 2. Revenue Chart
+  const revChartEl = document.getElementById('revenueChart');
+  const revLabelsEl = document.getElementById('revenueChartLabels');
+  if (revChartEl) {
+    const maxRev = Math.max(...revData, 1);
+    const colors = ['#1a6b8a', '#2d9e6b', '#a04090', '#e07b39', '#0891b2', '#7c3aed', '#f59e0b'];
+    revChartEl.innerHTML = revData.map((v, i) => {
+      const h = Math.round((v / maxRev) * 120) + 20;
+      return `<div class="chart-bar pay-week-bar" title="${fmt(v)}" style="height:${h}px;flex:1;background:${colors[i % colors.length]};border-radius:8px 8px 0 0;opacity:0.9;transition:height 0.5s ease;"></div>`;
+    }).join('');
+  }
+  if (revLabelsEl) {
+    revLabelsEl.innerHTML = labels.map(l =>
+      `<div class="pay-week-label" style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--muted, #64748b);">${l}</div>`
+    ).join('');
+  }
+
+  // 3. Service Mix
+  const serviceMixEl = document.getElementById('serviceMixBars');
+  if (serviceMixEl) {
+    const mix = [
+      { name: 'Hair Styling & Cuts', pct: 45, color: '#1a6b8a' },
+      { name: 'Keratin & Spa Treatments', pct: 30, color: '#2d9e6b' },
+      { name: 'Hair Coloring', pct: 15, color: '#a04090' },
+      { name: 'Beard Grooming & Facial', pct: 10, color: '#e07b39' }
+    ];
+    serviceMixEl.innerHTML = mix.map(sv => `
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+          <span style="font-weight:600;color:var(--text-main, #0f172a);">${sv.name}</span>
+          <span style="color:var(--muted, #64748b);font-weight:700;">${sv.pct}%</span>
+        </div>
+        <div style="background:var(--border, #e2e8f0);border-radius:999px;height:8px;overflow:hidden;">
+          <div style="width:${sv.pct}%;height:100%;background:${sv.color};border-radius:999px;transition:width 0.8s ease;"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  // 4. Top Services
+  const topServicesEl = document.getElementById('topServicesList');
+  if (topServicesEl) {
+    const topServices = [
+      { name: 'Keratin Treatment', count: 18, color: '#1a6b8a' },
+      { name: 'Executive Haircut & Wash', count: 14, color: '#2d9e6b' },
+      { name: 'Global Hair Coloring', count: 8, color: '#a04090' },
+      { name: 'Beard Spa & Trim', count: 6, color: '#e07b39' }
+    ];
+    topServicesEl.innerHTML = topServices.map((sv, i) => `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--muted-bg, #f1f5f9);border-radius:10px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:${sv.color};color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">${i + 1}</div>
+        <div style="flex:1;font-size:13px;font-weight:600;color:var(--text-main, #0f172a);">${sv.name}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted, #64748b);">${sv.count} done</div>
+      </div>`).join('');
+  }
+
+  // 5. Client Stats
+  const clientStatsEl = document.getElementById('clientStats');
+  if (clientStatsEl) {
+    const stats = [
+      { label: 'Total Clients', value: '38', icon: '👥' },
+      { label: 'New This Month', value: '8', icon: '✨' },
+      { label: 'Returning Clients', value: '30 (82%)', icon: '🔄' },
+      { label: 'Avg Ticket Size', value: fmt(Math.round(totalRev / 38)), icon: '💳' },
+    ];
+    clientStatsEl.innerHTML = stats.map(c => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--muted-bg, #f1f5f9);border-radius:10px;">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:16px;">${c.icon}</span>
+          <span style="font-size:13px;font-weight:600;color:var(--text-main, #0f172a);">${c.label}</span>
+        </div>
+        <span style="font-weight:800;color:var(--primary, #1A6B8A);">${c.value}</span>
+      </div>`).join('');
+  }
+}
+window.buildAnalytics = buildAnalytics;
+
 function renderAnalyticsSection() {
+  buildAnalytics();
+
   const tbody = document.getElementById("commissionHistoryBody");
-  if (!tbody) return;
+  if (tbody) {
+    const history = [
+      { month: "May 2026 (Running)", count: 42, rev: "₹ 1,23,000", rate: "15%", net: "₹ 18,450", status: "Processing", color: "#fef3c7", textColor: "#92400e" },
+      { month: "April 2026", count: 68, rev: "₹ 1,84,000", rate: "15%", net: "₹ 27,600", status: "Paid", color: "#dcfce7", textColor: "#166534" },
+      { month: "March 2026", count: 72, rev: "₹ 1,95,500", rate: "15%", net: "₹ 29,325", status: "Paid", color: "#dcfce7", textColor: "#166534" },
+      { month: "February 2026", count: 61, rev: "₹ 1,62,000", rate: "15%", net: "₹ 24,300", status: "Paid", color: "#dcfce7", textColor: "#166534" }
+    ];
 
-  const history = [
-    { month: "May 2026 (Running)", count: 42, rev: "₹ 1,23,000", rate: "15%", net: "₹ 18,450", status: "Processing", color: "#fef3c7", textColor: "#92400e" },
-    { month: "April 2026", count: 68, rev: "₹ 1,84,000", rate: "15%", net: "₹ 27,600", status: "Paid", color: "#dcfce7", textColor: "#166534" },
-    { month: "March 2026", count: 72, rev: "₹ 1,95,500", rate: "15%", net: "₹ 29,325", status: "Paid", color: "#dcfce7", textColor: "#166534" },
-    { month: "February 2026", count: 61, rev: "₹ 1,62,000", rate: "15%", net: "₹ 24,300", status: "Paid", color: "#dcfce7", textColor: "#166534" }
-  ];
-
-  tbody.innerHTML = history.map(h => `
-    <tr style="border-bottom: 1px solid var(--border);">
-      <td style="padding: 12px; font-weight: 700;">${h.month}</td>
-      <td style="padding: 12px;">${h.count} Services</td>
-      <td style="padding: 12px; font-weight: 700;">${h.rev}</td>
-      <td style="padding: 12px; color: var(--muted);">${h.rate}</td>
-      <td style="padding: 12px; font-weight: 800; color: var(--primary);">${h.net}</td>
-      <td style="padding: 12px;"><span style="background: ${h.color}; color: ${h.textColor}; font-weight: 800; font-size: 11px; padding: 4px 10px; border-radius: 12px;">${h.status}</span></td>
-    </tr>
-  `).join('');
+    tbody.innerHTML = history.map(h => `
+      <tr style="border-bottom: 1px solid var(--border);">
+        <td style="padding: 12px; font-weight: 700;">${h.month}</td>
+        <td style="padding: 12px;">${h.count} Services</td>
+        <td style="padding: 12px; font-weight: 700;">${h.rev}</td>
+        <td style="padding: 12px; color: var(--muted);">${h.rate}</td>
+        <td style="padding: 12px; font-weight: 800; color: var(--primary);">${h.net}</td>
+        <td style="padding: 12px;"><span style="background: ${h.color}; color: ${h.textColor}; font-weight: 800; font-size: 11px; padding: 4px 10px; border-radius: 12px;">${h.status}</span></td>
+      </tr>
+    `).join('');
+  }
 }
 
 // 6. REQUEST SUPPLIES SECTION
@@ -2701,18 +3067,33 @@ let staffDailyReports = [
 ];
 
 function renderSummarySection() {
-  const container = document.getElementById("pastDailyReportsList");
-  if (!container) return;
+  const summaryContent = document.getElementById("summaryContent");
+  if (summaryContent) {
+    summaryContent.innerHTML = `
+<b>PRO PERFORMANCE & SHIFT HANDOVER SUMMARY</b>
+• <b>Active Staff Member:</b> Priya Sharma (Senior Stylist & Hair Care Specialist)
+• <b>Total Clients Served (This Month):</b> 42 Clients
+• <b>Services Completed:</b> Keratin Treatments (18), Hair Cuts & Styling (16), Hair Coloring (8)
+• <b>Shift Performance Score:</b> 98.4% On-Time & Client Satisfaction Index (5.0 ★ Stars)
+• <b>Total Earned Revenue & Commission:</b> ₹1,23,000 Total Generated (₹18,450 Net Commission)
 
-  container.innerHTML = staffDailyReports.map(r => `
-    <div style="background: var(--bg-body); border-radius: 10px; padding: 14px; border: 1px solid var(--border);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <span style="font-weight: 800; font-size: 13px; color: var(--primary);">${r.date}</span>
-        <span style="font-size: 12px; font-weight: 700; color: #10b981;">Generated ${r.rev} (Comm: ${r.comm})</span>
+<b>Recent Shift Notes:</b>
+"All client appointments completed on schedule. Station sanitized and ready for tomorrow's shift."
+    `.trim();
+  }
+
+  const container = document.getElementById("pastDailyReportsList");
+  if (container) {
+    container.innerHTML = staffDailyReports.map(r => `
+      <div style="background: var(--bg-body); border-radius: 10px; padding: 14px; border: 1px solid var(--border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-weight: 800; font-size: 13px; color: var(--primary);">${r.date}</span>
+          <span style="font-size: 12px; font-weight: 700; color: #10b981;">Generated ${r.rev} (Comm: ${r.comm})</span>
+        </div>
+        <div style="font-size: 12px; color: var(--text); font-style: italic;">"${r.note}"</div>
       </div>
-      <div style="font-size: 12px; color: var(--text); font-style: italic;">"${r.note}"</div>
-    </div>
-  `).join('');
+    `).join('');
+  }
 }
 
 function submitDailySummaryReport() {
@@ -5713,10 +6094,16 @@ window.submitLeave = async function() {
     } else {
       throw new Error('Server returned error');
     }
+    if (typeof window.vynsterSyncEmit === 'function') {
+      window.vynsterSyncEmit('newLeaveRequest', payload);
+    }
   } catch (e) {
     showToast('Leave request submitted!', 'success');
     if (document.getElementById('leaveForm')) document.getElementById('leaveForm').classList.add('hidden');
     window.loadLeaves();
+    if (typeof window.vynsterSyncEmit === 'function') {
+      window.vynsterSyncEmit('newLeaveRequest', payload);
+    }
   }
 };
 
@@ -5948,6 +6335,34 @@ window.submitInventoryRequest = async function() {
 };
 
 // 6. Staff Logout Handler
+window.toggleVerticalLogout = function(elem) {
+  const knobs = document.querySelectorAll('#vLogoutKnob, .v-header-knob');
+  const labels = document.querySelectorAll('#vLogoutLabel');
+
+  knobs.forEach(knob => {
+    if (knob.classList.contains('v-header-knob')) {
+      knob.style.transform = 'translateY(24px)';
+    } else {
+      knob.style.transform = 'translateY(42px)';
+    }
+    knob.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+    knob.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.6)';
+  });
+
+  labels.forEach(label => {
+    label.innerText = 'Logging out...';
+    label.style.color = '#ef4444';
+  });
+
+  setTimeout(() => {
+    if (typeof handleStaffLogout === 'function') {
+      handleStaffLogout();
+    } else {
+      window.location.href = 'staff-login.html';
+    }
+  }, 450);
+};
+
 window.handleStaffLogout = function() {
   localStorage.removeItem('loggedInUser');
   localStorage.removeItem('loggedInPhone');
@@ -5962,3 +6377,104 @@ window.handleStaffLogout = function() {
     window.location.href = 'staff-login.html';
   }, 800);
 };
+
+window.selectWalkinService = function(serviceName, price) {
+  const serviceInput = document.getElementById('walkin-selected-service');
+  if (serviceInput) {
+    serviceInput.value = `${serviceName} (${price})`;
+  }
+};
+
+window.createWalkinAppointmentNow = function() {
+  const nameEl = document.getElementById('walkin-client-name');
+  const phoneEl = document.getElementById('walkin-client-phone');
+  const serviceEl = document.getElementById('walkin-selected-service');
+
+  const name = nameEl ? nameEl.value.trim() : '';
+  const phone = phoneEl ? phoneEl.value.trim() : '';
+  const service = serviceEl && serviceEl.value ? serviceEl.value.trim() : 'Haircut & Styling (₹500)';
+
+  if (!name) {
+    if (typeof showToast === 'function') showToast('Please enter client name.', 'error');
+    return;
+  }
+
+  if (typeof staffData !== 'undefined' && staffData) {
+    staffData.todayAppointments = (staffData.todayAppointments || 0) + 1;
+    if (!Array.isArray(staffData.appointments)) staffData.appointments = [];
+    staffData.appointments.push({
+      id: 'apt-' + Date.now(),
+      clientName: name,
+      clientPhone: phone,
+      serviceName: service,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      duration: '45 min',
+      price: '₹500',
+      status: 'upcoming'
+    });
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`Walk-in appointment created for ${name}!`, 'success', '🚶');
+  }
+
+  if (nameEl) nameEl.value = '';
+  if (phoneEl) phoneEl.value = '';
+  if (serviceEl) serviceEl.value = '';
+
+  if (typeof buildStats === 'function') buildStats(staffData);
+  if (typeof buildDashboard === 'function') buildDashboard(staffData);
+};
+
+window.selectTimelineClient = function(aptId) {
+  const staff = STAFF_DATA[currentStaff];
+  if (!staff || !Array.isArray(staff.appointments)) return;
+  const targetApt = staff.appointments.find(a => a.id === aptId);
+  if (targetApt) {
+    window.currentActiveApt = targetApt;
+    updateNextClientCard(staff);
+    if (typeof showToast === 'function') {
+      showToast(`Loaded details for ${targetApt.client || targetApt.clientName}!`, 'info', '👤');
+    }
+  }
+};
+
+window.openReassignModal = function(aptId) {
+  const overlay = document.getElementById("reassignModalOverlay");
+  if (overlay) {
+    overlay.classList.remove("hidden");
+    overlay.style.display = "flex";
+  }
+};
+
+window.closeReassignModal = function() {
+  const overlay = document.getElementById("reassignModalOverlay");
+  if (overlay) {
+    overlay.classList.add("hidden");
+    overlay.style.display = "none";
+  }
+};
+
+window.confirmReassign = function() {
+  const select = document.getElementById("reassignStaffSelect");
+  const targetStaff = select ? select.options[select.selectedIndex].text : 'Colleague';
+
+  if (window.currentActiveApt) {
+    const apt = window.currentActiveApt;
+    if (typeof showToast === 'function') {
+      showToast(`Appointment for ${apt.client || 'Client'} reassigned to ${targetStaff}!`, "info", "🔄");
+    }
+    aptStates[apt.id] = "upcoming";
+    saveAptStates();
+  }
+
+  closeReassignModal();
+  const staff = STAFF_DATA[currentStaff];
+  if (staff) {
+    buildStats(staff);
+    buildDashboard(staff);
+  }
+};
+
+
+

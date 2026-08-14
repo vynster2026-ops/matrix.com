@@ -296,6 +296,8 @@
                     localStorage.setItem('loggedInPhone', data.user.phone);
                     localStorage.setItem('loggedInRole', data.user.role);
                     localStorage.setItem('loggedInSpecialties', JSON.stringify(data.user.specialties || []));
+                    localStorage.setItem('loggedInStaffId', data.user.id || data.user.staffId || data.user._id || '');
+                    localStorage.setItem('loggedInStaffName', data.user.name || '');
                     
                     localStorage.setItem('lastLoginLocation', currentLoginLocation);
                     localStorage.setItem('lastLoginTime', currentLoginTime);
@@ -369,6 +371,8 @@
                 localStorage.setItem('loggedInPhone', foundStaff.phone);
                 localStorage.setItem('loggedInRole', foundStaff.role);
                 localStorage.setItem('loggedInSpecialties', JSON.stringify(foundStaff.specialties || []));
+                localStorage.setItem('loggedInStaffId', foundStaff.id || foundStaff.staffId || '');
+                localStorage.setItem('loggedInStaffName', foundStaff.name || '');
             } else {
                 const prevRegPhone = localStorage.getItem('loggedInPhone');
                 if (prevRegPhone && prevRegPhone === phoneInput) {
