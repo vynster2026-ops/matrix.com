@@ -14,6 +14,107 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="vynster-sync.js"></script>
 
+    <!-- 🧪 VYNSTER DEMO MODE MOCK ENGINE (Bypasses login & isolates data) -->
+    <script>
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDemo = urlParams.get('demo') === 'true' || 
+                           sessionStorage.getItem('isDemoMode') === 'true' || 
+                           localStorage.getItem('isDemoMode') === 'true' ||
+                           sessionStorage.getItem('vynster_demo_mode') === 'true' ||
+                           localStorage.getItem('vynster_demo_mode') === 'true';
+
+            if (isDemo) {
+                window.isDemoMode = true;
+                sessionStorage.setItem('isDemoMode', 'true');
+                localStorage.setItem('isDemoMode', 'true');
+                sessionStorage.setItem('vynster_demo_mode', 'true');
+                localStorage.setItem('vynster_demo_mode', 'true');
+
+                // Bypass all login requirements with active demo credentials
+                sessionStorage.setItem('adminToken', 'demo-session-token');
+                localStorage.setItem('adminToken', 'demo-session-token');
+                sessionStorage.setItem('loggedInUser', 'Demo Salon Manager');
+                localStorage.setItem('loggedInUser', 'Demo Salon Manager');
+                localStorage.setItem('loggedInEmail', 'demo@vynster.com');
+                localStorage.setItem('loggedInRole', 'manager');
+
+                // Isolated, clean, realistic Mock Data (No client records exposed in Demo Mode)
+                const mockClients = [];
+
+                const mockBookings = [
+                    { id: 'b1', clientName: 'Sophia Martinez', service: 'Deluxe Hair Styling & Coloring', staffName: 'Elena Rostova', date: '2026-08-14', time: '10:00 AM', status: 'Confirmed', price: 180, branch: 'Main Branch' },
+                    { id: 'b2', clientName: 'Alexander Wright', service: 'Gentlemen Beard Trim & Facial', staffName: 'Marcus Vance', date: '2026-08-14', time: '11:30 AM', status: 'Completed', price: 95, branch: 'Main Branch' },
+                    { id: 'b3', clientName: 'Olivia Chen', service: 'Signature Spa Pedicure', staffName: 'Priya Sharma', date: '2026-08-14', time: '02:00 PM', status: 'InProgress', price: 120, branch: 'Main Branch' },
+                    { id: 'b4', clientName: 'Liam Johnson', service: 'Classic Haircut', staffName: 'Elena Rostova', date: '2026-08-14', time: '04:15 PM', status: 'Confirmed', price: 65, branch: 'Main Branch' }
+                ];
+
+                const mockStaff = [
+                    { id: 's1', name: 'Elena Rostova', role: 'Senior Hair Stylist', phone: '+1 (555) 111-2222', status: 'Active', rating: 4.9, earnings: 4200, branch: 'Main Branch' },
+                    { id: 's2', name: 'Marcus Vance', role: 'Barber Specialist', phone: '+1 (555) 333-4444', status: 'Active', rating: 4.8, earnings: 3800, branch: 'Main Branch' },
+                    { id: 's3', name: 'Priya Sharma', role: 'Nail & Spa Technician', phone: '+1 (555) 555-6666', status: 'Active', rating: 4.95, earnings: 4500, branch: 'Main Branch' }
+                ];
+
+                const mockServices = [
+                    { id: 'srv1', name: 'Deluxe Hair Styling & Coloring', price: 180, duration: '90 min', category: 'Hair', branch: 'Main Branch' },
+                    { id: 'srv2', name: 'Gentlemen Beard Trim & Facial', price: 95, duration: '45 min', category: 'Grooming', branch: 'Main Branch' },
+                    { id: 'srv3', name: 'Signature Spa Pedicure', price: 120, duration: '60 min', category: 'Nails & Spa', branch: 'Main Branch' },
+                    { id: 'srv4', name: 'Classic Haircut', price: 65, duration: '30 min', category: 'Hair', branch: 'Main Branch' }
+                ];
+
+                const mockInventory = [
+                    { id: 'inv1', name: 'L’Oréal Professional Shampoo 1L', quantity: 24, minStock: 5, unitPrice: 35, category: 'Hair Care' },
+                    { id: 'inv2', name: 'Moroccanoil Treatment Oil 100ml', quantity: 18, minStock: 4, unitPrice: 48, category: 'Hair Care' },
+                    { id: 'inv3', name: 'OPI Gel Polish Kit', quantity: 12, minStock: 3, unitPrice: 65, category: 'Nails' }
+                ];
+
+                // Intercept Window Fetch API so no real network requests hit real DB
+                const originalFetch = window.fetch;
+                window.fetch = async function(url, options = {}) {
+                    const urlStr = String(url);
+
+                    // Mock API endpoints for GET requests
+                    if (urlStr.includes('/clients')) return new Response(JSON.stringify(mockClients), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    if (urlStr.includes('/bookings')) return new Response(JSON.stringify(mockBookings), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    if (urlStr.includes('/staff')) return new Response(JSON.stringify(mockStaff), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    if (urlStr.includes('/services')) return new Response(JSON.stringify(mockServices), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    if (urlStr.includes('/inventory')) return new Response(JSON.stringify(mockInventory), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    if (urlStr.includes('/events') || urlStr.includes('/expenses') || urlStr.includes('/tickets') || urlStr.includes('/ads') || urlStr.includes('/whatsapp')) {
+                        return new Response(JSON.stringify([]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    }
+
+                    // Default success response for POST/PUT/DELETE mock actions
+                    return new Response(JSON.stringify({ success: true, message: 'Demo mode action simulated in memory.' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                };
+
+                // Add Demo Banner to top of page when loaded
+                window.addEventListener('DOMContentLoaded', () => {
+                    if (document.getElementById('demo-mode-header-banner')) return;
+                    const banner = document.createElement('div');
+                    banner.id = 'demo-mode-header-banner';
+                    banner.style.cssText = 'position: sticky; top: 0; z-index: 999999; background: linear-gradient(90deg, #7c3aed, #ef4444); color: white; padding: 8px 18px; font-family: sans-serif; font-size: 12.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);';
+                    banner.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 15px;">🧪</span>
+                            <span><strong>DEMO MODE ACTIVE:</strong> Bypassed login • Isolated mock data session • No real database records exposed or saved.</span>
+                        </div>
+                        <button onclick="exitDemoMode()" style="background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.6); color: white; padding: 3px 12px; border-radius: 50px; cursor: pointer; font-size: 11.5px; font-weight: 700; transition: all 0.2s ease;">Exit Demo Mode ✕</button>
+                    `;
+                    document.body.prepend(banner);
+                });
+            }
+        })();
+
+        function exitDemoMode() {
+            sessionStorage.removeItem('isDemoMode');
+            localStorage.removeItem('isDemoMode');
+            sessionStorage.removeItem('vynster_demo_mode');
+            localStorage.removeItem('vynster_demo_mode');
+            sessionStorage.removeItem('adminToken');
+            localStorage.removeItem('adminToken');
+            window.location.href = 'landing.html';
+        }
+    </script>
 
     <script>
         // Global variables for the app

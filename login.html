@@ -738,7 +738,16 @@
                     </div>
                     <div class="logo-crest">V</div>
                     <h1 class="brand-title">Vynster Salon</h1>
-                    <p class="brand-subtitle">Branch Operations & Manager Gateway</p>
+                    <p class="brand-subtitle">Log in using credentials generated in Super Admin Portal</p>
+                </div>
+
+                <!-- Super Admin Generated Credentials Notice Banner -->
+                <div class="superadmin-notice-banner" style="background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.35); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px;">
+                    <i class="fa-solid fa-key" style="color: var(--accent-purple); font-size: 1.25rem; flex-shrink: 0;"></i>
+                    <div style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4;">
+                        <strong style="color: var(--text-main); display: block; font-weight: 700; margin-bottom: 2px;">Super Admin Credentials Required</strong>
+                        Please enter the branch email/access key & password generated in the Super Admin Portal.
+                    </div>
                 </div>
 
                 <!-- Alert Box -->
@@ -747,12 +756,12 @@
                 <!-- Quick Access / Demo Accounts Bar -->
                 <div class="demo-bar">
                     <div class="demo-bar-title">
-                        <span><i class="fa-solid fa-bolt" style="color: var(--accent-gold); margin-right: 4px;"></i> Quick-Fill Demo Access</span>
+                        <span><i class="fa-solid fa-bolt" style="color: var(--accent-gold); margin-right: 4px;"></i> Quick-Fill Demo Credentials</span>
                         <span style="opacity: 0.7; font-weight: 500;">Click to fill</span>
                     </div>
                     <div class="demo-btns-row">
                         <button type="button" class="demo-pill-btn" onclick="fillDemo('manager@vynster.com', 'manager123')">
-                            <i class="fa-solid fa-user-tie" style="color: var(--primary);"></i> Salon Manager
+                            <i class="fa-solid fa-user-tie" style="color: var(--primary);"></i> Salon Manager (Super Admin Generated)
                         </button>
                         <button type="button" class="demo-pill-btn" onclick="fillDemo('admin@medika.com', 'admin')">
                             <i class="fa-solid fa-crown" style="color: var(--accent-gold);"></i> Admin Master
@@ -764,23 +773,23 @@
                 <form id="form-login" novalidate>
                     <div class="form-group">
                         <label class="form-label" for="input-email">
-                            <span>Branch Access Key / Email</span>
+                            <span>Super Admin Generated Email / Access Key</span>
                         </label>
                         <div class="input-wrapper">
-                            <i class="fa-solid fa-envelope input-icon"></i>
-                            <input type="email" id="input-email" class="form-control"
-                                placeholder="e.g. manager@vynster.com" required autocomplete="username">
+                            <i class="fa-solid fa-id-card input-icon"></i>
+                            <input type="text" id="input-email" class="form-control"
+                                placeholder="Enter email generated in Super Admin Portal" required autocomplete="username">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="input-password">
-                            <span>Access Password</span>
+                            <span>Super Admin Generated Password</span>
                         </label>
                         <div class="input-wrapper">
                             <i class="fa-solid fa-lock input-icon"></i>
                             <input type="password" id="input-password" class="form-control"
-                                placeholder="Enter branch password" required autocomplete="current-password">
+                                placeholder="Enter password generated in Super Admin Portal" required autocomplete="current-password">
                             <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('input-password', this)" title="Toggle visibility">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
@@ -1000,7 +1009,7 @@
             const password = inputPassword.value.trim();
 
             if (!email || !password) {
-                showAlert('Please provide both your Branch Email and Password.');
+                showAlert('Please provide both your Super Admin generated Email/Access Key and Password.');
                 return;
             }
 

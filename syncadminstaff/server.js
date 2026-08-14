@@ -938,15 +938,16 @@ app.post('/api/settings', (req, res) => {
 });
 
 app.get('/api/clients', async (req, res) => {
-    const { branchId } = req.query;
-    let isTier1 = false;
     const token = req.headers['authorization'] || req.query.token;
-    if (token) {
-        const decoded = verifyToken(token);
-        if (decoded && (decoded.tier === 1 || decoded.role === 'super')) {
-            isTier1 = true;
-        }
+    const decoded = verifyToken(token);
+
+    // Privacy & Security: Block unauthenticated public booking requests from accessing client database
+    if (!decoded && !req.headers['x-staff-access']) {
+        return res.json([]);
     }
+
+    const { branchId } = req.query;
+    let isTier1 = decoded && (decoded.tier === 1 || decoded.role === 'super');
 
     let clients = [];
     if (isConnected) {
@@ -1272,6 +1273,14 @@ app.delete('/api/expenses/:id', async (req, res) => {
 
 // Bookings
 app.get('/api/bookings', async (req, res) => {
+    const token = req.headers['authorization'] || req.query.token;
+    const decoded = verifyToken(token);
+
+    // Privacy & Security: Block unauthenticated public booking requests from reading booking database
+    if (!decoded && !req.headers['x-staff-access']) {
+        return res.json([]);
+    }
+
     const { branchId } = req.query;
     if (isConnected) { try { return res.json(await Booking.find(branchId ? { branchId } : {})); } catch (e) { } }
     let data = localDb.bookings;
