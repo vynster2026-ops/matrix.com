@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "Vynster Salon Unified API & Real-Time Sync Collection",
+    "description": "Complete Postman collection for testing REST APIs, Authentication, SuperAdmin accounts, Client/Staff databases, and Socket.IO real-time events.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Admin Login (Founder / Rooter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rooter1@medhika.com\",\n  \"password\": \"rootadmin1\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Verify 2FA",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rooter1@medhika.com\",\n  \"code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/auth/verify-2fa",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "auth", "verify-2fa"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clients Database",
+      "item": [
+        {
+          "name": "Get All Clients",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/clients",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "clients"]
+            }
+          }
+        },
+        {
+          "name": "Add New Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tara Joshi\",\n  \"phone\": \"+91 98765 43210\",\n  \"email\": \"tara@example.com\",\n  \"location\": \"Park Street Branch\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/clients",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "clients"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Staff Hub",
+      "item": [
+        {
+          "name": "Get Staff Members",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/staff",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "staff"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments & Bookings",
+      "item": [
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/bookings",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientName\": \"Tara Joshi\",\n  \"service\": \"Deluxe Hair Styling\",\n  \"staffName\": \"Priya Sharma\",\n  \"date\": \"2026-08-18\",\n  \"time\": \"11:00 AM\",\n  \"price\": 1200,\n  \"status\": \"Confirmed\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/bookings",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "bookings"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Marketing & Ads",
+      "item": [
+        {
+          "name": "Get Active Ads",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/api/ads",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "ads"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

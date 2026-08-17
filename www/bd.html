@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js for Animated Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="vynster-sync.js"></script>
 
     <style>
         :root {
@@ -1058,7 +1061,7 @@
         let revenueVsSpendChartInstance = null;
         let leadChannelsChartInstance = null;
 
-        // Initialize Module on Load
+        // Initialize Module on Load & Register Real-time Sync
         document.addEventListener('DOMContentLoaded', () => {
             renderSalesPipeline();
             renderB2BTable();
@@ -1066,6 +1069,36 @@
             renderBranchMatrix();
             renderCharts();
             fetchServerData();
+
+            // Real-Time Cross-Portal Sync Engine Integration for BD Motion Suite
+            if (typeof window.vynsterSyncOn === 'function') {
+                window.vynsterSyncOn(['newAppointment', 'booking_created', 'bookingCreated', 'appointmentUpdated', 'booking_updated', 'data_updated'], (data) => {
+                    console.log('⚡ BD Motion Suite received live appointment update:', data);
+                    fetchServerData();
+                    if (data && data.clientName) {
+                        const newDeal = {
+                            id: 'd-live-' + Date.now(),
+                            title: (data.service || 'Salon Service') + ' Booking',
+                            client: data.clientName,
+                            phone: data.phone || '+91 98765 00000',
+                            value: Number(data.price || data.total) || 2500,
+                            stage: 'new'
+                        };
+                        if (!dealsState.some(d => d.client === data.clientName && d.title.includes(data.service || ''))) {
+                            dealsState.unshift(newDeal);
+                            renderSalesPipeline();
+                        }
+                    }
+                    if (typeof showToast === 'function') {
+                        showToast('⚡ Live Customer Booking synced to BD Pipeline!', 'info');
+                    }
+                });
+
+                window.vynsterSyncOn('campaign_launched', (data) => {
+                    console.log('⚡ BD Suite campaign event:', data);
+                    if (typeof renderCampaigns === 'function') renderCampaigns();
+                });
+            }
         });
 
         // Fetch Real Server Data if available
@@ -1361,6 +1394,9 @@
             dealsState.unshift(newDeal);
             renderSalesPipeline();
             closeModal('modal-lead');
+            if (typeof window.vynsterSyncEmit === 'function') {
+                window.vynsterSyncEmit('data_updated', { type: 'deal_created', title, client, value });
+            }
             showToast(`Deal "${title}" created successfully!`, 'success');
             document.getElementById('form-new-deal').reset();
         }
@@ -1385,6 +1421,9 @@
 
             campaignsState.unshift(newCmp);
             renderCampaigns();
+            if (typeof window.vynsterSyncEmit === 'function') {
+                window.vynsterSyncEmit('campaign_launched', { title, channel, reach: count });
+            }
 
             // Direct WhatsApp API execution if channel is whatsapp
             if (channel === 'whatsapp') {

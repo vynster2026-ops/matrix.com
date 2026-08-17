@@ -18,11 +18,14 @@
     <script>
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const isDemo = urlParams.get('demo') === 'true' || 
-                           sessionStorage.getItem('isDemoMode') === 'true' || 
-                           localStorage.getItem('isDemoMode') === 'true' ||
-                           sessionStorage.getItem('vynster_demo_mode') === 'true' ||
-                           localStorage.getItem('vynster_demo_mode') === 'true';
+            const isDemo = urlParams.get('demo') === 'true';
+
+            if (!isDemo && urlParams.get('demo') === 'false') {
+                sessionStorage.removeItem('isDemoMode');
+                localStorage.removeItem('isDemoMode');
+                sessionStorage.removeItem('vynster_demo_mode');
+                localStorage.removeItem('vynster_demo_mode');
+            }
 
             if (isDemo) {
                 window.isDemoMode = true;
@@ -88,20 +91,31 @@
                 };
 
                 // Add Demo Banner to top of page when loaded
-                window.addEventListener('DOMContentLoaded', () => {
-                    if (document.getElementById('demo-mode-header-banner')) return;
-                    const banner = document.createElement('div');
-                    banner.id = 'demo-mode-header-banner';
-                    banner.style.cssText = 'position: sticky; top: 0; z-index: 999999; background: linear-gradient(90deg, #7c3aed, #ef4444); color: white; padding: 8px 18px; font-family: sans-serif; font-size: 12.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);';
-                    banner.innerHTML = `
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-size: 15px;">🧪</span>
-                            <span><strong>DEMO MODE ACTIVE:</strong> Bypassed login • Isolated mock data session • No real database records exposed or saved.</span>
-                        </div>
-                        <button onclick="exitDemoMode()" style="background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.6); color: white; padding: 3px 12px; border-radius: 50px; cursor: pointer; font-size: 11.5px; font-weight: 700; transition: all 0.2s ease;">Exit Demo Mode ✕</button>
-                    `;
-                    document.body.prepend(banner);
-                });
+                const applyDemoCustomizations = () => {
+                    if (!document.getElementById('demo-mode-header-banner') && document.body) {
+                        const banner = document.createElement('div');
+                        banner.id = 'demo-mode-header-banner';
+                        banner.style.cssText = 'position: sticky; top: 0; z-index: 999999; background: linear-gradient(90deg, #7c3aed, #ef4444); color: white; padding: 8px 18px; font-family: sans-serif; font-size: 12.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);';
+                        banner.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 15px;">🧪</span>
+                                <span><strong>DEMO MODE ACTIVE:</strong> Bypassed login • Isolated mock data session • No real database records exposed or saved.</span>
+                            </div>
+                            <button onclick="exitDemoMode()" style="background: rgba(255, 255, 255, 0.25); border: 1px solid rgba(255, 255, 255, 0.6); color: white; padding: 3px 12px; border-radius: 50px; cursor: pointer; font-size: 11.5px; font-weight: 700; transition: all 0.2s ease;">Exit Demo Mode ✕</button>
+                        `;
+                        document.body.prepend(banner);
+                    }
+                    const openingTitle = document.getElementById('opening-modal-title') || document.querySelector('#opening-amount-modal h3');
+                    if (openingTitle) {
+                        openingTitle.textContent = 'Welcome to Salon!';
+                    }
+                };
+
+                if (document.readyState === 'loading') {
+                    window.addEventListener('DOMContentLoaded', applyDemoCustomizations);
+                } else {
+                    applyDemoCustomizations();
+                }
             }
         })();
 
@@ -509,6 +523,15 @@
             box-shadow: var(--shadow);
         }
 
+        /* Clients view card must NOT have transform (breaks position:sticky on toolbar) */
+        #view-clients .card,
+        #view-clients .card:hover {
+            transform: none !important;
+            transform-style: flat !important;
+            perspective: none !important;
+            will-change: auto !important;
+        }
+
         .view-section {
             display: none;
             animation: fadeIn 0.4s ease;
@@ -519,9 +542,10 @@
             flex: 1;
             overflow-y: auto;
             min-height: 0;
-            padding-right: 8px;
-            /* avoid scrollbar overlapping content */
+            padding-right: 4px;
             padding-bottom: 24px;
+            /* Critical: position must be set for sticky children to work */
+            position: relative;
         }
 
         /* Tables */
@@ -2525,9 +2549,8 @@
 
             <!-- Clients View -->
             <div id="view-clients" class="view-section">
-                <div class="card" style="position: relative;">
-                    <!-- Sticky Header Toolbar -->
-                    <div style="position: sticky; top: 0; background: white; z-index: 100; padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+                <!-- Sticky Header Toolbar: OUTSIDE the card so transform on .card doesn't break sticky -->
+                <div style="position: sticky; top: 0; background: var(--bg-body, #f8fafc); z-index: 200; padding: 16px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; border-radius: 16px 16px 0 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
                         <!-- TOP ROW: Title & Action Buttons -->
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
                             <div style="display:flex; align-items:center; gap:12px;">
@@ -2622,68 +2645,22 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </div><!-- End Bottom Row -->
 
-                        <!-- Event Automations Modal -->
-                        <div id="event-automation-modal"
-                            style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:99999; justify-content:center; align-items:center;">
-                            <div
-                                style="background:white; width:400px; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
-                                <div
-                                    style="background:var(--primary); padding:20px; color:white; display:flex; justify-content:space-between; align-items:center;">
-                                    <h3 style="margin:0; font-size:18px;">Automated Event Messages</h3>
-                                    <button
-                                        onclick="document.getElementById('event-automation-modal').style.display='none'"
-                                        style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">&times;</button>
-                                </div>
-                                <div style="padding:24px; display:flex; flex-direction:column; gap:20px;">
-                                    <div style="display:flex; align-items:center; justify-content:space-between;">
-                                        <div>
-                                            <div style="font-weight:700; font-size:15px; color:var(--text-main);">Enable
-                                                Automation</div>
-                                            <div style="font-size:12px; color:var(--text-muted);">Automatically send
-                                                WhatsApp messages for birthdays and anniversaries.</div>
-                                        </div>
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" id="setting-event-enabled">
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label
-                                            style="display:block; font-weight:600; font-size:13px; margin-bottom:8px; color:var(--text-main);">Notification
-                                            Frequency</label>
-                                        <select id="setting-event-frequency" class="form-input" style="width:100%;"
-                                            onchange="window.currentEventTimeFilter = this.value; renderClientsView(cachedClients);">
-                                            <option value="daily">Daily (Day-wise)</option>
-                                            <option value="weekly">Weekly (Week-wise, every Monday)</option>
-                                            <option value="monthly">Monthly (Month-wise, 1st of every month)</option>
-                                        </select>
-                                    </div>
-                                    <button onclick="saveEventSettings()" class="btn"
-                                        style="width:100%; background:var(--primary); color:white; padding:12px; margin-top:8px;">Save
-                                        Preferences</button>
-                                </div>
-                            </div>
-                        </div>
-
+                        <!-- Bulk Actions Bar (shown when rows selected) -->
                         <div id="bulk-client-actions"
-                            style="display:none; align-items:center; gap:12px; background:var(--primary-bg); padding:8px 16px; border-radius:12px; border:1px solid rgba(26, 107, 138, 0.2); animation: slideIn 0.3s ease;">
-                            <span style="font-size:13px; font-weight:700; color:var(--primary);"><span
-                                    id="selected-client-count">0</span> Selected</span>
-                            <button class="btn btn-primary" onclick="launchMarketingFromSelection()"
-                                style="padding:8px 16px; font-size:12px;">🚀 Bulk Message Selected</button>
-                            <button class="btn"
-                                style="padding:8px 16px; font-size:12px; background:var(--bg-body); color:var(--text-main); border:1px solid var(--border);"
-                                onclick="launchOfferFromSelection('birthday')">🎁 Send Birthday Offer</button>
-                            <button class="btn"
-                                style="padding:8px 16px; font-size:12px; background:var(--bg-body); color:var(--text-main); border:1px solid var(--border);"
-                                onclick="launchOfferFromSelection('anniversary')">🎂 Send Anniversary Offer</button>
-                            <button class="btn" onclick="toggleAllClients(false)"
-                                style="padding:8px 16px; font-size:12px; background:white; color:var(--text-muted); border:1px solid var(--border);">Deselect</button>
+                            style="display:none; align-items:center; gap:12px; background:var(--primary-bg); padding:8px 16px; border-radius:12px; border:1px solid rgba(26, 107, 138, 0.2); animation: slideIn 0.3s ease; margin-top:12px;">
+                            <span style="font-size:13px; font-weight:700; color:var(--primary);"><span id="selected-client-count">0</span> Selected</span>
+                            <button class="btn btn-primary" onclick="launchMarketingFromSelection()" style="padding:8px 16px; font-size:12px;">🚀 Bulk Message Selected</button>
+                            <button class="btn" style="padding:8px 16px; font-size:12px; background:var(--bg-body); color:var(--text-main); border:1px solid var(--border);" onclick="launchOfferFromSelection('birthday')">🎁 Send Birthday Offer</button>
+                            <button class="btn" style="padding:8px 16px; font-size:12px; background:var(--bg-body); color:var(--text-main); border:1px solid var(--border);" onclick="launchOfferFromSelection('anniversary')">🎂 Send Anniversary Offer</button>
+                            <button class="btn" onclick="toggleAllClients(false)" style="padding:8px 16px; font-size:12px; background:white; color:var(--text-muted); border:1px solid var(--border);">Deselect</button>
                         </div>
-                    </div> <!-- End Sticky Header Toolbar -->
-                    <div class="table-responsive-wrapper" style="overflow-x: auto; margin-top: 12px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                </div><!-- End Sticky Toolbar -->
+
+                <div class="card" style="border-radius: 0 0 16px 16px; padding: 20px 20px 32px; margin-top: -1px;">
+                <!-- Event Automations Modal (positioned fixed, won't affect layout) -->
+
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -2707,7 +2684,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
             </div>
 
             <!-- Staff View -->
@@ -7498,8 +7474,8 @@
             <button onclick="closeOpeningAmountModal()"
                 style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
             <div style="font-size: 40px; margin-bottom: 8px;">💰</div>
-            <h3 style="font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Welcome to
-                Srijes!</h3>
+            <h3 id="opening-modal-title" style="font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Welcome to
+                Salon!</h3>
             <p id="edit-opening-desc" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Please
                 enter the opening cash
                 amount in the register for today.</p>

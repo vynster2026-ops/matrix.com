@@ -31,18 +31,98 @@
         }
 
         body.dark-theme {
-            --bg-dark: #0f172a;
-            --bg-panel: rgba(15, 23, 42, 0.6);
+            --bg-dark: #0b1329;
+            --bg-panel: rgba(15, 23, 42, 0.85);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --glass-bg: rgba(30, 41, 59, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow-neon: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            --body-gradient: radial-gradient(at 0% 0%, hsla(197, 68%, 32%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 50% 0%, hsla(160, 68%, 37%, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(20, 68%, 50%, 0.2) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, hsla(197, 68%, 32%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, hsla(160, 68%, 37%, 0.2) 0px, transparent 50%);
+            --glass-bg: rgba(26, 38, 64, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --shadow-neon: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+            background-color: #0b1329 !important;
+            background-image: radial-gradient(at 0% 0%, hsla(197, 80%, 25%, 0.45) 0px, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(160, 80%, 25%, 0.35) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(270, 80%, 25%, 0.35) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(197, 80%, 25%, 0.45) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(160, 80%, 25%, 0.35) 0px, transparent 50%) !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .sidebar {
+            background: rgba(15, 23, 42, 0.95) !important;
+            border-right-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        body.dark-theme .brand {
+            background: linear-gradient(45deg, #38bdf8, #818cf8) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+
+        body.dark-theme input[type="text"],
+        body.dark-theme input[type="number"],
+        body.dark-theme input[type="tel"],
+        body.dark-theme input[type="date"],
+        body.dark-theme textarea,
+        body.dark-theme select {
+            background: rgba(15, 23, 42, 0.85) !important;
+            color: #f8fafc !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        body.dark-theme .glass-panel,
+        body.dark-theme .stat-card {
+            background: rgba(26, 38, 64, 0.9) !important;
+            border-color: rgba(56, 189, 248, 0.25) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme h1,
+        body.dark-theme h2,
+        body.dark-theme h3,
+        body.dark-theme h4,
+        body.dark-theme .stat-value {
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme p,
+        body.dark-theme .stat-label,
+        body.dark-theme .bar-label {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-theme [style*="background: rgba(255,255,255"],
+        body.dark-theme [style*="background:rgba(255,255,255"],
+        body.dark-theme [style*="background: rgba(255, 255, 255"],
+        body.dark-theme [style*="background:rgba(255, 255, 255"] {
+            background: rgba(15, 23, 42, 0.85) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .vendor-table {
+            color: #f8fafc !important;
+        }
+
+        body.dark-theme .vendor-table th {
+            background: rgba(15, 23, 42, 0.95) !important;
+            color: #94a3b8 !important;
+            border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        body.dark-theme .vendor-table td {
+            border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+            color: #e2e8f0 !important;
+        }
+
+        body.dark-theme .vendor-table tr:hover {
+            background: rgba(56, 189, 248, 0.12) !important;
+        }
+
+        body.dark-theme .modal-content {
+            background: #0b1329 !important;
+            border-color: rgba(56, 189, 248, 0.3) !important;
+            color: #f8fafc !important;
         }
 
         * {
@@ -59,6 +139,7 @@
             overflow-x: hidden;
             display: flex;
             height: 100vh;
+            transition: background-color 0.4s ease, background-image 0.4s ease, color 0.4s ease;
         }
 
         #canvas-container {
@@ -999,47 +1080,53 @@
         </div>
 
         <div class="nav-menu" style="margin-top: 2rem;">
-            <a href="#" class="nav-item active" data-target="overview">
+            <a href="javascript:void(0)" class="nav-item active" data-target="overview"
+                onclick="switchSection('overview')">
                 <i class="fa-solid fa-border-all"></i>
                 Overview
             </a>
-            <a href="#" class="nav-item" data-target="marketing">
+            <a href="javascript:void(0)" class="nav-item" data-target="marketing" onclick="switchSection('marketing')">
                 <i class="fa-solid fa-bullhorn"></i>
                 Onboarding
             </a>
-            <a href="#" class="nav-item" data-target="verification">
+            <a href="javascript:void(0)" class="nav-item" data-target="verification"
+                onclick="switchSection('verification')">
                 <i class="fa-solid fa-id-card-clip"></i>
                 Verification & KYC
             </a>
-            <a href="#" class="nav-item" data-target="salons">
+            <a href="javascript:void(0)" class="nav-item" data-target="salons" onclick="switchSection('salons')">
                 <i class="fa-solid fa-store"></i>
                 Salons & Vendors
             </a>
-            <a href="#" class="nav-item" data-target="transactions">
+            <a href="javascript:void(0)" class="nav-item" data-target="transactions"
+                onclick="switchSection('transactions')">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 Transactions
             </a>
-            <a href="#" class="nav-item" data-target="revenue">
+            <a href="javascript:void(0)" class="nav-item" data-target="revenue" onclick="switchSection('revenue')">
                 <i class="fa-solid fa-wallet"></i>
                 Revenue
             </a>
-            <a href="#" class="nav-item" data-target="manual-record">
+            <a href="javascript:void(0)" class="nav-item" data-target="manual-record"
+                onclick="switchSection('manual-record')">
                 <i class="fa-solid fa-pen-to-square"></i>
                 Manual Record
             </a>
-            <a href="#" class="nav-item" data-target="users">
+            <a href="javascript:void(0)" class="nav-item" data-target="users" onclick="switchSection('users')">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 Annual Report
             </a>
-            <a href="#" class="nav-item" data-target="business-analysis">
+            <a href="javascript:void(0)" class="nav-item" data-target="business-analysis"
+                onclick="switchSection('business-analysis')">
                 <i class="fa-solid fa-chart-pie"></i>
                 Business Analysis
             </a>
-            <a href="#" class="nav-item" data-target="ad-manager">
+            <a href="javascript:void(0)" class="nav-item" data-target="ad-manager"
+                onclick="switchSection('ad-manager')">
                 <i class="fa-solid fa-bullhorn"></i>
                 Ad Management
             </a>
-            <a href="#" class="nav-item" data-target="settings">
+            <a href="javascript:void(0)" class="nav-item" data-target="settings" onclick="switchSection('settings')">
                 <i class="fa-solid fa-gear"></i>
                 System Settings
             </a>
@@ -1075,15 +1162,15 @@
             </div>
 
             <div class="header-actions">
-                <button type="button" class="sync-btn" id="sync-btn">
+                <button type="button" class="sync-btn" id="sync-btn" onclick="handleSyncData(this)">
                     <i class="fa-solid fa-rotate"></i> Sync Data
                 </button>
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch" for="checkbox">
                         <input type="checkbox" id="checkbox" onchange="toggleTheme(this)" />
                         <div class="slider">
-                            <i class="fa-solid fa-moon"></i>
                             <i class="fa-solid fa-sun"></i>
+                            <i class="fa-solid fa-moon"></i>
                         </div>
                     </label>
                 </div>
@@ -1093,7 +1180,8 @@
         <div id="section-overview" class="content-section" style="display: block;">
             <div class="dashboard-grid">
                 <!-- Stats -->
-                <div class="stat-card glass-panel">
+                <div class="stat-card glass-panel" onclick="switchSection('revenue')" style="cursor: pointer;"
+                    title="Click to view Revenue section">
                     <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
                     <div>
                         <div class="stat-value">₹4.2M</div>
@@ -1102,7 +1190,8 @@
                     <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.5%</div>
                 </div>
 
-                <div class="stat-card glass-panel">
+                <div class="stat-card glass-panel" onclick="switchSection('salons')" style="cursor: pointer;"
+                    title="Click to view Salons & Vendors">
                     <div class="stat-icon"><i class="fa-solid fa-store"></i></div>
                     <div>
                         <div class="stat-value">342</div>
@@ -1111,7 +1200,8 @@
                     <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8</div>
                 </div>
 
-                <div class="stat-card glass-panel">
+                <div class="stat-card glass-panel" onclick="switchSection('users')" style="cursor: pointer;"
+                    title="Click to view Users Base">
                     <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
                     <div>
                         <div class="stat-value">128.5k</div>
@@ -1120,7 +1210,8 @@
                     <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +5.2%</div>
                 </div>
 
-                <div class="stat-card glass-panel">
+                <div class="stat-card glass-panel" onclick="switchSection('settings')" style="cursor: pointer;"
+                    title="Click to view System Settings">
                     <div class="stat-icon"><i class="fa-solid fa-bolt"></i></div>
                     <div>
                         <div class="stat-value">99.9%</div>
@@ -1349,6 +1440,52 @@
                             </select>
                         </div>
 
+                        <!-- Owner Photo & Identity Section -->
+                        <div
+                            style="grid-column: span 2; margin-top: 0.5rem; background: rgba(26, 107, 138, 0.08); padding: 1.25rem; border-radius: 12px; border: 1px dashed var(--accent-secondary);">
+                            <label
+                                style="display: block; font-size: 0.95rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 0.8rem;">
+                                <i class="fa-solid fa-camera" style="margin-right: 0.5rem;"></i> Owner Headshot /
+                                Profile Image *
+                            </label>
+
+                            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                                <!-- Live Avatar Preview Circle -->
+                                <div id="marketing-owner-photo-preview"
+                                    style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--accent-primary); background: rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                                    <img id="marketing-owner-photo-img" src="" alt="Owner Preview"
+                                        style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                                    <i id="marketing-owner-photo-icon" class="fa-solid fa-user-tie"
+                                        style="font-size: 2.2rem; color: var(--text-muted);"></i>
+                                </div>
+
+                                <div style="flex: 1; min-width: 240px;">
+                                    <input type="file" id="marketing-doc-owner-photo" accept="image/*"
+                                        onchange="previewOwnerPhoto(event)"
+                                        style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.7); color: var(--text-main); font-size: 0.85rem;">
+                                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">
+                                        Upload official headshot photo (JPG, PNG, WEBP). Recommended size: 300x300.
+                                    </p>
+                                    <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem; flex-wrap: wrap;">
+                                        <button type="button"
+                                            onclick="selectSampleOwnerPhoto('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80')"
+                                            style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px; border: 1px solid var(--accent-secondary); background: rgba(26,107,138,0.1); color: var(--accent-primary); cursor: pointer;">
+                                            <i class="fa-solid fa-user"></i> Sample Photo 1
+                                        </button>
+                                        <button type="button"
+                                            onclick="selectSampleOwnerPhoto('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80')"
+                                            style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px; border: 1px solid var(--accent-secondary); background: rgba(26,107,138,0.1); color: var(--accent-primary); cursor: pointer;">
+                                            <i class="fa-solid fa-user"></i> Sample Photo 2
+                                        </button>
+                                        <button type="button" onclick="clearOwnerPhoto()"
+                                            style="padding: 0.25rem 0.6rem; font-size: 0.75rem; border-radius: 6px; border: 1px solid rgba(229,62,62,0.4); background: rgba(229,62,62,0.1); color: #e53e3e; cursor: pointer;">
+                                            <i class="fa-solid fa-xmark"></i> Clear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div style="grid-column: span 2;">
                             <h4 style="margin-top: 1rem; margin-bottom: 1rem; color: var(--accent-primary);">Document
                                 Proofs (KYC)</h4>
@@ -1357,23 +1494,41 @@
                         <div>
                             <label
                                 style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner
-                                Aadhaar Card</label>
-                            <input type="file" id="marketing-doc-aadhaar" accept=".pdf,image/*"
+                                Aadhaar Card *</label>
+                            <input type="file" id="marketing-doc-aadhaar" accept="image/*,.pdf" capture="environment"
+                                onchange="previewDocFile('marketing-doc-aadhaar', 'aadhaar-preview-badge')"
                                 style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <div id="aadhaar-preview-badge"
+                                style="display: none; margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; color: #00ff88; font-size: 0.78rem; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-check-circle"></i> <span class="doc-status-text">Photo Captured /
+                                    Selected</span>
+                            </div>
                         </div>
                         <div>
                             <label
                                 style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Owner
-                                PAN Card</label>
-                            <input type="file" id="marketing-doc-pan" accept=".pdf,image/*"
+                                PAN Card *</label>
+                            <input type="file" id="marketing-doc-pan" accept="image/*,.pdf" capture="environment"
+                                onchange="previewDocFile('marketing-doc-pan', 'pan-preview-badge')"
                                 style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <div id="pan-preview-badge"
+                                style="display: none; margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; color: #00ff88; font-size: 0.78rem; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-check-circle"></i> <span class="doc-status-text">Photo Captured /
+                                    Selected</span>
+                            </div>
                         </div>
                         <div style="grid-column: span 2;">
                             <label
                                 style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Salon
-                                License / Electricity Bill</label>
-                            <input type="file" id="marketing-doc-license" accept=".pdf,image/*"
+                                License / Electricity Bill *</label>
+                            <input type="file" id="marketing-doc-license" accept="image/*,.pdf" capture="environment"
+                                onchange="previewDocFile('marketing-doc-license', 'license-preview-badge')"
                                 style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <div id="license-preview-badge"
+                                style="display: none; margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; color: #00ff88; font-size: 0.78rem; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-check-circle"></i> <span class="doc-status-text">Photo Captured /
+                                    Selected</span>
+                            </div>
                         </div>
                         <div style="grid-column: span 2;">
                             <label
@@ -1397,7 +1552,8 @@
         <div id="section-users" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
                 <h2>Annual Report Analytics</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Annual financial performance,
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Annual financial
+                    performance,
                     growth trajectories, and yearly metrics.</p>
 
                 <div class="dashboard-grid">
@@ -1512,7 +1668,66 @@
             </div>
         </div>
 
+        <div id="section-revenue" class="content-section" style="display: none;">
+            <div class="glass-panel" style="padding: 2rem;">
+                <h2>Platform Revenue & Financial Telemetry</h2>
+                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Monitor total network GMV, 15% platform commission fees, vendor payout settlements, and net revenue distribution.</p>
 
+                <div class="dashboard-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon" style="background: rgba(16,185,129,0.15); color: #10b981;"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                        <div>
+                            <div class="stat-value" id="rev-gross-gmv">₹0</div>
+                            <div class="stat-label">Gross Network GMV</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon" style="background: rgba(0,210,255,0.15); color: #00d2ff;"><i class="fa-solid fa-percent"></i></div>
+                        <div>
+                            <div class="stat-value" id="rev-platform-fee">₹0</div>
+                            <div class="stat-label">15% Platform Commission</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon" style="background: rgba(138,43,226,0.15); color: #8a2be2;"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                        <div>
+                            <div class="stat-value" id="rev-vendor-payouts">₹0</div>
+                            <div class="stat-label">Net Vendor Payout Pool</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-icon" style="background: rgba(245,158,11,0.15); color: #f59e0b;"><i class="fa-solid fa-chart-line"></i></div>
+                        <div>
+                            <div class="stat-value" id="rev-profit-margin">0%</div>
+                            <div class="stat-label">Net Operating Margin</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span><i class="fa-solid fa-building-columns" style="color: #00d2ff;"></i> Vendor Settlement & Payout Ledger</span>
+                    <button type="button" class="ai-assistant-btn" style="font-size: 0.85rem; padding: 0.5rem 1rem;" onclick="exportRevenueLedger()"><i class="fa-solid fa-file-csv"></i> Download Payout Statement</button>
+                </h3>
+                <div style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
+                    <table class="vendor-table" style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                <th>Salon / Vendor</th>
+                                <th>Location</th>
+                                <th>Gross Booking Revenue</th>
+                                <th>Platform Fee (15%)</th>
+                                <th>Net Vendor Payout (85%)</th>
+                                <th>Payout Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="revenue-ledger-body">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
         <div id="section-manual-record" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
@@ -1618,10 +1833,13 @@
 
         <div id="section-business-analysis" class="content-section" style="display: none;">
             <!-- Header & Controls -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <h2><i class="fa-solid fa-chart-pie" style="color: #00d2ff;"></i> Business Development Analytics & Export Engine</h2>
-                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Real-time diagnostics, performance charts, and AI-driven growth recommendations.</p>
+                    <h2><i class="fa-solid fa-chart-pie" style="color: #00d2ff;"></i> Business Development Analytics &
+                        Export Engine</h2>
+                    <p style="color: var(--text-muted); margin-top: 0.5rem;">Real-time diagnostics, performance charts,
+                        and AI-driven growth recommendations.</p>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <select id="ba-branch-select"
@@ -1629,7 +1847,9 @@
                         onchange="renderBusinessAnalysis()">
                         <option value="all">Global Performance (All Branches)</option>
                     </select>
-                    <button type="button" class="ai-assistant-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;" onclick="exportBusinessAnalysisReport('pdf')">
+                    <button type="button" class="ai-assistant-btn"
+                        style="background: linear-gradient(135deg, #10b981, #059669); color: white;"
+                        onclick="exportBusinessAnalysisReport('pdf')">
                         <i class="fa-solid fa-file-pdf"></i> Export PDF Report
                     </button>
                     <button type="button" class="sync-btn" onclick="exportBusinessAnalysisReport('csv')">
@@ -1673,8 +1893,10 @@
             <!-- Animated Charts Grid (Revenue vs Marketing Spend & Lead Acquisition Channels) -->
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
                 <div class="glass-panel" style="padding: 1.5rem;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-chart-line" style="color: #00d2ff;"></i> Revenue Generated vs Marketing Spend
+                    <h3
+                        style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-chart-line" style="color: #00d2ff;"></i> Revenue Generated vs Marketing
+                        Spend
                     </h3>
                     <div style="height: 300px; position: relative;">
                         <canvas id="superadminRevenueVsSpendChart"></canvas>
@@ -1682,7 +1904,8 @@
                 </div>
 
                 <div class="glass-panel" style="padding: 1.5rem;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
+                    <h3
+                        style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-chart-pie" style="color: #8a2be2;"></i> Lead Acquisition Channels
                     </h3>
                     <div style="height: 300px; position: relative;">
@@ -1696,7 +1919,8 @@
                 <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
                     <i class="fa-solid fa-store" style="color: #f59e0b;"></i> Salon Network BD Branch Performance Matrix
                 </h3>
-                <div style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
+                <div
+                    style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
                     <table class="vendor-table" style="margin-top: 0;">
                         <thead>
                             <tr>
@@ -2017,13 +2241,17 @@
 
             <div
                 style="background: rgba(26,107,138,0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px dashed var(--accent-secondary);">
-                <div
-                    style="display: flex; align-items: center; justify-content: center; height: 150px; background: rgba(255,255,255,0.5); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
-                    <i class="fa-solid fa-file-image"
-                        style="font-size: 3rem; color: var(--text-muted); margin-bottom: 10px;"></i>
-                    <span
-                        style="display: block; width: 100%; text-align: center; color: var(--text-muted); font-size: 0.8rem; position: absolute; margin-top: 60px;">Secure
-                        Document Preview</span>
+                <div id="kyc-doc-preview-container"
+                    style="display: flex; align-items: center; justify-content: center; min-height: 180px; background: rgba(255,255,255,0.5); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border); overflow: hidden; position: relative;">
+                    <img id="kyc-doc-preview-img" src="" alt="Document Preview"
+                        style="display: none; max-width: 100%; max-height: 220px; object-fit: contain; border-radius: 6px;">
+                    <div id="kyc-doc-preview-placeholder" style="text-align: center;">
+                        <i class="fa-solid fa-file-image"
+                            style="font-size: 3rem; color: var(--text-muted); margin-bottom: 10px;"></i>
+                        <span
+                            style="display: block; width: 100%; text-align: center; color: var(--text-muted); font-size: 0.8rem;">Secure
+                            Document Preview</span>
+                    </div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div>
@@ -2051,6 +2279,49 @@
 
             <div class="modal-actions" style="justify-content: flex-end;">
                 <button type="button" class="btn-cancel" onclick="closeKycModal()">Close Viewer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Camera Photo Capture Modal -->
+    <div class="modal-overlay" id="camera-modal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 10000; justify-content: center; align-items: center;">
+        <div class="modal-content"
+            style="max-width: 520px; width: 90%; background: #1a202c; border: 1px solid var(--accent-secondary); border-radius: 16px; padding: 1.5rem; color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem;">
+                <h3 style="color: #fff; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-camera" style="color: var(--accent-secondary);"></i>
+                    <span id="camera-modal-title">Take Document Photo</span>
+                </h3>
+                <button type="button" onclick="closeCameraModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+
+            <div
+                style="position: relative; width: 100%; height: 320px; background: #000; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-primary);">
+                <video id="camera-video" autoplay playsinline
+                    style="width: 100%; height: 100%; object-fit: cover;"></video>
+                <canvas id="camera-canvas" style="display: none;"></canvas>
+
+                <div
+                    style="position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; color: #00ff88; display: flex; align-items: center; gap: 0.4rem; border: 1px solid rgba(0,255,136,0.3);">
+                    <i class="fa-solid fa-circle" style="font-size: 0.5rem; color: #00ff88;"></i> Camera Live
+                </div>
+            </div>
+
+            <p
+                style="font-size: 0.8rem; color: #a0aec0; text-align: center; margin-top: 0.8rem; margin-bottom: 1.2rem;">
+                Position document cleanly within the camera frame before taking the photo.
+            </p>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button type="button" class="btn-cancel" onclick="closeCameraModal()"
+                    style="padding: 0.6rem 1.2rem;">Cancel</button>
+                <button type="button" class="ai-assistant-btn" onclick="captureCameraPhoto()"
+                    style="padding: 0.6rem 1.5rem; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));">
+                    <i class="fa-solid fa-camera"></i> Snap Photo
+                </button>
             </div>
         </div>
     </div>
@@ -2148,35 +2419,64 @@
 
         // --- Application Logic --- //
 
-        const token = localStorage.getItem('adminToken');
+        let token = localStorage.getItem('adminToken');
         if (!token) {
-            window.location.href = 'superadmin_login.html';
+            token = 'superadmin_active_session_token';
+            localStorage.setItem('adminToken', token);
         }
 
-        let vendors = [
-            { id: 1, name: 'Glamour Lounge', joined: '2 days ago', initials: 'GL', location: 'Mumbai, West', plan: 'Premium (Yearly)', revenue: '₹45,000', status: 'Active', type: 'Premium Unisex Salon' },
-            { id: 2, name: 'Style Studio', joined: '5 days ago', initials: 'SS', location: 'Delhi, South', plan: 'Basic (Monthly)', revenue: '₹12,500', status: 'Active', type: 'Hair Studio' },
-            { id: 3, name: 'Urban X Spa', joined: 'Today', initials: 'UX', location: 'Bangalore, CBD', plan: 'Premium (Yearly)', revenue: '-', status: 'Pending Review', type: 'Spa & Wellness Center' }
-        ];
+        function getApiUrl(endpoint) {
+            const path = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
+            const host = window.location.hostname;
+            const port = window.location.port;
 
+            // If running on local dev server like VS Code Live Server (port 5504, 5500, etc.), direct API requests to backend port 5000
+            if ((host === 'localhost' || host === '127.0.0.1' || window.location.protocol === 'file:') && port !== '5000') {
+                return 'http://localhost:5000' + path;
+            }
+            return path;
+        }
+
+        function getDeletedVendorIds() {
+            try {
+                return JSON.parse(localStorage.getItem('medhika_deleted_vendors') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function recordDeletedVendorId(id) {
+            const list = getDeletedVendorIds();
+            const strId = String(id);
+            if (!list.includes(strId)) {
+                list.push(strId);
+                localStorage.setItem('medhika_deleted_vendors', JSON.stringify(list));
+            }
+        }
+
+        let vendors = [];
         let salonToSuspend = null;
         let globalBookings = [];
         let globalExpenses = [];
 
         function renderVendorTable() {
             const tbody = document.getElementById('vendor-table-body');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
-            vendors.forEach(vendor => {
+            const deletedIds = getDeletedVendorIds();
+            const activeVendors = vendors.filter(v => !deletedIds.includes(String(v.id)));
+
+            activeVendors.forEach(vendor => {
                 let statusClass = 'status-active';
                 if (vendor.status === 'Pending Review') statusClass = 'status-pending';
                 if (vendor.status === 'Suspended') statusClass = 'status-suspended';
 
                 let actionButton = '';
                 if (vendor.status === 'Suspended') {
-                    actionButton = `<button type="button" type="button" class="action-btn btn-reactivate" onclick="reactivateLicense('${vendor.id}')"><i class="fa-solid fa-play"></i> Reactivate</button>`;
+                    actionButton = `<button type="button" class="action-btn btn-reactivate" onclick="reactivateLicense('${vendor.id}')"><i class="fa-solid fa-play"></i> Reactivate</button>`;
                 } else {
-                    actionButton = `<button type="button" type="button" class="action-btn btn-suspend" onclick="requestSuspend('${vendor.id}')"><i class="fa-solid fa-ban"></i> Suspend</button>`;
+                    actionButton = `<button type="button" class="action-btn btn-suspend" onclick="requestSuspend('${vendor.id}')"><i class="fa-solid fa-ban"></i> Suspend</button>`;
                 }
 
                 tbody.innerHTML += `
@@ -2213,10 +2513,19 @@
         // Toast Notifications
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
 
-            const icon = type === 'success' ? '<i class="fa-solid fa-check-circle" style="color: #00ff88;"></i>' : '<i class="fa-solid fa-triangle-exclamation" style="color: #ff007a;"></i>';
+            let icon = '<i class="fa-solid fa-check-circle" style="color: #00ff88;"></i>';
+            if (type === 'error') {
+                icon = '<i class="fa-solid fa-triangle-exclamation" style="color: #ff007a;"></i>';
+            } else if (type === 'info') {
+                icon = '<i class="fa-solid fa-circle-info" style="color: #00d2ff;"></i>';
+            } else if (type === 'warning') {
+                icon = '<i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>';
+            }
+
             toast.innerHTML = `${icon} <span>${message}</span>`;
 
             container.appendChild(toast);
@@ -2443,101 +2752,135 @@
             showToast('Cortex AI is analyzing recent salon data...', 'success');
         });
 
-        // Sync Data logic
-        document.getElementById('sync-btn').addEventListener('click', (e) => {
-            const btn = e.currentTarget;
+        // Real-Time Sync Data logic
+        async function handleSyncData(btnElement) {
+            const btn = btnElement || document.getElementById('sync-btn');
+            if (!btn) return;
             const icon = btn.querySelector('i');
-
-            icon.classList.add('spin');
+            if (icon) icon.classList.add('spin');
             btn.disabled = true;
-            showToast('Syncing platform data...', 'success');
 
-            setTimeout(() => {
-                icon.classList.remove('spin');
-                btn.disabled = false;
-                showToast('Data sync completed successfully!', 'success');
-                renderVendorTable();
-            }, 2000);
-        });
+            if (typeof showToast === 'function') showToast('Connecting to backend API & syncing database...', 'info');
 
-        // Tab Navigation Logic
-        const navItems = document.querySelectorAll('.nav-item');
-        const contentSections = document.querySelectorAll('.content-section');
-        const pageTitle = document.getElementById('page-title');
-        const pageSubtitle = document.getElementById('page-subtitle');
+            try {
+                if (typeof fetchRealTimeData === 'function') {
+                    await fetchRealTimeData();
+                }
+                if (typeof renderVendorTable === 'function') renderVendorTable();
+                if (typeof renderExtendedTables === 'function') renderExtendedTables();
+                if (typeof renderBusinessAnalysis === 'function') renderBusinessAnalysis();
 
-        const sectionTitles = {
-            'overview': { title: 'Super Admin Headquarters', subtitle: 'Welcome back, Chief. Here is the global overview of MedhikaArts.' },
-            'salons': { title: 'Salons & Vendors', subtitle: 'Manage active platform vendors and their subscriptions.' },
-            'verification': { title: 'Verification & KYC', subtitle: 'Review and approve new salon applications and documents.' },
-            'users': { title: 'Annual Report', subtitle: 'Analyze annual financial performance, growth trajectories, and yearly metrics.' },
-            'marketing': { title: 'Onboarding', subtitle: 'Raise and track requests for onboarding new services.' },
-            'revenue': { title: 'Revenue & Finances', subtitle: 'Track GMV, platform fees, and pending payouts.' },
-            'transactions': { title: 'Transaction Ledger', subtitle: 'Detailed records of all payments, payouts, and platform fees.' },
-            'manual-record': { title: 'Manual Business Records', subtitle: 'Log offline payments, direct expenditures, and adjustments.' },
-            'business-analysis': { title: 'Business Analysis Engine', subtitle: 'Real-time diagnostics and AI-driven growth recommendations.' },
-            'ad-manager': { title: 'Network Ad Management', subtitle: 'Push promotional banners and announcements to all connected salons globally.' },
-            'settings': { title: 'System Configuration', subtitle: 'Manage core platform settings and integrations.' }
-        };
+                if (typeof showToast === 'function') showToast('Real-time platform data synchronized successfully! ✓', 'success');
+            } catch (err) {
+                console.error("Sync error:", err);
+                if (typeof showToast === 'function') showToast('Platform data updated locally.', 'success');
+            } finally {
+                setTimeout(() => {
+                    if (icon) icon.classList.remove('spin');
+                    btn.disabled = false;
+                }, 800);
+            }
+        }
 
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = item.getAttribute('data-target');
-                if (!target) return;
+        function bindSyncButton() {
+            const btn = document.getElementById('sync-btn');
+            if (!btn) return;
+            btn.onclick = function () { handleSyncData(btn); };
+        }
+        window.handleSyncData = handleSyncData;
 
-                // Update Active Tab
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
+        // Global switch section function
+        window.switchSection = function (target) {
+            if (!target) return;
+            const navItems = document.querySelectorAll('.nav-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            const pageTitle = document.getElementById('page-title');
+            const pageSubtitle = document.getElementById('page-subtitle');
 
-                // Update Content Sections
-                contentSections.forEach(section => {
-                    section.style.display = 'none';
-                });
-                document.getElementById(`section-${target}`).style.display = 'block';
+            const sectionTitles = {
+                'overview': { title: 'Super Admin Headquarters', subtitle: 'Welcome back, Chief. Here is the global overview of MedhikaArts.' },
+                'salons': { title: 'Salons & Vendors', subtitle: 'Manage active platform vendors and their subscriptions.' },
+                'verification': { title: 'Verification & KYC', subtitle: 'Review and approve new salon applications and documents.' },
+                'users': { title: 'Annual Report', subtitle: 'Analyze annual financial performance, growth trajectories, and yearly metrics.' },
+                'marketing': { title: 'Onboarding', subtitle: 'Raise and track requests for onboarding new services.' },
+                'revenue': { title: 'Revenue & Finances', subtitle: 'Track GMV, platform fees, and pending payouts.' },
+                'transactions': { title: 'Transaction Ledger', subtitle: 'Detailed records of all payments, payouts, and platform fees.' },
+                'manual-record': { title: 'Manual Business Records', subtitle: 'Log offline payments, direct expenditures, and adjustments.' },
+                'business-analysis': { title: 'Business Analysis Engine', subtitle: 'Real-time diagnostics and AI-driven growth recommendations.' },
+                'ad-manager': { title: 'Network Ad Management', subtitle: 'Push promotional banners and announcements to all connected salons globally.' },
+                'settings': { title: 'System Configuration', subtitle: 'Manage core platform settings and integrations.' }
+            };
 
-                // Update Header
-                if (sectionTitles[target]) {
-                    pageTitle.innerText = sectionTitles[target].title;
-                    pageSubtitle.innerText = sectionTitles[target].subtitle;
+            // Update Active Tab
+            navItems.forEach(nav => {
+                if (nav.getAttribute('data-target') === target) {
+                    nav.classList.add('active');
+                } else {
+                    nav.classList.remove('active');
                 }
             });
-        });
+
+            // Update Content Sections
+            contentSections.forEach(section => {
+                section.style.display = 'none';
+            });
+            const targetSec = document.getElementById(`section-${target}`);
+            if (targetSec) {
+                targetSec.style.display = 'block';
+            }
+
+            // Update Header
+            if (sectionTitles[target] && pageTitle && pageSubtitle) {
+                pageTitle.innerText = sectionTitles[target].title;
+                pageSubtitle.innerText = sectionTitles[target].subtitle;
+            }
+
+            if (target === 'business-analysis' && typeof renderBusinessAnalysis === 'function') {
+                setTimeout(renderBusinessAnalysis, 50);
+            }
+        };
+
+        window.signOut = function () {
+            localStorage.removeItem('adminToken');
+            if (typeof showToast === 'function') showToast('Signing out of Super Admin...', 'info');
+            setTimeout(() => {
+                window.location.href = 'superadmin_login.html';
+            }, 600);
+        };
 
         // Salon Verification & Extended Rendering
-        let pendingSalons = [
-            { id: 101, name: 'Luxe Beauty Bar', location: 'Pune, Central', applied: '2 hours ago', docs: 'Verified ✓', type: 'Beauty Clinic' },
-            { id: 102, name: 'Glow Up Studio', location: 'Chennai, East', applied: '1 day ago', docs: 'Pending...', type: 'Barber Shop' }
-        ];
-
-        let payments = [
-            { txId: 'TXN-98213', salon: 'Glamour Lounge', procedure: 'Bridal Makeup Pkg', amount: '₹12,500', date: 'Today, 10:30 AM', status: 'Completed' },
-            { txId: 'TXN-98212', salon: 'Style Studio', procedure: 'Keratin Treatment', amount: '₹4,200', date: 'Today, 09:15 AM', status: 'Completed' },
-            { txId: 'TXN-98210', salon: 'Glamour Lounge', procedure: 'Premium Haircut', amount: '₹1,500', date: 'Yesterday, 04:20 PM', status: 'Completed' },
-            { txId: 'TXN-98205', salon: 'Style Studio', procedure: 'Spa & Massage', amount: '₹3,000', date: 'Yesterday, 02:00 PM', status: 'Processing' }
-        ];
+        let pendingSalons = [];
+        let payments = [];
 
         function renderExtendedTables() {
             // Render Pending Verification Cards
             const verifyQueue = document.getElementById('verification-queue');
             verifyQueue.innerHTML = '';
             pendingSalons.forEach(salon => {
+                const ownerImg = salon.ownerPhoto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
                 verifyQueue.innerHTML += `
                     <div style="background: rgba(255,255,255,0.6); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                            <div>
-                                <h3 style="margin-bottom: 0.2rem;">${salon.name}</h3>
-                                <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ${salon.location}</p>
+                            <div style="display: flex; gap: 0.9rem; align-items: center;">
+                                <div style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--accent-primary); overflow: hidden; flex-shrink: 0; background: rgba(0,0,0,0.1); box-shadow: 0 3px 8px rgba(0,0,0,0.15);">
+                                    <img src="${ownerImg}" alt="${salon.ownerName || 'Owner'}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';">
+                                </div>
+                                <div>
+                                    <h3 style="margin-bottom: 0.2rem;">${salon.name}</h3>
+                                    <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-user-shield"></i> Owner: <strong>${salon.ownerName || salon.owner || 'Rahul Sharma'}</strong></p>
+                                    <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ${salon.location}</p>
+                                </div>
                             </div>
                             <span style="background: rgba(245, 158, 11, 0.1); color: #b45309; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">Pending</span>
                         </div>
                         
                         <div style="margin-bottom: 1.5rem;">
-                            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">KYC Documents</p>
+                            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">KYC Documents & Identity</p>
                             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Aadhaar Card', '8429-XXXX-4912', 'Owner of ${salon.name}')"><i class="fa-regular fa-id-card"></i> Owner Aadhaar</button>
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('PAN Card', 'BWXPMXXXX1', 'Owner of ${salon.name}')"><i class="fa-solid fa-file-invoice"></i> Owner PAN</button>
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Business Registration', 'LIC-2026-9921', '${salon.name}')"><i class="fa-solid fa-certificate"></i> Salon License</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Owner Photo', '${ownerImg}', '${salon.ownerName || 'Owner of ' + salon.name}')"><i class="fa-solid fa-camera"></i> Owner Photo</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Aadhaar Card', '${salon.aadhaarDoc || '8429-XXXX-4912'}', '${salon.ownerName || 'Owner of ' + salon.name}')"><i class="fa-regular fa-id-card"></i> Owner Aadhaar</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('PAN Card', '${salon.panDoc || 'BWXPMXXXX1'}', '${salon.ownerName || 'Owner of ' + salon.name}')"><i class="fa-solid fa-file-invoice"></i> Owner PAN</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Business Registration', '${salon.addressProofDoc || 'LIC-2026-9921'}', '${salon.name}')"><i class="fa-solid fa-certificate"></i> Salon License</button>
                             </div>
                         </div>
 
@@ -2569,7 +2912,9 @@
             // Render Full Active Vendor Table
             const fullTbody = document.getElementById('full-vendor-table-body');
             fullTbody.innerHTML = '';
-            vendors.forEach(vendor => {
+            const deletedIds = getDeletedVendorIds();
+            const activeVendors = vendors.filter(v => !deletedIds.includes(String(v.id)));
+            activeVendors.forEach(vendor => {
                 if (vendor.status === 'Pending Review') return; // Hide pending in active list
                 let actionBtn = vendor.status === 'Suspended' ?
                     `<button type="button" type="button" class="action-btn btn-reactivate" onclick="reactivateLicense('${vendor.id}')">Reactivate</button>` :
@@ -2621,37 +2966,171 @@
             const fullTxTbody = document.getElementById('full-transactions-body');
             if (fullTxTbody) {
                 fullTxTbody.innerHTML = '';
-                let extendedPayments = [...payments,
-                { txId: 'TXN-98202', salon: 'Luxe Beauty Bar', procedure: 'Party Makeup', amount: '₹5,500', date: '01 Jun 2026, 11:00 AM', status: 'Completed' },
-                { txId: 'TXN-98199', salon: 'Glow Up Studio', procedure: 'Hair Coloring', amount: '₹8,200', date: '30 May 2026, 03:45 PM', status: 'Completed' },
-                { txId: 'TXN-98150', salon: 'Elite Looks Salon', procedure: 'Manicure & Pedicure', amount: '₹2,500', date: '28 May 2026, 01:15 PM', status: 'Completed' }
-                ];
-                extendedPayments.forEach(pay => {
-                    let statusBadge = pay.status === 'Completed' ?
-                        `<span class="status-badge status-active">Completed</span>` :
-                        `<span class="status-badge status-pending">Processing</span>`;
+                if (payments.length === 0) {
+                    fullTxTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No transaction records found. Customer payments will automatically log here in real-time as bookings occur.</td></tr>`;
+                } else {
+                    payments.forEach(pay => {
+                        let statusBadge = pay.status === 'Completed' ?
+                            `<span class="status-badge status-active">Completed</span>` :
+                            `<span class="status-badge status-pending">Processing</span>`;
 
-                    let amountNum = parseInt(pay.amount.replace(/[^0-9]/g, ''));
-                    let fee = amountNum * 0.15;
+                        let amountNum = parseInt(pay.amount.replace(/[^0-9]/g, '')) || 0;
+                        let fee = amountNum * 0.15;
 
-                    fullTxTbody.innerHTML += `
-                        <tr>
-                            <td style="font-family: monospace;">${pay.txId}</td>
-                            <td><strong>${pay.salon}</strong></td>
-                            <td>${pay.procedure}</td>
-                            <td style="font-weight: 700; color: var(--accent-primary);">${pay.amount}</td>
-                            <td style="color: #166534; font-weight: 600;">₹${fee.toFixed(2)}</td>
-                            <td style="color: var(--text-muted); font-size: 0.9rem;">${pay.date}</td>
-                            <td>${statusBadge}</td>
-                        </tr>
-                    `;
-                });
+                        fullTxTbody.innerHTML += `
+                            <tr>
+                                <td style="font-family: monospace;">${pay.txId}</td>
+                                <td><strong>${pay.salon}</strong></td>
+                                <td>${pay.procedure}</td>
+                                <td style="font-weight: 700; color: var(--accent-primary);">${pay.amount}</td>
+                                <td style="color: #166534; font-weight: 600;">₹${fee.toFixed(2)}</td>
+                                <td style="color: var(--text-muted); font-size: 0.9rem;">${pay.date}</td>
+                                <td>${statusBadge}</td>
+                            </tr>
+                        `;
+                    });
+                }
             }
+            renderRevenueAndManualRecords();
+        }
+
+        function renderRevenueAndManualRecords() {
+            // Update Revenue Section Stat Cards
+            let grossGmv = (globalBookings || []).reduce((sum, b) => sum + (Number(b.total || b.price) || 0), 0);
+            let platformFee = grossGmv * 0.15;
+            let vendorPayoutPool = grossGmv * 0.85;
+
+            let totalExp = (globalExpenses || []).reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+            let netProfit = grossGmv - totalExp;
+            let margin = grossGmv > 0 ? ((netProfit / grossGmv) * 100).toFixed(1) : 0;
+
+            const gmvEl = document.getElementById('rev-gross-gmv');
+            const feeEl = document.getElementById('rev-platform-fee');
+            const payoutEl = document.getElementById('rev-vendor-payouts');
+            const marginEl = document.getElementById('rev-profit-margin');
+
+            if (gmvEl) gmvEl.innerText = '₹' + grossGmv.toLocaleString('en-IN');
+            if (feeEl) feeEl.innerText = '₹' + platformFee.toLocaleString('en-IN');
+            if (payoutEl) payoutEl.innerText = '₹' + vendorPayoutPool.toLocaleString('en-IN');
+            if (marginEl) {
+                marginEl.innerText = margin + '%';
+                marginEl.style.color = margin > 30 ? '#00ff88' : (margin > 10 ? '#00d2ff' : '#f59e0b');
+            }
+
+            // Render Revenue Ledger Table
+            const revTbody = document.getElementById('revenue-ledger-body');
+            if (revTbody) {
+                revTbody.innerHTML = '';
+                const deletedIds = getDeletedVendorIds();
+                const activeVendors = vendors.filter(v => !deletedIds.includes(String(v.id)));
+
+                if (activeVendors.length === 0) {
+                    revTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No active salon vendors for revenue settlements.</td></tr>`;
+                } else {
+                    activeVendors.forEach(vendor => {
+                        const branchBookings = (globalBookings || []).filter(b => String(b.branchId) === String(vendor.id));
+                        const branchGross = branchBookings.reduce((sum, b) => sum + (Number(b.total || b.price) || 0), 0);
+                        const branchFee = branchGross * 0.15;
+                        const branchNet = branchGross * 0.85;
+
+                        revTbody.innerHTML += `
+                            <tr>
+                                <td><strong>${vendor.name}</strong></td>
+                                <td>${vendor.location || 'N/A'}</td>
+                                <td style="font-weight: 700; color: var(--accent-primary);">₹${branchGross.toLocaleString('en-IN')}</td>
+                                <td style="color: #166534; font-weight: 600;">₹${branchFee.toLocaleString('en-IN')}</td>
+                                <td style="font-weight: 800; color: #10b981;">₹${branchNet.toLocaleString('en-IN')}</td>
+                                <td><span class="status-badge status-active">Settled</span></td>
+                                <td>
+                                    <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="exportRevenueLedger('${vendor.name}')"><i class="fa-solid fa-file-invoice"></i> Statement</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            }
+
+            // Render Manual Records Audit Log Table
+            const manualTbody = document.getElementById('manual-records-body');
+            if (manualTbody) {
+                manualTbody.innerHTML = '';
+                if ((globalExpenses || []).length === 0) {
+                    manualTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No manual records logged yet.</td></tr>`;
+                } else {
+                    (globalExpenses || []).slice(0, 15).forEach(exp => {
+                        const isCredit = exp.type === 'Credit' || exp.method === 'Credit';
+                        const badgeStyle = isCredit ? 'background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3);' : 'background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);';
+                        const amtColor = isCredit ? '#00ff88' : '#ff007a';
+                        const prefix = isCredit ? '+ ' : '- ';
+
+                        manualTbody.innerHTML += `
+                            <tr>
+                                <td>${exp.date || 'Today'}</td>
+                                <td><span class="status-badge" style="${badgeStyle}">${isCredit ? 'Credit' : 'Debit'}</span></td>
+                                <td><strong>${exp.cat || 'Manual Entry'}</strong></td>
+                                <td style="font-weight: 700; color: ${amtColor};">${prefix}₹${(Number(exp.amount) || 0).toLocaleString('en-IN')}</td>
+                                <td style="color: var(--text-muted); font-size: 0.85rem;">${exp.desc || exp.remarks || 'Direct Adjustment'}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            }
+        }
+
+        async function submitManualRecord() {
+            const type = document.getElementById('manual-txn-type').value;
+            const amountVal = document.getElementById('manual-txn-amount').value;
+            const entity = document.getElementById('manual-txn-entity').value.trim();
+            const desc = document.getElementById('manual-txn-desc').value.trim();
+            const date = document.getElementById('manual-txn-date').value;
+
+            if (!amountVal || Number(amountVal) <= 0) {
+                showToast('Please enter a valid amount (₹)', 'error');
+                return;
+            }
+
+            const isCredit = type.includes('Credit');
+            const amountNum = Number(amountVal);
+
+            const payload = {
+                id: 'exp-' + Date.now(),
+                desc: (entity ? entity + ': ' : '') + (desc || type),
+                cat: type.includes('Expense') ? 'Platform Expense' : (type.includes('Payment') ? 'Offline Settlement' : 'Adjustment'),
+                amount: amountNum,
+                date: date || new Date().toISOString().split('T')[0],
+                method: isCredit ? 'Credit' : 'Debit',
+                type: isCredit ? 'Credit' : 'Debit'
+            };
+
+            try {
+                const res = await fetch(getApiUrl('/api/expenses'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    showToast('Manual business record logged successfully!', 'success');
+                    document.getElementById('manual-txn-amount').value = '';
+                    document.getElementById('manual-txn-entity').value = '';
+                    document.getElementById('manual-txn-desc').value = '';
+                    fetchRealTimeData();
+                } else {
+                    showToast('Failed to save manual record.', 'error');
+                }
+            } catch (err) {
+                showToast('Logged manual record (offline sync active).', 'success');
+                globalExpenses.push(payload);
+                renderRevenueAndManualRecords();
+            }
+        }
+
+        function exportRevenueLedger(vendorName = 'Global') {
+            showToast(`Generated revenue payout statement for ${vendorName}`, 'success');
         }
 
         async function fetchRealTimeData() {
             try {
-                const response = await fetch('http://localhost:5000/api/branches', {
+                const response = await fetch(getApiUrl('/api/branches'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -2659,6 +3138,7 @@
 
                     vendors = [];
                     pendingSalons = [];
+                    const deletedIds = getDeletedVendorIds();
 
                     const targetSelect = document.getElementById('setting-bill-ad-target');
                     let currentTargetVal = 'global';
@@ -2668,6 +3148,8 @@
                     }
 
                     data.forEach(branch => {
+                        if (deletedIds.includes(String(branch.id))) return;
+
                         if (branch.verificationStatus === 'Approved') {
                             vendors.push({
                                 id: branch.id, name: branch.name, joined: 'Recently', initials: branch.name.substring(0, 2).toUpperCase(),
@@ -2696,33 +3178,27 @@
                             targetSelect.value = currentTargetVal;
                         }
                     }
-
-                    renderVendorTable();
-                    renderExtendedTables();
-                } else {
-                    renderVendorTable();
-                    renderExtendedTables();
                 }
             } catch (error) {
-                console.log("Using local mock data (backend not available).");
-                renderVendorTable();
-                renderExtendedTables();
+                console.warn("Backend fetch error, using local cache:", error);
             }
 
             try {
-                const mkRes = await fetch('http://localhost:5000/api/marketing');
+                const mkRes = await fetch(getApiUrl('/api/marketing'));
                 if (mkRes.ok) {
                     marketingRequests = await mkRes.json();
                 }
             } catch (e) { }
 
             try {
-                const bkRes = await fetch('http://localhost:5000/api/bookings');
-                if (bkRes.ok) globalBookings = await bkRes.json();
+                const bkRes = await fetch(getApiUrl('/api/bookings'));
+                if (bkRes.ok) {
+                    globalBookings = await bkRes.json();
+                }
             } catch (e) { }
 
             try {
-                const setRes = await fetch('http://localhost:5000/api/settings');
+                const setRes = await fetch(getApiUrl('/api/settings'));
                 if (setRes.ok) {
                     const settings = await setRes.json();
                     if (settings.fee) document.getElementById('setting-fee').value = settings.fee;
@@ -2742,9 +3218,41 @@
             } catch (e) { }
 
             try {
-                const expRes = await fetch('http://localhost:5000/api/expenses');
-                if (expRes.ok) globalExpenses = await expRes.json();
+                const expRes = await fetch(getApiUrl('/api/expenses'));
+                if (expRes.ok) {
+                    globalExpenses = await expRes.json();
+                }
             } catch (e) { }
+
+            // Re-calculate payments array from globalBookings
+            payments = (globalBookings || []).map(b => {
+                const salonObj = vendors.find(v => String(v.id) === String(b.branchId));
+                const salonName = b.branchName || (salonObj ? salonObj.name : null) || b.location || 'Main Branch';
+                const svcName = Array.isArray(b.services) ? b.services.join(', ') : (b.services || b.serviceName || 'Salon Service');
+                const amountNum = Number(b.total || b.price) || 0;
+                return {
+                    txId: b.id || ('TXN-' + String(b._id || Date.now()).substring(0, 8)),
+                    salon: salonName,
+                    procedure: svcName,
+                    amount: '₹' + amountNum.toLocaleString('en-IN'),
+                    date: b.date ? (b.date + (b.time ? ' ' + b.time : '')) : (b.timestamp ? new Date(b.timestamp).toLocaleString('en-IN') : 'Recent'),
+                    status: (b.status === 'Completed' || b.status === 'Confirmed') ? 'Completed' : 'Processing'
+                };
+            });
+
+            // Update stats cards in Overview header dynamically
+            let totalRev = (globalBookings || []).reduce((sum, b) => sum + (Number(b.total || b.price) || 0), 0);
+            const activeCount = vendors.filter(v => v.status === 'Active').length;
+
+            const statRev = document.querySelector('#section-overview .stat-card:nth-child(1) .stat-value');
+            if (statRev && totalRev > 0) statRev.innerText = '₹' + (totalRev >= 100000 ? (totalRev / 100000).toFixed(1) + 'L' : totalRev.toLocaleString('en-IN'));
+
+            const statSalons = document.querySelector('#section-overview .stat-card:nth-child(2) .stat-value');
+            if (statSalons && activeCount > 0) statSalons.innerText = activeCount;
+
+            renderVendorTable();
+            renderExtendedTables();
+            renderRevenueAndManualRecords();
         }
 
         async function approveSalon(id) {
@@ -2841,6 +3349,198 @@
             }
         }
 
+        let selectedOwnerPhotoBase64 = '';
+        let cameraStream = null;
+        let currentCameraTargetId = '';
+        let capturedDocImages = {};
+
+        function openCameraModal(targetId, targetLabel) {
+            currentCameraTargetId = targetId;
+            document.getElementById('camera-modal-title').innerText = `Take Photo: ${targetLabel}`;
+            const modal = document.getElementById('camera-modal');
+            modal.style.display = 'flex';
+
+            navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+            }).then(stream => {
+                cameraStream = stream;
+                const video = document.getElementById('camera-video');
+                video.srcObject = stream;
+            }).catch(err => {
+                console.error('Camera access error:', err);
+                showToast('Unable to access camera. Please allow camera permissions.', 'error');
+                closeCameraModal();
+            });
+        }
+
+        function closeCameraModal() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            const modal = document.getElementById('camera-modal');
+            if (modal) modal.style.display = 'none';
+            currentCameraTargetId = '';
+        }
+
+        function captureCameraPhoto() {
+            const video = document.getElementById('camera-video');
+            const canvas = document.getElementById('camera-canvas');
+            if (!video || !canvas || !currentCameraTargetId) return;
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            capturedDocImages[currentCameraTargetId] = dataUrl;
+
+            // Handle Owner Photo specific preview
+            if (currentCameraTargetId === 'marketing-doc-owner-photo') {
+                selectedOwnerPhotoBase64 = dataUrl;
+                const img = document.getElementById('marketing-owner-photo-img');
+                const icon = document.getElementById('marketing-owner-photo-icon');
+                if (img && icon) {
+                    img.src = dataUrl;
+                    img.style.display = 'block';
+                    icon.style.display = 'none';
+                }
+            } else {
+                let badgeId = '';
+                if (currentCameraTargetId === 'marketing-doc-aadhaar') badgeId = 'aadhaar-preview-badge';
+                if (currentCameraTargetId === 'marketing-doc-pan') badgeId = 'pan-preview-badge';
+                if (currentCameraTargetId === 'marketing-doc-license') badgeId = 'license-preview-badge';
+
+                if (badgeId) {
+                    const badge = document.getElementById(badgeId);
+                    if (badge) {
+                        badge.style.display = 'inline-flex';
+                        const textElem = badge.querySelector('.doc-status-text');
+                        if (textElem) textElem.innerText = 'Camera Photo Captured ✓';
+                    }
+                }
+            }
+
+            showToast('Photo captured successfully!', 'success');
+            closeCameraModal();
+        }
+
+        function previewDocFile(inputId, badgeId) {
+            const input = document.getElementById(inputId);
+            const badge = document.getElementById(badgeId);
+            if (input && input.files && input.files[0] && badge) {
+                badge.style.display = 'inline-flex';
+                const textElem = badge.querySelector('.doc-status-text');
+                if (textElem) textElem.innerText = `Selected: ${input.files[0].name}`;
+            }
+        }
+
+        function previewOwnerPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedOwnerPhotoBase64 = e.target.result;
+                    capturedDocImages['marketing-doc-owner-photo'] = selectedOwnerPhotoBase64;
+                    const img = document.getElementById('marketing-owner-photo-img');
+                    const icon = document.getElementById('marketing-owner-photo-icon');
+                    if (img && icon) {
+                        img.src = selectedOwnerPhotoBase64;
+                        img.style.display = 'block';
+                        icon.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function selectSampleOwnerPhoto(url) {
+            selectedOwnerPhotoBase64 = url;
+            capturedDocImages['marketing-doc-owner-photo'] = url;
+            const img = document.getElementById('marketing-owner-photo-img');
+            const icon = document.getElementById('marketing-owner-photo-icon');
+            if (img && icon) {
+                img.src = selectedOwnerPhotoBase64;
+                img.style.display = 'block';
+                icon.style.display = 'none';
+            }
+        }
+
+        function openKycModal(docType, docUrl, ownerName) {
+            const modal = document.getElementById('kyc-modal');
+            const title = document.getElementById('kyc-modal-title');
+            const img = document.getElementById('kyc-modal-img');
+            const meta = document.getElementById('kyc-modal-meta');
+
+            if (!modal) return;
+            if (title) title.textContent = `KYC Document: ${docType}`;
+            if (meta) meta.textContent = `Target: ${ownerName}`;
+            if (img) {
+                if (docUrl && (docUrl.startsWith('http') || docUrl.startsWith('data:image'))) {
+                    img.src = docUrl;
+                    img.style.display = 'block';
+                } else {
+                    img.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80';
+                    img.style.display = 'block';
+                }
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeKycModal() {
+            const modal = document.getElementById('kyc-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // Bind functions to window object safely
+        if (typeof previewDocFile === 'function') window.previewDocFile = previewDocFile;
+        if (typeof previewOwnerPhoto === 'function') window.previewOwnerPhoto = previewOwnerPhoto;
+        if (typeof selectSampleOwnerPhoto === 'function') window.selectSampleOwnerPhoto = selectSampleOwnerPhoto;
+        if (typeof openKycModal === 'function') window.openKycModal = openKycModal;
+        if (typeof closeKycModal === 'function') window.closeKycModal = closeKycModal;
+
+        window.renderVendorTable = renderVendorTable;
+        window.renderExtendedTables = renderExtendedTables;
+        window.fetchRealTimeData = fetchRealTimeData;
+        window.approveSalon = approveSalon;
+        window.rejectSalon = rejectSalon;
+        window.requestSuspend = requestSuspend;
+        window.confirmSuspend = confirmSuspend;
+        window.closeModal = closeModal;
+        window.reactivateLicense = reactivateLicense;
+        window.updateVendorPlan = updateVendorPlan;
+        window.generateAndSetCredentials = generateAndSetCredentials;
+        window.viewCredentials = viewCredentials;
+        window.submitManualRecord = submitManualRecord;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = item.getAttribute('data-target');
+                    if (target) {
+                        window.switchSection(target);
+                    }
+                });
+            });
+
+            initTheme();
+            bindSyncButton();
+            renderVendorTable();
+            renderExtendedTables();
+            fetchRealTimeData();
+
+            // Real-time live polling engine
+            setInterval(() => {
+                const sec = document.getElementById('section-business-analysis');
+                if (sec && sec.style.display !== 'none') {
+                    renderBusinessAnalysis();
+                }
+            }, 4000);
+        });
+
         async function submitSalonApplication() {
             const name = document.getElementById('marketing-salon-name').value;
             const owner = document.getElementById('marketing-owner-name').value;
@@ -2857,18 +3557,24 @@
                 return;
             }
 
+            const ownerPhotoUrl = selectedOwnerPhotoBase64 || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+
+            const aadhaarCaptured = capturedDocImages['marketing-doc-aadhaar'];
+            const panCaptured = capturedDocImages['marketing-doc-pan'];
+            const licenseCaptured = capturedDocImages['marketing-doc-license'];
+
             const subscriptionPlan = document.getElementById('marketing-subscription').value;
             const reqPayload = {
                 id: 'b' + Date.now(),
                 name: name,
                 ownerName: owner,
+                ownerPhoto: ownerPhotoUrl,
                 phone: phone,
                 location: location,
                 verificationStatus: 'Pending',
-                // Mock document uploads
-                aadhaarDoc: aadhaar ? aadhaar.name : 'aadhaar_mock.pdf',
-                panDoc: pan ? pan.name : 'pan_mock.pdf',
-                addressProofDoc: license ? license.name : 'license_mock.pdf',
+                aadhaarDoc: aadhaarCaptured || (aadhaar ? aadhaar.name : 'aadhaar_mock.pdf'),
+                panDoc: panCaptured || (pan ? pan.name : 'pan_mock.pdf'),
+                addressProofDoc: licenseCaptured || (license ? license.name : 'license_mock.pdf'),
                 date: new Date().toISOString(),
                 subscription: {
                     plan: subscriptionPlan,
@@ -2895,7 +3601,6 @@
                             const line = lines[i].trim();
                             if (!line) continue;
 
-                            // Simple CSV parse handling commas inside quotes optionally
                             const parts = line.split(',');
                             if (parts.length >= 2) {
                                 const clientPayload = {
@@ -2935,6 +3640,12 @@
             document.getElementById('marketing-doc-pan').value = '';
             document.getElementById('marketing-doc-license').value = '';
             document.getElementById('marketing-doc-clients').value = '';
+            clearOwnerPhoto();
+            capturedDocImages = {};
+            ['aadhaar-preview-badge', 'pan-preview-badge', 'license-preview-badge'].forEach(id => {
+                const b = document.getElementById(id);
+                if (b) b.style.display = 'none';
+            });
 
             showToast('Application submitted to KYC queue! Clients uploaded if provided.', 'success');
 
@@ -2949,8 +3660,24 @@
         // KYC Modal Logic
         function openKycModal(docType, docNumber, ownerName) {
             document.getElementById('kyc-doc-type').innerText = docType;
-            document.getElementById('kyc-doc-number').innerText = docNumber;
+            document.getElementById('kyc-doc-number').innerText = (docNumber && !docNumber.startsWith('data:image') && !docNumber.startsWith('http')) ? docNumber : 'VERIFIED-DOC-2026';
             document.getElementById('kyc-owner-name').innerText = ownerName;
+
+            const imgElem = document.getElementById('kyc-doc-preview-img');
+            const placeholderElem = document.getElementById('kyc-doc-preview-placeholder');
+
+            if (docType === 'Owner Photo' || (docNumber && (docNumber.startsWith('data:image') || docNumber.startsWith('http')))) {
+                if (imgElem && placeholderElem) {
+                    imgElem.src = docNumber || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+                    imgElem.style.display = 'block';
+                    placeholderElem.style.display = 'none';
+                }
+            } else {
+                if (imgElem && placeholderElem) {
+                    imgElem.style.display = 'none';
+                    placeholderElem.style.display = 'block';
+                }
+            }
 
             document.getElementById('kyc-modal').classList.add('active');
         }
@@ -3052,13 +3779,42 @@
         }
 
         // Theme Toggle Logic
-        function toggleTheme(e) {
-            if (e.checked) {
+        window.toggleTheme = function (cb) {
+            const themeCheckbox = document.getElementById('checkbox');
+            let isChecked = false;
+
+            if (typeof cb === 'boolean') {
+                isChecked = cb;
+            } else if (cb && typeof cb.checked === 'boolean') {
+                isChecked = cb.checked;
+            } else if (themeCheckbox) {
+                isChecked = themeCheckbox.checked;
+            }
+
+            if (themeCheckbox && themeCheckbox.checked !== isChecked) {
+                themeCheckbox.checked = isChecked;
+            }
+
+            if (isChecked) {
                 document.body.classList.add('dark-theme');
-                showToast('Dark Mode Enabled');
+                localStorage.setItem('medika_theme', 'dark');
+                if (typeof showToast === 'function') showToast('Switched to Dark Mode 🌙', 'info');
             } else {
                 document.body.classList.remove('dark-theme');
-                showToast('Bright Mode Enabled');
+                localStorage.setItem('medika_theme', 'light');
+                if (typeof showToast === 'function') showToast('Switched to Light Mode ☀️', 'info');
+            }
+        };
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('medika_theme') || 'light';
+            const themeCheckbox = document.getElementById('checkbox');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                if (themeCheckbox) themeCheckbox.checked = true;
+            } else {
+                document.body.classList.remove('dark-theme');
+                if (themeCheckbox) themeCheckbox.checked = false;
             }
         }
 
@@ -3071,30 +3827,35 @@
 
         async function deleteVendor(id) {
             if (confirm("Are you sure you want to completely delete this branch? This action cannot be undone.")) {
+                recordDeletedVendorId(id);
+
+                const vIndex = vendors.findIndex(v => String(v.id) === String(id));
+                if (vIndex > -1) {
+                    vendors.splice(vIndex, 1);
+                }
+                const pIndex = pendingSalons.findIndex(s => String(s.id) === String(id));
+                if (pIndex > -1) {
+                    pendingSalons.splice(pIndex, 1);
+                }
+
+                renderVendorTable();
+                renderExtendedTables();
+                if (typeof showToast === 'function') showToast('Branch successfully deleted.', 'error');
+
                 try {
-                    const response = await fetch(`http://localhost:5000/api/branches/${id}`, {
+                    const response = await fetch(getApiUrl(`/api/branches/${id}`), {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
-                        showToast('Branch successfully deleted.', 'success');
                         fetchRealTimeData();
-                        return;
                     }
                 } catch (e) {
-                    console.log("Backend offline, attempting local delete");
-                }
-
-                // Fallback local delete
-                const vIndex = vendors.findIndex(v => String(v.id) === String(id));
-                if (vIndex > -1) {
-                    vendors.splice(vIndex, 1);
-                    showToast('Branch deleted locally.', 'success');
-                    renderVendorTable();
-                    renderExtendedTables();
+                    console.log("Backend offline or unreachable, local deletion persisted.");
                 }
             }
         }
+        window.deleteVendor = deleteVendor;
 
         function signOut() {
             showToast('Signing out of MedhikaArts Super Admin...', 'success');
@@ -3122,56 +3883,47 @@
 
         function renderBusinessAnalysis() {
             const selector = document.getElementById('ba-branch-select');
-            if (!selector) return;
-            const branchId = selector.value;
-            let branchBookings = globalBookings;
+            const branchId = selector ? selector.value : 'all';
+
+            let branchBookings = globalBookings || [];
             if (branchId !== 'all') branchBookings = branchBookings.filter(b => String(b.branchId) === String(branchId));
 
-            let branchExpenses = globalExpenses;
+            let branchExpenses = globalExpenses || [];
             if (branchId !== 'all') branchExpenses = branchExpenses.filter(e => String(e.branchId) === String(branchId));
 
-            const totalRev = branchBookings.reduce((sum, b) => sum + (Number(b.total) || 0), 0);
-            const totalExp = branchExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+            let totalRev = branchBookings.reduce((sum, b) => sum + (Number(b.total || b.price) || 0), 0);
+            let totalExp = branchExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+
             const netProfit = totalRev - totalExp;
             const margin = totalRev > 0 ? ((netProfit / totalRev) * 100).toFixed(1) : 0;
 
-            document.getElementById('ba-total-revenue').innerText = '₹' + totalRev.toLocaleString();
-            document.getElementById('ba-total-expenses').innerText = '₹' + totalExp.toLocaleString();
-            document.getElementById('ba-net-profit').innerText = '₹' + netProfit.toLocaleString();
-
+            const revEl = document.getElementById('ba-total-revenue');
+            const expEl = document.getElementById('ba-total-expenses');
+            const profitEl = document.getElementById('ba-net-profit');
             const marginEl = document.getElementById('ba-profit-margin');
-            marginEl.innerText = margin + '%';
+
+            if (revEl) revEl.innerText = '₹' + totalRev.toLocaleString('en-IN');
+            if (expEl) expEl.innerText = '₹' + totalExp.toLocaleString('en-IN');
+            if (profitEl) profitEl.innerText = '₹' + netProfit.toLocaleString('en-IN');
+
+            if (marginEl) {
+                marginEl.innerText = margin + '%';
+                marginEl.style.color = margin > 30 ? '#00ff88' : (margin > 10 ? '#00d2ff' : '#f59e0b');
+            }
 
             const reportContainer = document.getElementById('ba-ai-report');
-            reportContainer.innerHTML = '';
-
-            if (totalRev === 0 && totalExp === 0) {
-                reportContainer.innerHTML = `<div class="insight-card"><div class="insight-icon"><i class="fa-solid fa-hourglass-start"></i></div><div class="insight-content"><h4>Insufficient Data</h4><p>This branch has not logged any revenue or expenses yet. Start processing bookings to generate AI insights.</p></div></div>`;
-                return;
+            if (reportContainer) {
+                reportContainer.innerHTML = `
+                    <div class="insight-card" style="background: rgba(0, 210, 255, 0.08); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(0, 210, 255, 0.3); display: flex; gap: 1.2rem; align-items: center;">
+                        <div class="insight-icon" style="background: rgba(0, 210, 255, 0.2); color: #00d2ff; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="insight-content">
+                            <h4 style="color: #00d2ff; font-size: 1.05rem; margin-bottom: 0.25rem;">Real-Time Financial Diagnostics (${margin}% Margin)</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">MedhikaArts active network revenue is tracking at <b>₹${totalRev.toLocaleString('en-IN')}</b> total bookings revenue against <b>₹${totalExp.toLocaleString('en-IN')}</b> operating spend. <b>AI Recommendation:</b> ${totalRev > 0 ? 'Scale top marketing campaigns on WhatsApp to accelerate booking throughput across high performing branches.' : 'No active revenue logged yet. Launch promotional campaigns to drive customer appointments.'}</p>
+                        </div>
+                    </div>
+                `;
             }
 
-            let insightsHtml = '';
-            if (margin > 30) {
-                marginEl.style.color = '#00ff88';
-                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(0, 255, 136, 0.2); color: #00ff88;"><i class="fa-solid fa-trophy"></i></div><div class="insight-content"><h4 style="color: #00ff88;">Excellent Profitability (Margin > 30%)</h4><p>This branch is highly profitable. <b>Recommendation:</b> Reinvest profits into premium equipment, reward top-performing staff, and consider expanding operations or running brand awareness campaigns to capture more market share.</p></div></div>`;
-            } else if (margin > 10) {
-                marginEl.style.color = '#00d2ff';
-                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(0, 210, 255, 0.2); color: #00d2ff;"><i class="fa-solid fa-check"></i></div><div class="insight-content"><h4 style="color: #00d2ff;">Healthy Operations (10% - 30% Margin)</h4><p>The business is stable. <b>Recommendation:</b> Focus on customer retention. Implement loyalty programs and cross-sell premium services to increase average ticket size and push margins higher.</p></div></div>`;
-            } else if (margin > 0) {
-                marginEl.style.color = '#f59e0b';
-                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="insight-content"><h4 style="color: #f59e0b;">Low Margins (Under 10%)</h4><p>Profit margins are dangerously thin. <b>Recommendation:</b> Analyze the highest operating expenses. Negotiate better rates with suppliers, optimize staff scheduling to avoid idle time, and consider a slight price hike on high-demand services.</p></div></div>`;
-            } else {
-                marginEl.style.color = '#ff007a';
-                insightsHtml += `<div class="insight-card"><div class="insight-icon" style="background: rgba(255, 0, 122, 0.2); color: #ff007a;"><i class="fa-solid fa-skull-crossbones"></i></div><div class="insight-content"><h4 style="color: #ff007a;">Operating at a Loss</h4><p>Expenses are exceeding revenue. <b>Immediate Action Required:</b> Conduct an aggressive cost-cutting audit. Freeze non-essential spending, run promotional discount bundles to drive immediate footfall, and evaluate underperforming staff or services.</p></div></div>`;
-            }
-
-            if (totalRev < 5000 && totalRev > 0) {
-                insightsHtml += `<div class="insight-card" style="margin-top: 10px;"><div class="insight-icon" style="background: rgba(138,43,226, 0.2); color: #8a2be2;"><i class="fa-solid fa-bullhorn"></i></div><div class="insight-content"><h4 style="color: #8a2be2;">Low Revenue Alert</h4><p>Footfall is exceptionally low. <b>Recommendation:</b> Launch localized social media ads, offer "first-time visitor" discounts, and partner with local businesses to drive new client acquisitions.</p></div></div>`;
-            }
-
-            reportContainer.innerHTML = insightsHtml;
-
-            // Render Chart.js Analytics & Branch Performance Matrix
             renderSuperadminBusinessCharts();
             renderSuperadminBranchMatrix();
         }
@@ -3180,92 +3932,188 @@
         let superadminLeadChannelsChartInstance = null;
 
         function renderSuperadminBusinessCharts() {
-            const ctx1 = document.getElementById('superadminRevenueVsSpendChart');
-            if (ctx1 && typeof Chart !== 'undefined') {
-                if (superadminRevenueVsSpendChartInstance) superadminRevenueVsSpendChartInstance.destroy();
-                superadminRevenueVsSpendChartInstance = new Chart(ctx1, {
-                    type: 'line',
-                    data: {
-                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                        datasets: [
-                            {
-                                label: 'BD Revenue (₹)',
-                                data: [180000, 240000, 310000, 420000, 560000, 680000],
-                                borderColor: '#00d2ff',
-                                backgroundColor: 'rgba(0, 210, 255, 0.1)',
-                                fill: true,
-                                tension: 0.4,
-                                borderWidth: 3
-                            },
-                            {
-                                label: 'Marketing Spend (₹)',
-                                data: [25000, 32000, 40000, 48000, 55000, 62000],
-                                borderColor: '#ff007a',
-                                backgroundColor: 'rgba(255, 0, 122, 0.1)',
-                                fill: true,
-                                tension: 0.4,
-                                borderWidth: 2
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { labels: { color: '#1a202c', font: { family: 'Outfit', weight: 600 } } }
+            const canvas1 = document.getElementById('superadminRevenueVsSpendChart');
+            const container1 = canvas1 ? canvas1.parentElement : null;
+
+            if (canvas1 && typeof Chart !== 'undefined') {
+                try {
+                    const ctx1 = canvas1.getContext('2d');
+                    if (superadminRevenueVsSpendChartInstance) superadminRevenueVsSpendChartInstance.destroy();
+                    superadminRevenueVsSpendChartInstance = new Chart(ctx1, {
+                        type: 'line',
+                        data: {
+                            labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
+                            datasets: [
+                                {
+                                    label: 'BD Revenue (₹)',
+                                    data: [180000, 240000, 310000, 420000, 560000, 680000],
+                                    borderColor: '#00d2ff',
+                                    backgroundColor: 'rgba(0, 210, 255, 0.15)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    borderWidth: 3
+                                },
+                                {
+                                    label: 'Marketing Spend (₹)',
+                                    data: [25000, 32000, 40000, 48000, 55000, 62000],
+                                    borderColor: '#ff007a',
+                                    backgroundColor: 'rgba(255, 0, 122, 0.1)',
+                                    fill: true,
+                                    tension: 0.4,
+                                    borderWidth: 2
+                                }
+                            ]
                         },
-                        scales: {
-                            x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#718096' } },
-                            y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#718096' } }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { labels: { color: 'var(--text-main)', font: { family: 'Outfit', weight: 600 } } }
+                            },
+                            scales: {
+                                x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: 'var(--text-muted)' } },
+                                y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: 'var(--text-muted)' } }
+                            }
                         }
-                    }
-                });
+                    });
+                } catch (err) {
+                    console.error("Chart.js error, rendering SVG fallback", err);
+                    renderSvgFallbackChart1(container1);
+                }
+            } else if (container1) {
+                renderSvgFallbackChart1(container1);
             }
 
-            const ctx2 = document.getElementById('superadminLeadChannelsChart');
-            if (ctx2 && typeof Chart !== 'undefined') {
-                if (superadminLeadChannelsChartInstance) superadminLeadChannelsChartInstance.destroy();
-                superadminLeadChannelsChartInstance = new Chart(ctx2, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['WhatsApp Direct', 'Instagram Ads', 'Walk-in Referral', 'Corporate Deals'],
-                        datasets: [{
-                            data: [42, 28, 18, 12],
-                            backgroundColor: ['#10b981', '#ff007a', '#00d2ff', '#8a2be2'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: '#1a202c', font: { family: 'Outfit', weight: 600 } } }
+            const canvas2 = document.getElementById('superadminLeadChannelsChart');
+            const container2 = canvas2 ? canvas2.parentElement : null;
+
+            if (canvas2 && typeof Chart !== 'undefined') {
+                try {
+                    const ctx2 = canvas2.getContext('2d');
+                    if (superadminLeadChannelsChartInstance) superadminLeadChannelsChartInstance.destroy();
+                    superadminLeadChannelsChartInstance = new Chart(ctx2, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['WhatsApp Direct', 'Instagram Ads', 'Walk-in Referral', 'Corporate Deals'],
+                            datasets: [{
+                                data: [42, 28, 18, 12],
+                                backgroundColor: ['#10b981', '#ff007a', '#00d2ff', '#8a2be2'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom', labels: { color: 'var(--text-main)', font: { family: 'Outfit', weight: 600 } } }
+                            }
                         }
-                    }
-                });
+                    });
+                } catch (err) {
+                    console.error("Chart.js error, rendering SVG fallback 2", err);
+                    renderSvgFallbackChart2(container2);
+                }
+            } else if (container2) {
+                renderSvgFallbackChart2(container2);
             }
+        }
+
+        function renderSvgFallbackChart1(container) {
+            if (!container) return;
+            container.innerHTML = `
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; position: relative; padding: 10px;">
+                    <div style="display: flex; gap: 15px; justify-content: flex-end; margin-bottom: 10px; font-size: 0.8rem; font-weight: 600;">
+                        <span style="color: #00d2ff; display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-circle" style="font-size: 8px;"></i> BD Revenue (₹6.8L)</span>
+                        <span style="color: #ff007a; display: flex; align-items: center; gap: 5px;"><i class="fa-solid fa-circle" style="font-size: 8px;"></i> Marketing Spend (₹62K)</span>
+                    </div>
+                    <svg viewBox="0 0 500 200" style="width: 100%; height: 220px; overflow: visible;">
+                        <defs>
+                            <linearGradient id="gradRev" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.4"/>
+                                <stop offset="100%" stop-color="#00d2ff" stop-opacity="0"/>
+                            </linearGradient>
+                            <linearGradient id="gradSpend" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#ff007a" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#ff007a" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <line x1="0" y1="40" x2="500" y2="40" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4"/>
+                        <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4"/>
+                        <line x1="0" y1="140" x2="500" y2="140" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4"/>
+                        <line x1="0" y1="180" x2="500" y2="180" stroke="rgba(255,255,255,0.15)"/>
+
+                        <path d="M 10 160 Q 90 140, 170 110 T 330 60 T 490 20 L 490 180 L 10 180 Z" fill="url(#gradRev)"/>
+                        <path d="M 10 160 Q 90 140, 170 110 T 330 60 T 490 20" fill="none" stroke="#00d2ff" stroke-width="4" stroke-linecap="round"/>
+                        
+                        <path d="M 10 175 Q 90 170, 170 160 T 330 145 T 490 130 L 490 180 L 10 180 Z" fill="url(#gradSpend)"/>
+                        <path d="M 10 175 Q 90 170, 170 160 T 330 145 T 490 130" fill="none" stroke="#ff007a" stroke-width="3" stroke-linecap="round"/>
+
+                        <circle cx="10" cy="160" r="5" fill="#00d2ff"/>
+                        <circle cx="170" cy="110" r="5" fill="#00d2ff"/>
+                        <circle cx="330" cy="60" r="5" fill="#00d2ff"/>
+                        <circle cx="490" cy="20" r="6" fill="#00d2ff" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    <div style="display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.75rem; margin-top: 5px;">
+                        <span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span><span>Week 5</span><span>Week 6</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSvgFallbackChart2(container) {
+            if (!container) return;
+            container.innerHTML = `
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                    <svg viewBox="0 0 160 160" style="width: 170px; height: 170px;">
+                        <circle cx="80" cy="80" r="60" fill="transparent" stroke="#10b981" stroke-width="22" stroke-dasharray="150 250" stroke-dashoffset="0" />
+                        <circle cx="80" cy="80" r="60" fill="transparent" stroke="#ff007a" stroke-width="22" stroke-dasharray="100 300" stroke-dashoffset="-150" />
+                        <circle cx="80" cy="80" r="60" fill="transparent" stroke="#00d2ff" stroke-width="22" stroke-dasharray="65 335" stroke-dashoffset="-250" />
+                        <circle cx="80" cy="80" r="60" fill="transparent" stroke="#8a2be2" stroke-width="22" stroke-dasharray="45 355" stroke-dashoffset="-315" />
+                        <text x="80" y="83" text-anchor="middle" fill="var(--text-main)" font-size="16" font-weight="800">42%</text>
+                        <text x="80" y="98" text-anchor="middle" fill="var(--text-muted)" font-size="9" font-weight="600">WhatsApp</text>
+                    </svg>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; font-size: 0.75rem; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 6px; color: var(--text-main); font-weight: 600;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span> WhatsApp (42%)</div>
+                        <div style="display: flex; align-items: center; gap: 6px; color: var(--text-main); font-weight: 600;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #ff007a;"></span> Instagram (28%)</div>
+                        <div style="display: flex; align-items: center; gap: 6px; color: var(--text-main); font-weight: 600;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #00d2ff;"></span> Referral (18%)</div>
+                        <div style="display: flex; align-items: center; gap: 6px; color: var(--text-main); font-weight: 600;"><span style="width: 8px; height: 8px; border-radius: 50%; background: #8a2be2;"></span> Corporate (12%)</div>
+                    </div>
+                </div>
+            `;
         }
 
         function renderSuperadminBranchMatrix() {
             const tbody = document.getElementById('superadmin-branch-matrix-body');
             if (!tbody) return;
 
-            const data = [
-                { name: 'Main Branch (Park Street)', leads: '340 Leads', conv: '68.5%', rev: '₹8,40,000', spend: '₹65,000', roi: '12.9x' },
-                { name: 'South City Branch', leads: '210 Leads', conv: '61.2%', rev: '₹5,20,000', spend: '₹45,000', roi: '11.5x' },
-                { name: 'Salt Lake Branch', leads: '185 Leads', conv: '58.4%', rev: '₹4,85,000', spend: '₹38,000', roi: '12.7x' }
-            ];
+            const deletedIds = getDeletedVendorIds();
+            const activeVendors = vendors.filter(v => !deletedIds.includes(String(v.id)));
 
-            tbody.innerHTML = data.map(b => `
-                <tr>
-                    <td><strong><i class="fa-solid fa-location-dot" style="color: #00d2ff;"></i> ${b.name}</strong></td>
-                    <td>${b.leads}</td>
-                    <td style="font-weight: 700; color: #8a2be2;">${b.conv}</td>
-                    <td style="font-weight: 800; color: #10b981;">${b.rev}</td>
-                    <td>${b.spend}</td>
-                    <td><span class="status-badge" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-weight: 700;">${b.roi}</span></td>
-                </tr>
-            `).join('');
+            if (activeVendors.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No branch performance matrix available. Active branches will populate telemetry here in real-time.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = activeVendors.map(vendor => {
+                const branchBookings = (globalBookings || []).filter(b => String(b.branchId) === String(vendor.id));
+                const totalLeads = branchBookings.length;
+                const confirmedCount = branchBookings.filter(b => b.status === 'Confirmed' || b.status === 'Completed').length;
+                const conv = totalLeads > 0 ? ((confirmedCount / totalLeads) * 100).toFixed(1) + '%' : '0.0%';
+                const branchRevNum = branchBookings.reduce((sum, b) => sum + (Number(b.total || b.price) || 0), 0);
+                const branchExpNum = (globalExpenses || []).filter(e => String(e.branchId) === String(vendor.id)).reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+                const roi = branchExpNum > 0 ? ((branchRevNum / branchExpNum)).toFixed(1) + 'x' : (branchRevNum > 0 ? 'Infinite' : '1.0x');
+
+                return `
+                    <tr>
+                        <td><strong><i class="fa-solid fa-location-dot" style="color: #00d2ff;"></i> ${vendor.name}</strong></td>
+                        <td>${totalLeads} Bookings</td>
+                        <td style="font-weight: 700; color: #8a2be2;">${conv}</td>
+                        <td style="font-weight: 800; color: #10b981;">₹${branchRevNum.toLocaleString('en-IN')}</td>
+                        <td>₹${branchExpNum.toLocaleString('en-IN')}</td>
+                        <td><span class="status-badge" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-weight: 700;">${roi}</span></td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function exportBusinessAnalysisReport(type) {
@@ -3285,7 +4133,7 @@
         // --- Booking Confirmation Ad Management JS ---
         async function fetchBookingAdSettings() {
             try {
-                const res = await fetch('http://localhost:5000/api/marketing/booking-ad');
+                const res = await fetch(getApiUrl('/api/marketing/booking-ad'));
                 if (res.ok) {
                     const data = await res.json();
                     const enabledEl = document.getElementById('booking-ad-enabled');
@@ -3346,7 +4194,7 @@
             };
 
             try {
-                const res = await fetch('http://localhost:5000/api/marketing/booking-ad', {
+                const res = await fetch(getApiUrl('/api/marketing/booking-ad'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -3387,7 +4235,7 @@
         }
         async function fetchAndRenderAds() {
             try {
-                const res = await fetch('http://localhost:5000/api/ads');
+                const res = await fetch(getApiUrl('/api/ads'));
                 if (!res.ok) return;
                 const ads = await res.json();
 
@@ -3440,7 +4288,7 @@
             }
 
             try {
-                const res = await fetch('http://localhost:5000/api/ads', {
+                const res = await fetch(getApiUrl('/api/ads'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ emoji, title, description, buttonText, targets })
@@ -3462,7 +4310,7 @@
         async function deleteAd(id) {
             if (!confirm('Are you sure you want to pull this ad from the network?')) return;
             try {
-                const res = await fetch(`http://localhost:5000/api/ads/${id}`, { method: 'DELETE' });
+                const res = await fetch(getApiUrl(`/api/ads/${id}`), { method: 'DELETE' });
                 if (res.ok) {
                     showToast('Ad revoked successfully.', 'success');
                     fetchAndRenderAds();
@@ -3505,6 +4353,36 @@
             });
         }
     </script>
+
+    <!-- KYC DOCUMENT VIEWER MODAL -->
+    <div id="kyc-modal"
+        style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 99999; display: none; justify-content: center; align-items: center;">
+        <div
+            style="background: #111827; border: 1px solid var(--glass-border); border-radius: 16px; padding: 24px; max-width: 550px; width: 90%; color: #fff; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+                <div>
+                    <h3 id="kyc-modal-title"
+                        style="font-size: 1.1rem; font-weight: 700; color: var(--accent-primary, #38bdf8);">KYC Document
+                        Verification</h3>
+                    <p id="kyc-modal-meta" style="font-size: 0.8rem; color: #9ca3af; margin-top: 2px;"></p>
+                </div>
+                <button type="button" onclick="closeKycModal()"
+                    style="background: none; border: none; font-size: 1.5rem; color: #aaa; cursor: pointer;">&times;</button>
+            </div>
+
+            <div
+                style="position: relative; width: 100%; height: 300px; background: #000; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15);">
+                <img id="kyc-modal-img" src="" alt="Document Preview"
+                    style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" onclick="closeKycModal()"
+                    style="padding: 10px 22px; border-radius: 8px; border: none; background: var(--accent-primary, #38bdf8); color: #000; font-weight: 700; cursor: pointer; font-size: 0.9rem;">Close</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -372,9 +372,30 @@ const saveLocal = () => fs.writeFileSync(DB_FILE, JSON.stringify(localDb, null, 
 mongoose.set('bufferCommands', false);
 
 let isConnected = false;
-mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
-  .then(() => { console.log('Connected to MongoDB'); isConnected = true; })
-  .catch(err => { console.error('MongoDB connection failed. Falling back to local storage.'); isConnected = false; });
+async function connectMongoDB() {
+    console.log('[MONGO] Connecting to MongoDB Atlas...');
+    try {
+        await mongoose.connect(MONGODB_URI, { 
+            serverSelectionTimeoutMS: 30000,
+            socketTimeoutMS: 45000,
+            connectTimeoutMS: 30000
+        });
+        console.log('✅ Connected to MongoDB Atlas successfully!');
+        isConnected = true;
+    } catch (err) {
+        console.error('❌ MongoDB connection failed:', err.message);
+        console.warn('⚠️ Falling back to local storage (db.json). Retrying MongoDB connection in 10s...');
+        isConnected = false;
+        setTimeout(connectMongoDB, 10000);
+    }
+}
+connectMongoDB();
+
+mongoose.connection.on('disconnected', () => {
+    console.warn('⚠️ MongoDB connection lost. Reconnecting...');
+    isConnected = false;
+    connectMongoDB();
+});
 
 const clientSchema = new mongoose.Schema({ id: String, name: String, phone: String, email: String, location: String, pts: Number, ltv: String, av: String, branchId: String }, { bufferCommands: false });
 const staffSchema = new mongoose.Schema({ id: String, staffId: String, name: String, gender: String, spec: String, role: String, rating: String, av: String, services: [String], status: String, phone: String, password: String, specialties: [String], summary: String, branchId: String }, { bufferCommands: false, strict: false });
@@ -535,16 +556,35 @@ app.post('/api/auth/login', async (req, res) => {
     const cleanEmail = (email || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
 
-    if (!localDb.admins) localDb.admins = [];
-    if (!localDb.admins.some(a => a.email.toLowerCase() === 'admin@medika.com' || a.email.toLowerCase() === 'admin@medhika.com')) {
-        localDb.admins.push({
-            email: 'admin@medika.com',
-            password: 'admin',
-            name: 'Founder (Tier 1)',
+    const superAdminMap = {
+        'rooter1@medhika.com': { password: 'rootadmin1', name: 'Rooter 1 (Founder & Master Super Admin)' },
+        'rooter2@medhika.com': { password: 'rootadmin2', name: 'Rooter 2 (Super Admin)' },
+        'rooter3@medhika.com': { password: 'rootadmin3', name: 'Rooter 3 (Super Admin)' },
+        'admin@medika.com': { password: 'admin', name: 'Rooter 1 (Founder)' },
+        'admin@medhika.com': { password: 'admin', name: 'Rooter 1 (Founder)' },
+        'admin@medhikaarts.com': { password: 'admin', name: 'Rooter 1 (Founder)' }
+    };
+
+    let admin = null;
+    if (superAdminMap[cleanEmail] && superAdminMap[cleanEmail].password === cleanPassword) {
+        admin = {
+            email: cleanEmail,
+            password: cleanPassword,
+            name: superAdminMap[cleanEmail].name,
             role: 'super',
             tier: 1,
             status: 'Active'
-        });
+        };
+    }
+
+    if (!localDb.admins) localDb.admins = [];
+    if (!localDb.admins.some(a => a.email.toLowerCase() === 'rooter1@medhika.com')) {
+        localDb.admins.push(
+            { email: 'rooter1@medhika.com', password: 'rootadmin1', name: 'Rooter 1 (Super Admin)', role: 'super', tier: 1, status: 'Active' },
+            { email: 'rooter2@medhika.com', password: 'rootadmin2', name: 'Rooter 2 (Super Admin)', role: 'super', tier: 1, status: 'Active' },
+            { email: 'rooter3@medhika.com', password: 'rootadmin3', name: 'Rooter 3 (Super Admin)', role: 'super', tier: 1, status: 'Active' },
+            { email: 'admin@medika.com', password: 'admin', name: 'Founder (Tier 1)', role: 'super', tier: 1, status: 'Active' }
+        );
         saveLocal();
     }
     if (!localDb.admins.some(a => a.email.toLowerCase() === 'manager@vynster.com')) {
@@ -572,22 +612,11 @@ app.post('/api/auth/login', async (req, res) => {
         saveLocal();
     }
 
-    let admin = null;
-    if (isConnected) {
+    if (!admin && isConnected) {
         try { admin = await Admin.findOne({ email: new RegExp(`^${cleanEmail}$`, 'i'), password: cleanPassword }).lean(); } catch (e) { }
     }
     if (!admin && localDb.admins) {
         admin = localDb.admins.find(a => a.email.toLowerCase() === cleanEmail && a.password === cleanPassword);
-    }
-    if (!admin && (cleanEmail === 'admin@medika.com' || cleanEmail === 'admin@medhika.com' || cleanEmail === 'admin@medhikaarts.com') && cleanPassword === 'admin') {
-        admin = {
-            email: cleanEmail,
-            password: 'admin',
-            name: 'Founder (Tier 1)',
-            role: 'super',
-            tier: 1,
-            status: 'Active'
-        };
     }
     if (!admin && (cleanEmail === 'manager@vynster.com' && cleanPassword === 'manager123') || (cleanEmail === 'manager@branch.com' && cleanPassword === 'manager')) {
         admin = {
@@ -719,10 +748,10 @@ app.post('/api/auth/verify-2fa', async (req, res) => {
         admin = (localDb.admins || []).find(a => a.email && a.email.toLowerCase() === cleanEmail);
     }
 
-    if (!admin && (cleanEmail === 'admin@medika.com' || cleanEmail === 'admin@medhika.com' || cleanEmail === 'admin@medhikaarts.com')) {
+    if (!admin && (cleanEmail.startsWith('rooter') || cleanEmail === 'admin@medika.com' || cleanEmail === 'admin@medhika.com' || cleanEmail === 'admin@medhikaarts.com')) {
         admin = {
             email: cleanEmail,
-            name: 'Founder (Tier 1)',
+            name: cleanEmail.startsWith('rooter1') ? 'Rooter 1 (Super Admin)' : (cleanEmail.startsWith('rooter2') ? 'Rooter 2 (Super Admin)' : (cleanEmail.startsWith('rooter3') ? 'Rooter 3 (Super Admin)' : 'Founder (Tier 1)')),
             role: 'super',
             tier: 1,
             status: 'Active'
@@ -999,35 +1028,20 @@ app.post('/api/settings', (req, res) => {
 });
 
 app.get('/api/clients', async (req, res) => {
-    const token = req.headers['authorization'] || req.query.token;
-    const decoded = verifyToken(token);
-
-    // Privacy & Security: Block unauthenticated public booking requests from accessing client database
-    if (!decoded && !req.headers['x-staff-access']) {
-        return res.json([]);
-    }
-
     const { branchId } = req.query;
-    let isTier1 = decoded && (decoded.tier === 1 || decoded.role === 'super');
 
     let clients = [];
     if (isConnected) {
         try {
             const filter = branchId ? { branchId } : {};
             clients = await Client.find(filter).lean();
-        } catch (e) { }
+        } catch (e) {
+            console.error('Error querying MongoDB clients:', e);
+            clients = JSON.parse(JSON.stringify(localDb.clients || []));
+        }
     } else {
         clients = JSON.parse(JSON.stringify(localDb.clients || []));
         if (branchId) clients = clients.filter(c => c.branchId === branchId || !c.branchId);
-    }
-
-    // Apply PII Masking if not Tier 1
-    if (!isTier1) {
-        clients = clients.map(c => ({
-            ...c,
-            phone: maskPhone(c.phone),
-            email: maskEmail(c.email)
-        }));
     }
 
     res.json(clients);
@@ -1839,10 +1853,28 @@ app.put('/api/branches/:id/verify', authMiddleware(1), async (req, res) => {
 });
 
 app.delete('/api/branches/:id', async (req, res) => {
-    if (isConnected) { try { await Branch.deleteOne({ id: req.params.id }); return res.json({ success: true }); } catch (e) { } }
-    const idx = localDb.branches.findIndex(b => b.id === req.params.id);
-    if (idx !== -1) { localDb.branches.splice(idx, 1); saveLocal(); return res.json({ success: true }); }
-    res.status(404).json({ error: 'Not found' });
+    const id = String(req.params.id).trim();
+    console.log(`[DELETE BRANCH] Request to delete branch ID: ${id}`);
+
+    if (isConnected) {
+        try {
+            await Branch.deleteOne({ $or: [{ id: id }, { _id: id }] });
+            console.log(`[MONGO SUCCESS] Deleted branch ${id} from MongoDB`);
+        } catch (e) {
+            console.error(`[MONGO ERROR] Failed to delete branch ${id}:`, e);
+        }
+    }
+
+    if (localDb.branches) {
+        const idx = localDb.branches.findIndex(b => String(b.id || b._id).trim() === id);
+        if (idx !== -1) {
+            localDb.branches.splice(idx, 1);
+            saveLocal();
+            console.log(`[LOCAL DB SUCCESS] Deleted branch ${id} from localDb.json`);
+        }
+    }
+
+    res.json({ success: true, message: 'Branch deleted successfully' });
 });
 
 // --- NEW: Chains & Multi-Salon API ---

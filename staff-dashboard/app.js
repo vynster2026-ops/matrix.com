@@ -1,7 +1,6 @@
-// ── AUTHENTICATION CHECK ─────────────────────────────────────────
-if (!localStorage.getItem('loggedInPhone') && !window.location.pathname.includes('staff-login.html') && !window.location.pathname.includes('staff-register.html')) {
-  window.location.href = 'staff-login.html';
-}
+// ── AUTHENTICATION CHECK (DISABLED) ─────────────────────────────
+// Login requirement removed — staff portal is now open access.
+// if (!localStorage.getItem('loggedInPhone') && ...) { window.location.href = 'staff-login.html'; }
 
 // ── API BASE URL RESOLVER ──────────────────────────────────────
 const API_BASE = (typeof window !== 'undefined' && (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5503' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'))
@@ -83,7 +82,7 @@ if (typeof STAFF_DATA !== 'undefined') {
         specialties: regSpecialties.length > 0 ? regSpecialties : ["Haircut", "Hair Color"],
         weeklyRevenue: [1500, 2000, 1800, 2500, 3000, 0, 0],
         weeklyServices: [2, 4, 3, 5, 6, 0, 0],
-        appointments: typeof generateAppointments === 'function' ? generateAppointments() : [],
+        appointments: [],
         reviews: [],
         leaves: [],
         clients: []
@@ -387,58 +386,107 @@ async function loadServiceCatalog() {
 }
 
 async function syncLiveAppointments() {
-  const staff = STAFF_DATA[currentStaff];
-  // Resolve staffId: prefer loggedInStaffId, then staff.id, then phone, then name
   const loggedInStaffId = localStorage.getItem('loggedInStaffId');
-  const loggedInPhone   = localStorage.getItem('loggedInPhone');
-  const loggedInName    = localStorage.getItem('loggedInUser') || localStorage.getItem('loggedInStaffName');
-  const staffId = loggedInStaffId || (staff ? staff.id : null) || loggedInPhone || loggedInName || currentStaff;
-  
+  const loggedInPhone   = (localStorage.getItem('loggedInPhone') || '').replace(/\D/g, '');
+  const loggedInName    = localStorage.getItem('loggedInUser') || localStorage.getItem('loggedInStaffName') || '';
+
+  let resolvedStaffId = loggedInStaffId;
+
+  // ── Step 1: Resolve real DB staffId via /api/staff ──────────────
+  // This runs regardless of whether loggedInStaffId is set, to ensure accuracy.
   try {
-    const response = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(staffId)}`);
+    const staffRes = await fetch('/api/staff');
+    if (staffRes.ok) {
+      const allStaff = await staffRes.json();
+      if (Array.isArray(allStaff) && allStaff.length > 0) {
+        const matched = allStaff.find(s => {
+          const sPhone = (s.phone || '').replace(/\D/g, '');
+          const sId    = String(s.id || s.staffId || '').trim().toLowerCase();
+          const sName  = (s.name || '').toLowerCase();
+          return (
+            (loggedInStaffId && (sId === loggedInStaffId.toLowerCase() || String(s._id) === loggedInStaffId)) ||
+            (loggedInPhone.length >= 7 && sPhone === loggedInPhone) ||
+            (loggedInName && (sName === loggedInName.toLowerCase() || sName.startsWith(loggedInName.toLowerCase().split(' ')[0])))
+          );
+        });
+        if (matched) {
+          resolvedStaffId = matched.id || matched.staffId || String(matched._id);
+          // Cache for next load
+          localStorage.setItem('loggedInStaffId', resolvedStaffId);
+          // Also update STAFF_DATA with real profile data
+          const key = currentStaff;
+          if (STAFF_DATA[key]) {
+            STAFF_DATA[key].id      = resolvedStaffId;
+            STAFF_DATA[key].name    = matched.name  || STAFF_DATA[key].name;
+            STAFF_DATA[key].role    = matched.role  || STAFF_DATA[key].role;
+            STAFF_DATA[key].phone   = matched.phone || STAFF_DATA[key].phone;
+            STAFF_DATA[key].avatar  = matched.name ? matched.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2) : STAFF_DATA[key].avatar;
+          }
+          console.log('⚡ Resolved real staffId:', resolvedStaffId, 'for', matched.name);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Staff ID resolution warning:', e.message);
+  }
+
+  if (!resolvedStaffId) {
+    console.warn('No staffId resolved — skipping appointment fetch.');
+    return;
+  }
+
+  // ── Step 2: Fetch real appointments ─────────────────────────────
+  try {
+    const response = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(resolvedStaffId)}`);
     if (response.ok) {
-      let bookings = await response.json();
-
-      // If staffId lookup returned empty, try fallback by phone / name
-      if ((!bookings || bookings.length === 0) && loggedInPhone) {
-        const r2 = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(loggedInPhone)}`);
-        if (r2.ok) { const b2 = await r2.json(); if (b2 && b2.length > 0) bookings = b2; }
-      }
-      if ((!bookings || bookings.length === 0) && loggedInName) {
-        const r3 = await fetch(`/api/my-appointments?staffId=${encodeURIComponent(loggedInName)}`);
-        if (r3.ok) { const b3 = await r3.json(); if (b3 && b3.length > 0) bookings = b3; }
-      }
-
-      // Map the bookings array from MongoDB format to Staff Timeline format
+      const bookings = await response.json();
       const mappedApts = (bookings || []).map(b => {
-        const currentStatus = (b.status || 'upcoming').toLowerCase();
+        const rawStatus = (b.status || 'upcoming').toLowerCase();
+        const now = new Date();
+        const [h, m] = (b.time || '09:00').split(':').map(Number);
+        const aptTime = new Date(b.date || now.toDateString());
+        aptTime.setHours(h, m);
+        const status = rawStatus === 'completed' ? 'done' :
+                       rawStatus === 'in-progress' || rawStatus === 'serving' ? 'in-progress' :
+                       rawStatus === 'done' ? 'done' : 'upcoming';
         return {
-          id: b.id || b._id,
-          time: b.time || "09:00",
-          client: b.clientName || "Walk-in Client",
-          service: Array.isArray(b.services) ? b.services.join(", ") : (b.services || "General Service"),
-          duration: 60,
-          price: Number(b.total) || 0,
-          status: currentStatus,
-          phone: b.clientPhone || "",
-          notes: b.notes || ""
+          id:       b.id || b._id,
+          time:     b.time || '09:00',
+          client:   b.clientName || 'Walk-in Client',
+          service:  Array.isArray(b.services) ? b.services.join(', ') : (b.services || 'General Service'),
+          duration: Number(b.duration) || 60,
+          price:    Number(b.total || b.price) || 0,
+          status,
+          phone:    b.clientPhone || b.phone || '',
+          notes:    b.notes || '',
+          date:     b.date || ''
         };
       });
 
-      // Always replace mock data with real data (even if empty)
       if (STAFF_DATA[currentStaff]) {
         STAFF_DATA[currentStaff].appointments = mappedApts;
-        mappedApts.forEach(a => {
-          if (!aptStates[a.id]) { aptStates[a.id] = a.status; }
-        });
+        // Recalculate stats from real data
+        const todayStr = new Date().toISOString().split('T')[0];
+        const todayApts = mappedApts.filter(a => !a.date || a.date === todayStr || a.date === '');
+        const doneApts  = todayApts.filter(a => a.status === 'done');
+        STAFF_DATA[currentStaff].todayAppointments = todayApts.length;
+        STAFF_DATA[currentStaff].completedToday    = doneApts.length;
+        STAFF_DATA[currentStaff].earnedRevenue     = doneApts.reduce((s, a) => s + a.price, 0);
+
+        // Preserve aptStates for statuses set locally
+        mappedApts.forEach(a => { if (!aptStates[a.id]) aptStates[a.id] = a.status; });
         saveAptStates();
-        STAFF_DATA[currentStaff].appointments.sort((a, b) => a.time.localeCompare(b.time));
-        if (typeof refreshTimeline === 'function') refreshTimeline();
-        if (typeof buildDashboard === 'function') buildDashboard(STAFF_DATA[currentStaff]);
+
+        mappedApts.sort((a, b) => a.time.localeCompare(b.time));
+
+        if (typeof refreshTimeline  === 'function') refreshTimeline();
+        if (typeof buildDashboard   === 'function') buildDashboard(STAFF_DATA[currentStaff]);
+        if (typeof buildStats       === 'function') buildStats(STAFF_DATA[currentStaff]);
+        console.log(`✅ Loaded ${mappedApts.length} real appointments for staffId: ${resolvedStaffId}`);
       }
     }
   } catch (error) {
-    console.error("Unable to sync live appointments from Admin server:", error);
+    console.error('Unable to fetch real appointments:', error);
   }
 }
 // ── REAL-TIME SOCKET.IO & DATABASE SYNC ENGINE ─────────────────────
@@ -6358,7 +6406,7 @@ window.toggleVerticalLogout = function(elem) {
     if (typeof handleStaffLogout === 'function') {
       handleStaffLogout();
     } else {
-      window.location.href = 'staff-login.html';
+      window.location.href = 'vynster-staff.html';
     }
   }, 450);
 };
@@ -6371,10 +6419,10 @@ window.handleStaffLogout = function() {
   localStorage.removeItem('loggedInStaffId');
   localStorage.removeItem('loggedInSpecialties');
   if (typeof showToast === 'function') {
-    showToast('Logged out successfully! Redirecting...', 'info', '👋');
+    showToast('Logged out successfully!', 'info', '👋');
   }
   setTimeout(() => {
-    window.location.href = 'staff-login.html';
+    window.location.href = 'vynster-staff.html';
   }, 800);
 };
 

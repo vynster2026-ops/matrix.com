@@ -8,6 +8,9 @@
   <!-- Clerk Authentication SDK -->
   <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA"
     src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+  <!-- Real-Time Socket.IO & Sync Engine -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="vynster-sync.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
@@ -1161,30 +1164,44 @@
     async function loadFromDB() {
       try {
         const ts = Date.now();
-        const [cRes, bRes, sRes, svRes] = await Promise.all([
-          fetch(`${API_URL}/clients?_t=${ts}`),
-          fetch(`${API_URL}/bookings?_t=${ts}`),
-          fetch(`${API_URL}/staff?_t=${ts}`),
-          fetch(`${API_URL}/services?_t=${ts}`)
-        ]);
-        CLIENTS = await cRes.json();
-        let rawBookings = await bRes.json();
-        const now = new Date();
-        BOOKINGS = rawBookings.map(b => {
-          const stat = (b.status || '').toLowerCase();
-          if (['upcoming', 'confirmed', 'ongoing', 'pending', 'done'].includes(stat)) {
-            const dateStr = b.date && b.date.includes('T') ? b.date.split('T')[0] : b.date;
-            if (dateStr && b.time) {
-              const apptEnd = new Date(dateStr + 'T' + b.time);
-              apptEnd.setMinutes(apptEnd.getMinutes() + 60);
-              if (now > apptEnd) { b.status = 'Completed'; }
+        const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+        const fetches = [
+          fetch(`${API_URL}/staff?_t=${ts}`, { headers }),
+          fetch(`${API_URL}/services?_t=${ts}`, { headers })
+        ];
+
+        if (token) {
+          fetches.push(fetch(`${API_URL}/clients?_t=${ts}`, { headers }));
+          fetches.push(fetch(`${API_URL}/bookings?_t=${ts}`, { headers }));
+        }
+
+        const responses = await Promise.all(fetches);
+        STAFF = await responses[0].json();
+        SERVICES = await responses[1].json();
+
+        if (token && responses[2] && responses[3]) {
+          CLIENTS = await responses[2].json();
+          let rawBookings = await responses[3].json();
+          const now = new Date();
+          BOOKINGS = Array.isArray(rawBookings) ? rawBookings.map(b => {
+            const stat = (b.status || '').toLowerCase();
+            if (['upcoming', 'confirmed', 'ongoing', 'pending', 'done'].includes(stat)) {
+              const dateStr = b.date && b.date.includes('T') ? b.date.split('T')[0] : b.date;
+              if (dateStr && b.time) {
+                const apptEnd = new Date(dateStr + 'T' + b.time);
+                apptEnd.setMinutes(apptEnd.getMinutes() + 60);
+                if (now > apptEnd) { b.status = 'Completed'; }
+              }
+              if (stat === 'done') b.status = 'Completed';
             }
-            if (stat === 'done') b.status = 'Completed';
-          }
-          return b;
-        });
-        STAFF = await sRes.json();
-        SERVICES = await svRes.json();
+            return b;
+          }) : [];
+        } else {
+          CLIENTS = [];
+          BOOKINGS = [];
+        }
 
         FEMALE_SERVICES_IDS = SERVICES.filter(s => s.gender === 'female' || s.gender === 'unisex').map(s => s.id);
         MALE_SERVICES_IDS = SERVICES.filter(s => s.gender === 'male' || s.gender === 'unisex').map(s => s.id);
@@ -1301,6 +1318,9 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(booking)
             });
+            if (typeof window.vynsterSyncEmit === 'function') {
+              window.vynsterSyncEmit('newAppointment', booking);
+            }
           }
         }
       } catch (err) {
@@ -1806,6 +1826,9 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(booking)
         });
+        if (typeof window.vynsterSyncEmit === 'function') {
+          window.vynsterSyncEmit('newAppointment', booking);
+        }
       } catch (err) {
         console.error('Save to DB Error:', err);
         alert('Error saving booking or client data: ' + err.message);
@@ -2007,8 +2030,14 @@ ${buildCategoryModal()}`;
 
 
     function buildStep1() {
+      const isDemo = new URLSearchParams(window.location.search).get('demo') === 'true' ||
+                     sessionStorage.getItem('isDemoMode') === 'true' ||
+                     localStorage.getItem('isDemoMode') === 'true' ||
+                     sessionStorage.getItem('vynster_demo_mode') === 'true' ||
+                     (window.parent && window.parent.isDemoMode);
+
       const q = state.clientQuery.toLowerCase();
-      const matches = q.length > 0 ? CLIENTS.filter(c => c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q))).sort((a, b) => a.name.localeCompare(b.name)) : [];
+      const matches = (!isDemo && q.length > 0) ? CLIENTS.filter(c => c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q))).sort((a, b) => a.name.localeCompare(b.name)) : [];
       const selected = state.client ? CLIENTS.find(c => c.id === state.client) : null;
       return `<div class="card">
   <div class="card-title">
@@ -2030,17 +2059,17 @@ ${buildCategoryModal()}`;
     ${state.errors.phone ? `<div class="error">${state.errors.phone}</div>` : ''}
   </div>` : ''}
   <div class="field">
-    <label>Search existing client or enter new name</label>
-    <input type="text" id="clientSearch" value="${state.clientQuery}" placeholder="Name, phone number..." autocomplete="off">
+    <label>${isDemo ? 'Client Name' : 'Search existing client or enter new name'}</label>
+    <input type="text" id="clientSearch" value="${state.clientQuery}" placeholder="${isDemo ? 'Enter client full name' : 'Name, phone number...'}" autocomplete="off">
     ${state.errors.client ? `<div class="error">${state.errors.client}</div>` : ''}
   </div>
-  ${matches.length > 0 && !selected ? `<div class="client-suggestion">${matches.map(c => `
+  ${!isDemo && matches.length > 0 && !selected ? `<div class="client-suggestion">${matches.map(c => `
     <div class="cs-item" data-cid="${c.id}">
       <div class="av ${c.av}">${c.name.split(' ').map(x => x[0]).join('')}</div>
       <div><div class="cs-name">${c.name}</div><div class="cs-sub">${c.phone} · ${c.pts.toLocaleString()} pts · LTV ${c.ltv}</div></div>
       <span class="badge badge-blue">Returning</span>
     </div>`).join('')}</div>` : ''}
-  ${!selected && !q ? `<div style="font-size:12px;color:var(--color-text-secondary);margin-top:-10px;margin-bottom:16px">Or quick-pick: ${CLIENTS.slice(0, 3).map(c => `<span data-cid="${c.id}" style="color:#1A6B8A;cursor:pointer;margin-right:8px">${c.name}</span>`).join('')}</div>` : ''}
+  ${!isDemo && !selected && !q ? `<div style="font-size:12px;color:var(--color-text-secondary);margin-top:-10px;margin-bottom:16px">Or quick-pick: ${CLIENTS.slice(0, 3).map(c => `<span data-cid="${c.id}" style="color:#1A6B8A;cursor:pointer;margin-right:8px">${c.name}</span>`).join('')}</div>` : ''}
   ${(!selected || !selected.gender) ? `
   <div class="field">
     <label>Client gender (determines service menu)</label>
@@ -2755,9 +2784,19 @@ ${buildCategoryModal()}`;
 
     function attachEvents() {
       function updateSuggestions(inputEl, queryVal) {
+        const isDemo = new URLSearchParams(window.location.search).get('demo') === 'true' ||
+                       sessionStorage.getItem('isDemoMode') === 'true' ||
+                       localStorage.getItem('isDemoMode') === 'true' ||
+                       sessionStorage.getItem('vynster_demo_mode') === 'true' ||
+                       (window.parent && window.parent.isDemoMode);
+        let sugBox = document.querySelector('.client-suggestion');
+        if (isDemo) {
+          if (sugBox) sugBox.remove();
+          return;
+        }
+
         const q = queryVal.toLowerCase();
         const matches = q.length > 0 ? CLIENTS.filter(c => c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q))).sort((a, b) => a.name.localeCompare(b.name)) : [];
-        let sugBox = document.querySelector('.client-suggestion');
         if (matches.length > 0 && !state.client) {
           if (!sugBox) {
             sugBox = document.createElement('div');
