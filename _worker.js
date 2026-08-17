@@ -13,25 +13,24 @@ export default {
         let targetFile = null;
 
         if (hostname.startsWith('admin.') || hostname.startsWith('salon.')) {
-            targetFile = pathname === '/' ? '/vynster-salon.html' : pathname;
+            targetFile = (pathname === '/' || pathname === '') ? '/vynster-salon.html' : pathname;
         } else if (hostname.startsWith('staff.')) {
-            targetFile = pathname === '/' ? '/vynster-staff.html' : pathname;
+            targetFile = (pathname === '/' || pathname === '') ? '/vynster-staff.html' : pathname;
         } else if (hostname.startsWith('reception.') || hostname.startsWith('booking.')) {
-            targetFile = pathname === '/' ? '/vynster-booking.html' : pathname;
+            targetFile = (pathname === '/' || pathname === '') ? '/vynster-booking.html' : pathname;
         } else if (hostname.startsWith('matrix.')) {
-            targetFile = pathname === '/' ? '/matrix.html' : pathname;
+            targetFile = (pathname === '/' || pathname === '') ? '/matrix.html' : pathname;
         } else if (hostname.startsWith('bd.')) {
-            targetFile = pathname === '/' ? '/bd.html' : pathname;
-        } else if (hostname === 'www.vynster.com' || hostname === 'vynster.com' || pathname === '/') {
-            targetFile = pathname === '/' ? '/landing.html' : pathname;
+            targetFile = (pathname === '/' || pathname === '') ? '/bd.html' : pathname;
+        } else if (pathname === '/' || pathname === '' || pathname === '/index.html') {
+            targetFile = '/landing.html';
         }
 
-        if (targetFile) {
+        if (targetFile && targetFile !== pathname) {
             const rewriteUrl = new URL(targetFile, request.url);
             return env.ASSETS.fetch(new Request(rewriteUrl, request));
         }
 
-        // Default fallthrough to root assets
         return env.ASSETS.fetch(request);
     }
 };
