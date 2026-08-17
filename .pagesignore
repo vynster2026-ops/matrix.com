@@ -1,0 +1,8 @@
+node_modules
+.wwebjs_auth
+.wwebjs_cache
+dist-admin
+seed-mongo.js
+syncadminstaff
+staff-dashboard
+*.log
