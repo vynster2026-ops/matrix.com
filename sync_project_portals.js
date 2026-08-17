@@ -50,6 +50,9 @@ const copyMap = [
     { src: 'vynster-sync.js', targets: ['www/vynster-sync.js', 'syncadminstaff/vynster-sync.js', 'staff-dashboard/vynster-sync.js'] },
 
     // Authentication & Auxiliary Files
+    { src: 'index.html', targets: ['www/index.html', 'syncadminstaff/index.html'] },
+    { src: '_worker.js', targets: ['www/_worker.js'] },
+    { src: '_redirects', targets: ['www/_redirects'] },
     { src: 'login.html', targets: ['www/login.html', 'staff-dashboard/login.html'] },
     { src: 'staff-login.html', targets: ['www/staff-login.html', 'syncadminstaff/staff-login.html', 'staff-dashboard/staff-login.html'] },
     { src: 'bd.html', targets: ['www/bd.html', 'syncadminstaff/bd.html', 'staff-dashboard/bd.html'] },
