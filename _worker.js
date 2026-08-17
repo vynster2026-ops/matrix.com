@@ -22,6 +22,8 @@ export default {
             targetFile = pathname === '/' ? '/matrix.html' : pathname;
         } else if (hostname.startsWith('bd.')) {
             targetFile = pathname === '/' ? '/bd.html' : pathname;
+        } else if (hostname === 'www.vynster.com' || hostname === 'vynster.com' || pathname === '/') {
+            targetFile = pathname === '/' ? '/landing.html' : pathname;
         }
 
         if (targetFile) {

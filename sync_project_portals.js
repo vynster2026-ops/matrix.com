@@ -51,6 +51,7 @@ const copyMap = [
 
     // Authentication & Auxiliary Files
     { src: 'index.html', targets: ['www/index.html', 'syncadminstaff/index.html'] },
+    { src: 'landing.html', targets: ['www/landing.html', 'syncadminstaff/landing.html', 'staff-dashboard/landing.html'] },
     { src: '_worker.js', targets: ['www/_worker.js'] },
     { src: '_redirects', targets: ['www/_redirects'] },
     { src: 'login.html', targets: ['www/login.html', 'staff-dashboard/login.html'] },
