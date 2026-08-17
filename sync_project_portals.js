@@ -50,6 +50,8 @@ const copyMap = [
     { src: 'vynster-sync.js', targets: ['www/vynster-sync.js', 'syncadminstaff/vynster-sync.js', 'staff-dashboard/vynster-sync.js'] },
 
     // Authentication & Auxiliary Files
+    { src: 'vynster-logo.png', targets: ['www/vynster-logo.png', 'syncadminstaff/vynster-logo.png', 'staff-dashboard/vynster-logo.png'] },
+    { src: 'superadmin_login.html', targets: ['www/superadmin_login.html', 'syncadminstaff/superadmin_login.html', 'staff-dashboard/superadmin_login.html'] },
     { src: 'index.html', targets: ['www/index.html', 'syncadminstaff/index.html'] },
     { src: 'landing.html', targets: ['www/landing.html', 'syncadminstaff/landing.html', 'staff-dashboard/landing.html'] },
     { src: '_worker.js', targets: ['www/_worker.js'] },
