@@ -1,4 +1,5 @@
 # Cloudflare Pages / Workers Subdomain & Clean URL Rewrites
+/ /landing.html 200
 /admin /vynster-salon.html 200
 /salon /vynster-salon.html 200
 /staff /vynster-staff.html 200
