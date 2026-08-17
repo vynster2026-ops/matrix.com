@@ -54,6 +54,7 @@ const copyMap = [
     { src: 'landing.html', targets: ['www/landing.html', 'syncadminstaff/landing.html', 'staff-dashboard/landing.html'] },
     { src: '_worker.js', targets: ['www/_worker.js'] },
     { src: '_redirects', targets: ['www/_redirects'] },
+    { src: '.assetsignore', targets: ['www/.assetsignore'] },
     { src: 'login.html', targets: ['www/login.html', 'staff-dashboard/login.html'] },
     { src: 'staff-login.html', targets: ['www/staff-login.html', 'syncadminstaff/staff-login.html', 'staff-dashboard/staff-login.html'] },
     { src: 'bd.html', targets: ['www/bd.html', 'syncadminstaff/bd.html', 'staff-dashboard/bd.html'] },
