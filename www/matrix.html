@@ -11,6 +11,8 @@
     <!-- Three.js for 3D Visuals & Chart.js for Analytics -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Socket.IO Client for Real-Time Synchronization -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <style>
         :root {
             --bg-dark: #ebedee;
@@ -1157,11 +1159,15 @@
                 </button>
                 <div class="greeting">
                     <h1 id="page-title">Super Admin Headquarters</h1>
-                    <p id="page-subtitle">Welcome back, Chief. Here is the global overview of MedhikaArts.</p>
+                    <p id="page-subtitle">Welcome back, <span id="admin-user-display-name" style="font-weight: 700; color: var(--accent-secondary, #2196B8);">Chief</span>. Here is the global overview of MedhikaArts.</p>
                 </div>
             </div>
 
             <div class="header-actions">
+                <div id="realtime-status-badge" style="display: flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: #10b981;">
+                    <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #10b981;"></span>
+                    <span id="realtime-status-text">LIVE REAL-TIME</span>
+                </div>
                 <button type="button" class="sync-btn" id="sync-btn" onclick="handleSyncData(this)">
                     <i class="fa-solid fa-rotate"></i> Sync Data
                 </button>
@@ -2419,11 +2425,34 @@
 
         // --- Application Logic --- //
 
-        let token = localStorage.getItem('adminToken');
+        let token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+        let adminUser = null;
+        try {
+            const rawUser = localStorage.getItem('adminUser') || sessionStorage.getItem('adminUser');
+            if (rawUser) adminUser = JSON.parse(rawUser);
+        } catch (e) { }
+
         if (!token) {
             token = 'superadmin_active_session_token';
             localStorage.setItem('adminToken', token);
+            sessionStorage.setItem('adminToken', token);
         }
+
+        function initSuperAdminSessionUI() {
+            if (adminUser && adminUser.name) {
+                const nameEl = document.getElementById('admin-user-display-name');
+                if (nameEl) nameEl.textContent = adminUser.name;
+            }
+        }
+
+        function signOut() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            sessionStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminUser');
+            window.location.href = 'superadmin_login.html';
+        }
+        window.signOut = signOut;
 
         function getApiUrl(endpoint) {
             const path = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
@@ -4123,6 +4152,9 @@
         const originalFetchRealTimeData = fetchRealTimeData;
         fetchRealTimeData = async function () {
             await originalFetchRealTimeData();
+            if (typeof renderVendorTable === 'function') renderVendorTable();
+            if (typeof renderMarketingTables === 'function') renderMarketingTables();
+            if (typeof renderSuperadminBranchMatrix === 'function') renderSuperadminBranchMatrix();
             populateBABranchSelector();
             populateAdTargets();
             renderBusinessAnalysis();
@@ -4352,6 +4384,47 @@
                 });
             });
         }
+
+        // Real-Time Socket.IO & Heartbeat Polling Setup
+        function setupRealTimeSocketAndPolling() {
+            if (typeof initSuperAdminSessionUI === 'function') initSuperAdminSessionUI();
+
+            // Automatic 5s background polling heartbeat
+            setInterval(() => {
+                if (typeof fetchRealTimeData === 'function') {
+                    fetchRealTimeData();
+                }
+            }, 5000);
+
+            // Socket.IO real-time event listener
+            if (typeof io !== 'undefined') {
+                try {
+                    const socketHost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') && window.location.port !== '5000'
+                        ? 'http://localhost:5000'
+                        : window.location.origin;
+
+                    const socket = io(socketHost, { transports: ['websocket', 'polling'], timeout: 5000 });
+
+                    socket.on('connect', () => {
+                        console.log('⚡ Connected to Real-Time Socket Server');
+                        const textEl = document.getElementById('realtime-status-text');
+                        if (textEl) textEl.textContent = 'LIVE REAL-TIME';
+                    });
+
+                    const realtimeEvents = ['booking_created', 'booking_updated', 'branch_created', 'branch_updated', 'expense_added', 'ad_updated', 'marketing_updated'];
+                    realtimeEvents.forEach(evt => {
+                        socket.on(evt, () => {
+                            console.log(`⚡ Real-time event [${evt}] received, refreshing portal telemetry...`);
+                            if (typeof fetchRealTimeData === 'function') fetchRealTimeData();
+                        });
+                    });
+                } catch (err) {
+                    console.warn("Socket.io initialization warning:", err);
+                }
+            }
+        }
+
+        setupRealTimeSocketAndPolling();
     </script>
 
     <!-- KYC DOCUMENT VIEWER MODAL -->

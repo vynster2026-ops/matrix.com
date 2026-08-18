@@ -197,9 +197,11 @@
                         if (verifyRes.ok && verifyData.success) {
                             localStorage.setItem('adminToken', verifyData.token);
                             localStorage.setItem('adminUser', JSON.stringify(verifyData.user));
+                            sessionStorage.setItem('adminToken', verifyData.token);
+                            sessionStorage.setItem('adminUser', JSON.stringify(verifyData.user));
                             btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
                             btnLogin.style.background = 'var(--success-color)';
-                            setTimeout(() => window.location.href = 'matrix.html', 800);
+                            setTimeout(() => window.location.href = 'matrix.html', 500);
                             return;
                         }
                     }
@@ -207,9 +209,11 @@
                     // Fallback if no 2FA is required for super admin
                     localStorage.setItem('adminToken', data.token);
                     localStorage.setItem('adminUser', JSON.stringify(data.user));
+                    sessionStorage.setItem('adminToken', data.token);
+                    sessionStorage.setItem('adminUser', JSON.stringify(data.user));
                     btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
                     btnLogin.style.background = 'var(--success-color)';
-                    setTimeout(() => window.location.href = 'matrix.html', 800);
+                    setTimeout(() => window.location.href = 'matrix.html', 500);
                     return;
                 }
             } catch (error) {
@@ -221,10 +225,13 @@
                 const nameMap = {
                     'rooter1@medhika.com': 'Rooter 1 (Super Admin)',
                     'rooter2@medhika.com': 'Rooter 2 (Super Admin)',
-                    'rooter3@medhika.com': 'Rooter 3 (Super Admin)'
+                    'rooter3@medhika.com': 'Rooter 3 (Super Admin)',
+                    'admin@medhikaarts.com': 'Super Admin (Founder)',
+                    'admin@medhika.com': 'Medhika Admin',
+                    'admin@medika.com': 'Medika Admin'
                 };
                 const userObj = {
-                    name: nameMap[email] || 'Founder (Tier 1)',
+                    name: nameMap[email] || 'Chief Super Admin',
                     role: 'super',
                     tier: 1,
                     status: 'Active',
@@ -232,9 +239,11 @@
                 };
                 localStorage.setItem('adminToken', 'superadmin_active_session_token');
                 localStorage.setItem('adminUser', JSON.stringify(userObj));
+                sessionStorage.setItem('adminToken', 'superadmin_active_session_token');
+                sessionStorage.setItem('adminUser', JSON.stringify(userObj));
                 btnLogin.innerHTML = '<i class="fa-solid fa-check" style="margin-right: 8px;"></i> Access Granted';
                 btnLogin.style.background = 'var(--success-color)';
-                setTimeout(() => window.location.href = 'matrix.html', 800);
+                setTimeout(() => window.location.href = 'matrix.html', 500);
                 return;
             }
 
