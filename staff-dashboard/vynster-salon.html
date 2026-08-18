@@ -415,7 +415,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
+            overflow-y: auto;
             box-sizing: border-box;
         }
 
@@ -539,14 +539,10 @@
 
         .view-section.active {
             display: block !important;
-            flex: 1;
             width: 100%;
-            min-height: calc(100vh - 120px);
-            overflow-y: auto;
-            padding-right: 4px;
-            padding-bottom: 40px;
             position: relative;
             box-sizing: border-box;
+            padding-bottom: 40px;
         }
 
         /* Tables */
@@ -14006,8 +14002,8 @@
             <td style="text-align:center;"><input type="checkbox" class="client-row-checkbox" value="${c.id}" onchange="updateClientSelectionState()" onclick="event.stopPropagation()" style="width:18px; height:18px; accent-color:var(--primary); cursor:pointer;"></td>
             <td style="cursor:pointer;" onclick="openClientProfile('${c.name}', '${c.id}')">
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <div class="event-avatar ${c.av || 'av-t'}" style="width:32px;height:32px;font-size:11px;">${c.name.split(' ').map(x => x[0]).join('')}</div>
-                    <span style="font-weight:600;">${c.name} ${isVip ? '<span style="background:var(--warning-bg); color:var(--warning); padding:2px 6px; border-radius:4px; font-size:10px; font-weight:800; letter-spacing:0.5px; margin-left:6px; vertical-align:middle; display:inline-block;"><span style="font-size:9px;">★</span> VIP</span>' : ''}</span>
+                    <div class="event-avatar ${c.av || 'av-t'}" style="width:32px;height:32px;font-size:11px;">${(c.name || 'Client').split(' ').filter(Boolean).map(x => x[0]).join('')}</div>
+                    <span style="font-weight:600;">${c.name || 'Client'} ${isVip ? '<span style="background:var(--warning-bg); color:var(--warning); padding:2px 6px; border-radius:4px; font-size:10px; font-weight:800; letter-spacing:0.5px; margin-left:6px; vertical-align:middle; display:inline-block;"><span style="font-size:9px;">★</span> VIP</span>' : ''}</span>
                 </div>
             </td>
             <td>${c.phone || '—'}</td>
@@ -14281,7 +14277,7 @@
                     lowStockItems.forEach(item => {
                         const cost = parseFloat(item.cost) || 0;
                         const oldPrice = cost > 0 ? Math.round(cost * 1.5) : 0;
-                        const discount = cost > 0 ? Math.round((1 - (cost / oldPrice)) * 100) : 0;
+                        const discount = (cost > 0 && oldPrice > 0) ? Math.round((1 - (cost / oldPrice)) * 100) : 0;
 
                         restockHtml += `
                             <div style="flex: 0 0 280px; background: white; border-radius: 12px; padding: 16px; display: flex; gap: 16px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; cursor: pointer;" onclick="editInventoryField('${item.id || item.name}', 'stock', ${item.stock})">
