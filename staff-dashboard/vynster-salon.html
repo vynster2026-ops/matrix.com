@@ -8057,8 +8057,20 @@
                 ? 'http://localhost:5000/api'
                 : '/api'
         );
-        let cachedBookings = [];
-        let cachedClients = [];
+        let DEFAULT_CLIENTS = [
+            { id: "c1", name: "Priya Reddy", phone: "+91 98400 12345", email: "priya@email.com", pts: 120, ltv: "₹4,500", av: "av-t" },
+            { id: "c2", name: "Suresh Kumar", phone: "+91 99000 54321", email: "suresh@email.com", pts: 80, ltv: "₹2,800", av: "av-b" },
+            { id: "c3", name: "Sindhuja", phone: "+91 6281639360", email: "sindhu@email.com", pts: 250, ltv: "₹12,400", av: "av-t", category: "VIP" },
+            { id: "c4", name: "Sushmitha", phone: "+91 6300144813", email: "", pts: 50, ltv: "₹1,200", av: "av-b" },
+            { id: "c5", name: "Princy", phone: "+91 6304071762", email: "", pts: 310, ltv: "₹15,800", av: "av-p", category: "VIP" }
+        ];
+        let DEFAULT_BOOKINGS = [
+            { id: "B-101", clientName: "Priya Reddy", clientId: "c1", staffId: "priya", staff: "Priya Sharma", date: new Date().toISOString().split('T')[0], time: "10:00", services: ["svc-1"], total: 800, status: "Confirmed" },
+            { id: "B-102", clientName: "Sindhuja", clientId: "c3", staffId: "sana", staff: "Sana Khan", date: new Date().toISOString().split('T')[0], time: "11:30", services: ["svc-2"], total: 1200, status: "Confirmed" },
+            { id: "B-103", clientName: "Princy", clientId: "c5", staffId: "anjali", staff: "Anjali Rao", date: new Date().toISOString().split('T')[0], time: "14:00", services: ["svc-4"], total: 2200, status: "Confirmed" }
+        ];
+        let cachedBookings = [...DEFAULT_BOOKINGS];
+        let cachedClients = [...DEFAULT_CLIENTS];
         let cachedEvents = [];
         let cachedExpenses = [
             {
@@ -8141,7 +8153,14 @@
             return d.toISOString().split('T')[0];
         }
 
-        let STAFF = [];
+        let DEFAULT_STAFF = [
+            { id: "priya", name: "Priya Sharma", role: "Senior Stylist", spec: "Senior Stylist", rating: "4.9", av: "av-t", status: "Online" },
+            { id: "sana", name: "Sana Khan", role: "Color Specialist", spec: "Color Specialist", rating: "4.8", av: "av-b", status: "Online" },
+            { id: "anjali", name: "Anjali Rao", role: "Esthetician", spec: "Esthetician", rating: "4.7", av: "av-p", status: "Online" },
+            { id: "riya", name: "Riya Patel", role: "Nail Artist", spec: "Nail Artist", rating: "4.6", av: "av-c", status: "Online" },
+            { id: "amrita", name: "Amrita Singh", role: "Makeup Artist", spec: "Makeup Artist", rating: "4.8", av: "av-k", status: "Online" }
+        ];
+        let STAFF = [...DEFAULT_STAFF];
         let ROOMS = [
             { id: 'rm-1', name: 'Room 1' },
             { id: 'rm-2', name: 'Room 2' },
@@ -8149,8 +8168,19 @@
             { id: 'rm-4', name: 'Room 4' },
             { id: 'rm-5', name: 'Room 5' }
         ];
-        let cachedInventory = [];
-        let ALL_SERVICES = [];
+        let cachedInventory = [
+            { id: "inv-1", name: "L'Oreal Professionnel Shampoo 500ml", cat: "Hair Care", opening_stock: 25, inward_stock: 0, outward_stock: 0, stock: 20, min: 5, cost: 850, unit: "pcs" },
+            { id: "inv-2", name: "Moroccanoil Hair Treatment 100ml", cat: "Hair Care", opening_stock: 15, inward_stock: 0, outward_stock: 0, stock: 12, min: 3, cost: 3100, unit: "pcs" },
+            { id: "inv-3", name: "O3+ Brightening Facial Kit", cat: "Skin Care", opening_stock: 10, inward_stock: 0, outward_stock: 0, stock: 8, min: 2, cost: 2400, unit: "kits" },
+            { id: "inv-4", name: "Olaplex No.3 Hair Perfector", cat: "Hair Treatment", opening_stock: 12, inward_stock: 0, outward_stock: 0, stock: 4, min: 5, cost: 2950, unit: "bottles" }
+        ];
+        let ALL_SERVICES = [
+            { id: "svc-1", name: "Haircut & Styling", cat: "Hair Care", price: 800, duration: 45 },
+            { id: "svc-2", name: "Hair Spa & Blow Dry", cat: "Hair Care", price: 1200, duration: 60 },
+            { id: "svc-3", name: "Keratin Treatment", cat: "Hair Treatment", price: 4500, duration: 120 },
+            { id: "svc-4", name: "24K Gold Facial", cat: "Skin Care", price: 2200, duration: 60 },
+            { id: "svc-5", name: "Spa Pedicure & Manicure", cat: "Nails", price: 1500, duration: 60 }
+        ];
 
         // --- START MOCK MODE INTERCEPTOR ---
         const originalFetch = window.fetch;
@@ -8161,17 +8191,14 @@
             if (mockDataRaw) {
                 try {
                     const db = JSON.parse(mockDataRaw);
-                    if (db.bookings) cachedBookings = db.bookings;
-                    if (db.clients) cachedClients = db.clients;
-
-                    // Force clear staff from localStorage mock DB
-                    STAFF = [];
-                    db.staff = [];
-                    if (db.inventory) cachedInventory = db.inventory;
-                    if (db.services) ALL_SERVICES = db.services;
-                    if (db.events) cachedEvents = db.events;
-                    if (db.expenses) cachedExpenses = db.expenses;
-                    if (db.tickets) supportTickets = db.tickets;
+                    if (db.bookings && Array.isArray(db.bookings)) cachedBookings = db.bookings;
+                    if (db.clients && Array.isArray(db.clients)) cachedClients = db.clients;
+                    if (db.staff && Array.isArray(db.staff) && db.staff.length > 0) STAFF = db.staff;
+                    if (db.inventory && Array.isArray(db.inventory)) cachedInventory = db.inventory;
+                    if (db.services && Array.isArray(db.services)) ALL_SERVICES = db.services;
+                    if (db.events && Array.isArray(db.events)) cachedEvents = db.events;
+                    if (db.expenses && Array.isArray(db.expenses)) cachedExpenses = db.expenses;
+                    if (db.tickets && Array.isArray(db.tickets)) supportTickets = db.tickets;
                 } catch (e) { }
             }
         }
@@ -8434,21 +8461,23 @@
                 try {
                     const res = await fetch(`${API_URL}/leave-requests`);
                     let requests = await res.json();
-                    requests = requests.filter(r => new Date(r.createdAt || r.fromDate).getTime() > clearedTime);
-                    requests.sort((a, b) => new Date(b.createdAt || b.fromDate) - new Date(a.createdAt || a.fromDate));
+                    if (Array.isArray(requests)) {
+                        requests = requests.filter(r => new Date(r.createdAt || r.fromDate).getTime() > clearedTime);
+                        requests.sort((a, b) => new Date(b.createdAt || b.fromDate) - new Date(a.createdAt || a.fromDate));
 
-                    requests.forEach(r => {
-                        let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
-                        notifsHTML += `
-                        <div class="notif-item">
-                            <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border);">🏃</div>
-                            <div class="notif-content">
-                                <h4>Leave Request</h4>
-                                <p><strong>${r.staffName || 'Staff'}</strong> requested leave (${r.reason || 'N/A'}).</p>
-                                <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${r.status}</span>
-                            </div>
-                        </div>`;
-                    });
+                        requests.forEach(r => {
+                            let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
+                            notifsHTML += `
+                            <div class="notif-item">
+                                <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border);">🏃</div>
+                                <div class="notif-content">
+                                    <h4>Leave Request</h4>
+                                    <p><strong>${r.staffName || 'Staff'}</strong> requested leave (${r.reason || 'N/A'}).</p>
+                                    <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${r.status}</span>
+                                </div>
+                            </div>`;
+                        });
+                    }
                 } catch (e) {
                     notifsHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Error loading leaves</div>';
                 }
@@ -8457,25 +8486,27 @@
                     const res = await fetch(`${API_URL}/whatsapp/campaigns`);
                     const campaigns = await res.json();
 
-                    let bookingCampaigns = campaigns.filter(c => c.id && c.id.startsWith('auto-new-booking-'));
-                    bookingCampaigns = bookingCampaigns.filter(c => new Date(c.timestamp || c.createdAt).getTime() > clearedTime);
+                    if (Array.isArray(campaigns)) {
+                        let bookingCampaigns = campaigns.filter(c => c.id && c.id.startsWith('auto-new-booking-'));
+                        bookingCampaigns = bookingCampaigns.filter(c => new Date(c.timestamp || c.createdAt).getTime() > clearedTime);
 
-                    bookingCampaigns.forEach(c => {
-                        let isSuccess = c.status === 'completed' || c.status === 'successful';
-                        let statusColor = isSuccess ? 'var(--success)' : c.status === 'failed' ? 'var(--danger)' : 'var(--warning)';
-                        let icon = isSuccess ? 'fa-check-circle' : c.status === 'failed' ? 'fa-times-circle' : 'fa-clock';
-                        let displayStatus = isSuccess ? 'SUCCESSFUL' : c.status === 'failed' ? 'FAILED' : c.status.toUpperCase();
+                        bookingCampaigns.forEach(c => {
+                            let isSuccess = c.status === 'completed' || c.status === 'successful';
+                            let statusColor = isSuccess ? 'var(--success)' : c.status === 'failed' ? 'var(--danger)' : 'var(--warning)';
+                            let icon = isSuccess ? 'fa-check-circle' : c.status === 'failed' ? 'fa-times-circle' : 'fa-clock';
+                            let displayStatus = isSuccess ? 'SUCCESSFUL' : c.status === 'failed' ? 'FAILED' : c.status.toUpperCase();
 
-                        notifsHTML += `
-                        <div class="notif-item">
-                            <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border); color: ${statusColor};"><i class="fa-solid ${icon}"></i></div>
-                            <div class="notif-content">
-                                <h4>Booking Confirmation</h4>
-                                <p>WhatsApp message for <strong>${c.name.replace('New Booking - ', '')}</strong>.</p>
-                                <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${displayStatus}</span>
-                            </div>
-                        </div>`;
-                    });
+                            notifsHTML += `
+                            <div class="notif-item">
+                                <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border); color: ${statusColor};"><i class="fa-solid ${icon}"></i></div>
+                                <div class="notif-content">
+                                    <h4>Booking Confirmation</h4>
+                                    <p>WhatsApp message for <strong>${c.name.replace('New Booking - ', '')}</strong>.</p>
+                                    <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${displayStatus}</span>
+                                </div>
+                            </div>`;
+                        });
+                    }
                 } catch (e) {
                     notifsHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Error loading logs</div>';
                 }
@@ -8625,12 +8656,19 @@
                     fetch(`${API_URL}/tickets?_t=${ts}`)
                 ]);
 
-                const newClients = await crez.json();
-                let newBookingsRaw = await brez.json();
+                const newClientsRaw = await crez.json();
+                const newBookingsRaw = await brez.json();
+                const newStaffRaw = await sRes.json();
+                const newInventoryRaw = await iRes.json();
+                const newServicesRaw = await svRes.json();
+                const newEventsRaw = await eRes.json();
+                const newExpensesRaw = await exRes.json();
+
+                const safeBookingsArray = Array.isArray(newBookingsRaw) ? newBookingsRaw : (Array.isArray(cachedBookings) ? cachedBookings : []);
 
                 // Dynamic frontend status resolution (ensures immediate updates without server restart)
                 const now = new Date();
-                const newBookings = newBookingsRaw.map(b => {
+                const newBookings = safeBookingsArray.map(b => {
                     const stat = (b.status || '').toLowerCase();
                     if (['upcoming', 'confirmed', 'ongoing', 'pending', 'done'].includes(stat)) {
                         const dateStr = (b.date && b.date.includes('T')) ? b.date.split('T')[0] : b.date;
@@ -8655,18 +8693,18 @@
                 }
 
                 cachedBookings = newBookings;
-                cachedClients = newClients;
-                STAFF = await sRes.json();
-                cachedInventory = await iRes.json();
-                ALL_SERVICES = await svRes.json();
-                cachedEvents = (await eRes.json()) || [];
-                cachedExpenses = (await exRes.json()) || [];
+                if (Array.isArray(newClientsRaw)) cachedClients = newClientsRaw;
+                if (Array.isArray(newStaffRaw)) STAFF = newStaffRaw;
+                if (Array.isArray(newInventoryRaw)) cachedInventory = newInventoryRaw;
+                if (Array.isArray(newServicesRaw)) ALL_SERVICES = newServicesRaw;
+                if (Array.isArray(newEventsRaw)) cachedEvents = newEventsRaw;
+                if (Array.isArray(newExpensesRaw)) cachedExpenses = newExpensesRaw;
 
                 // Parse tickets and seed defaults if server DB is empty
                 const loadedTickets = await tRes.json();
-                if (loadedTickets && loadedTickets.length > 0) {
+                if (Array.isArray(loadedTickets) && loadedTickets.length > 0) {
                     supportTickets = loadedTickets;
-                } else {
+                } else if (typeof supportTickets !== 'undefined' && Array.isArray(supportTickets)) {
                     // Seed defaults to server if empty
                     for (const tkt of supportTickets) {
                         try {
@@ -19831,6 +19869,10 @@
             try {
                 const res = await fetch(`${API_URL}/staff/leaderboard`);
                 const stats = await res.json();
+                if (!Array.isArray(stats)) {
+                    container.innerHTML = '<div style="font-size: 13px; color: var(--text-muted);">No leaderboard stats available yet.</div>';
+                    return;
+                }
                 let html = '';
                 const medals = ['🥇', '🥈', '🥉'];
                 stats.forEach((st, idx) => {
@@ -19861,6 +19903,10 @@
             try {
                 const res = await fetch(`${API_URL}/staff/alerts`);
                 const alerts = await res.json();
+                if (!Array.isArray(alerts)) {
+                    container.innerHTML = '<div style="font-size: 13px; color: var(--text-muted);">No active alerts at this time.</div>';
+                    return;
+                }
                 let alertsHtml = '';
                 alerts.forEach(al => {
                     if (al.type === 'warning') {
@@ -19888,6 +19934,7 @@
             try {
                 const res = await fetch(`${API_URL}/staff/performance`);
                 const stats = await res.json();
+                if (!Array.isArray(stats)) return;
                 let html = '';
                 stats.forEach(st => {
                     let statColor = st.status === 'Online' ? 'var(--success)' : 'var(--text-muted)';
