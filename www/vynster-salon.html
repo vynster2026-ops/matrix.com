@@ -538,14 +538,15 @@
         }
 
         .view-section.active {
-            display: block;
+            display: block !important;
             flex: 1;
+            width: 100%;
+            min-height: calc(100vh - 120px);
             overflow-y: auto;
-            min-height: 0;
             padding-right: 4px;
-            padding-bottom: 24px;
-            /* Critical: position must be set for sticky children to work */
+            padding-bottom: 40px;
             position: relative;
+            box-sizing: border-box;
         }
 
         /* Tables */
@@ -8258,7 +8259,16 @@
                     }
                 }
                 else if (path.startsWith('/staff')) {
-                    if (path.includes('/performance')) {
+                    if (path.includes('/summary')) {
+                        mockRes = { retentionRate: 98, totalStaff: STAFF.length, activeToday: STAFF.length };
+                    } else if (path.includes('/leaderboard')) {
+                        mockRes = (STAFF && STAFF.length > 0 ? STAFF : DEFAULT_STAFF).map((s, idx) => ({
+                            name: s.name,
+                            servicesCount: 24 - (idx * 3),
+                            revenue: 35000 - (idx * 5000),
+                            rating: s.rating || '4.9'
+                        }));
+                    } else if (path.includes('/performance')) {
                         mockRes = STAFF.map(s => ({
                             name: s.name,
                             servicesCount: Math.floor(Math.random() * 15) + 5,
@@ -13244,14 +13254,15 @@
             if (eventsContainer) {
                 const todayStr = displayDate.getFullYear() + '-' + String(displayDate.getMonth() + 1).padStart(2, '0') + '-' + String(displayDate.getDate()).padStart(2, '0');
 
-                const dayBookings = bookings.filter(b => {
-                    const bDateStr = (b.date && b.date.includes('T')) ? b.date.split('T')[0] : b.date;
+                const dayBookings = (bookings || []).filter(b => {
+                    if (!b || !b.date) return false;
+                    const bDateStr = String(b.date).includes('T') ? String(b.date).split('T')[0] : String(b.date);
                     return bDateStr === todayStr;
-                }).map(b => ({ ...b, itemType: 'booking' }));
+                }).map(b => ({ ...b, itemType: 'booking', time: b.time || '09:00' }));
 
-                const dayEvents = cachedEvents.filter(e => e.date === todayStr).map(e => ({ ...e, itemType: 'event' }));
+                const dayEvents = (cachedEvents || []).filter(e => e && e.date === todayStr).map(e => ({ ...e, itemType: 'event', time: e.time || '09:00' }));
 
-                const combined = [...dayBookings, ...dayEvents].sort((a, b) => a.time.localeCompare(b.time));
+                const combined = [...dayBookings, ...dayEvents].sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')));
 
                 if (combined.length === 0) {
                     eventsContainer.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted); font-size:14px;">No appointments or notes for this date.</div>';
@@ -13259,28 +13270,31 @@
                     eventsContainer.innerHTML = combined.map(item => {
                         if (item.itemType === 'booking') {
                             const initials = item.clientName ? item.clientName.split(' ').map(x => x[0]).join('') : '?';
+                            const timeParts = String(item.time || '09:00').split(':');
+                            const timeH = timeParts[0] || '09';
+                            const timeM = timeParts[1] || '00';
                             return `
-                                <div class="event-item" style="cursor:pointer;" onclick="openClientProfile('${item.clientName}', '${item.clientId}')">
+                                <div class="event-item" style="cursor:pointer;" onclick="openClientProfile('${item.clientName || 'Client'}', '${item.clientId || ''}')">
                                     <div class="event-time">
-                                        <div class="event-time-h">${item.time.split(':')[0]}</div>
-                                        <div class="event-time-m">${item.time.split(':')[1]}</div>
+                                        <div class="event-time-h">${timeH}</div>
+                                        <div class="event-time-m">${timeM}</div>
                                     </div>
                                     <div class="event-avatar av-t">${initials}</div>
                                     <div class="event-info">
-                                        <div class="event-name">${item.clientName}</div>
+                                        <div class="event-name">${item.clientName || 'Walk-in Client'}</div>
                                         <div class="event-service">${(item.services || []).map(svcId => {
                                 const found = ALL_SERVICES.find(s => s.id === svcId || s.name === svcId);
                                 return found ? found.name : svcId;
-                            }).join(', ')}</div>
+                            }).join(', ') || 'General Service'}</div>
                                         <div style="font-size: 11px; font-weight: 600; margin-top: 4px; color: ${item.serviceLocation === 'outdoor' ? '#f59e0b' : '#3b82f6'};">
                                             ${item.serviceLocation === 'outdoor' ? '🏡 Outdoor' : '🏢 In-Office'}
                                         </div>
                                     </div>
                                     ${(() => {
-                                    let currentStatus = (item.status && item.status.toLowerCase() !== 'upcoming' && item.status.toLowerCase() !== 'confirmed') ? item.status.toLowerCase() : null;
+                                    let currentStatus = (item.status && String(item.status).toLowerCase() !== 'upcoming' && String(item.status).toLowerCase() !== 'confirmed') ? String(item.status).toLowerCase() : null;
                                     if (!currentStatus || currentStatus === 'upcoming' || currentStatus === 'pending' || currentStatus === 'completed' || currentStatus === 'done') {
                                         const now = new Date();
-                                        const apptStart = new Date(item.date + 'T' + (item.time || '00:00'));
+                                        const apptStart = new Date((item.date || todayStr) + 'T' + (item.time || '09:00'));
                                         const apptEnd = new Date(apptStart.getTime() + 60 * 60 * 1000);
 
                                         if (now > apptEnd) {
@@ -13297,7 +13311,7 @@
                                     if (currentStatus === 'pending' || currentStatus === 'progress') badgeClass = 'status-progress';
                                     if (currentStatus === 'cancelled') badgeClass = 'status-cancelled';
 
-                                    const displayStatus = currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1);
+                                    const displayStatus = currentStatus ? (currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)) : 'Upcoming';
                                     let html = `<span class="status-badge ${badgeClass}">${displayStatus}</span>`;
                                     if (currentStatus === 'completed' || currentStatus === 'done') {
                                         html += ` <button class="btn" onclick="event.stopPropagation(); billCompletedAppointment('${item.id}')" style="padding: 4px 8px; font-size: 10px; background: var(--success-bg); color: var(--success); border: none; border-radius: 4px; font-weight: 700; cursor: pointer; margin-left: 8px;">Bill</button>`;
@@ -13309,18 +13323,21 @@
                         } else {
                             const typeIcon = item.type === 'Note' ? '📝' : (item.type === 'Reminder' ? '🔔' : '📅');
                             const typeColor = item.type === 'Note' ? '#3b82f6' : (item.type === 'Reminder' ? '#f59e0b' : '#10b981');
+                            const timeParts = String(item.time || '09:00').split(':');
+                            const timeH = timeParts[0] || '09';
+                            const timeM = timeParts[1] || '00';
                             return `
                                 <div class="event-item" style="border-left: 4px solid ${typeColor}; background: ${typeColor}08; cursor: pointer;" onclick="openEventForEdit('${item.id}')">
                                     <div class="event-time">
-                                        <div class="event-time-h">${item.time.split(':')[0]}</div>
-                                        <div class="event-time-m">${item.time.split(':')[1]}</div>
+                                        <div class="event-time-h">${timeH}</div>
+                                        <div class="event-time-m">${timeM}</div>
                                     </div>
                                     <div class="event-avatar" style="background: ${typeColor};">${typeIcon}</div>
                                     <div class="event-info">
-                                        <div class="event-name">${item.title}</div>
-                                        <div class="event-service">${item.description || item.type}</div>
+                                        <div class="event-name">${item.title || 'Event'}</div>
+                                        <div class="event-service">${item.description || item.type || 'Note'}</div>
                                     </div>
-                                    <span class="status-badge" style="background: ${typeColor}20; color: ${typeColor}">${item.type}</span>
+                                    <span class="status-badge" style="background: ${typeColor}20; color: ${typeColor}">${item.type || 'Note'}</span>
                                     <div class="delete-btn" onclick="event.stopPropagation(); deleteEvent('${item.id}')" title="Delete Event">🗑️</div>
                                 </div>`;
                         }
@@ -13331,11 +13348,12 @@
             // Render Staff Status
             const staffList = document.getElementById('staff-list');
             if (staffList) {
-                staffList.innerHTML = STAFF.map(s => `
+                const sList = (STAFF && STAFF.length > 0) ? STAFF : DEFAULT_STAFF;
+                staffList.innerHTML = sList.map(s => `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0;">
                     <div style="display: flex; gap: 12px; align-items: center;">
-                        <div class="event-avatar ${s.av}" style="width: 32px; height: 32px; font-size: 11px;">${s.name.slice(0, 2)}</div>
-                        <span style="font-size: 14px; font-weight: 600;">${s.name}</span>
+                        <div class="event-avatar ${s.av || 'av-t'}" style="width: 32px; height: 32px; font-size: 11px;">${(s.name || 'SF').slice(0, 2)}</div>
+                        <span style="font-size: 14px; font-weight: 600;">${s.name || 'Staff Member'}</span>
                     </div>
                     <span style="font-size: 11px; font-weight: 700; color: var(--success)">Available</span>
                 </div>
@@ -14001,25 +14019,39 @@
             const container = document.getElementById('staff-cards-container');
             if (!container) return;
 
-            container.innerHTML = STAFF.map(s => `
+            const staffList = (STAFF && STAFF.length > 0) ? STAFF : DEFAULT_STAFF;
+            const targetDateStr = displayDate.getFullYear() + '-' + String(displayDate.getMonth() + 1).padStart(2, '0') + '-' + String(displayDate.getDate()).padStart(2, '0');
+
+            container.innerHTML = staffList.map(s => {
+                const sName = s.name || 'Staff Member';
+                const sAv = s.av || 'av-t';
+                const sRating = s.rating || '4.9';
+                const todayApptCount = (cachedBookings || []).filter(b => {
+                    if (!b) return false;
+                    const isStaffMatch = (Array.isArray(b.staffId) ? b.staffId.includes(s.id) : b.staffId == s.id) || (b.stylist === s.name || b.stylist === s.id);
+                    const bDateStr = b.date ? (String(b.date).includes('T') ? String(b.date).split('T')[0] : String(b.date)) : '';
+                    return isStaffMatch && bDateStr === targetDateStr;
+                }).length;
+
+                return `
             <div style="border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; transition: 0.2s; background: white;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
                     <div style="display: flex; gap: 12px; align-items: center;">
-                        <div class="event-avatar ${s.av}" style="width: 48px; height: 48px; font-size: 16px;">${s.name.slice(0, 2)}</div>
+                        <div class="event-avatar ${sAv}" style="width: 48px; height: 48px; font-size: 16px;">${sName.slice(0, 2)}</div>
                         <div>
-                            <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">${s.name}</div>
+                            <div style="font-weight: 800; font-size: 16px; color: var(--text-main);">${sName}</div>
                             <div style="font-size: 12px; color: var(--text-muted);">${s.spec || s.role || 'No specialization'}</div>
                         </div>
                     </div>
                     <div style="background: var(--warning-bg); color: #b45309; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px;">
-                        ★ ${s.rating}
+                        ★ ${sRating}
                     </div>
                 </div>
                 
                 <div style="background: var(--bg-body); border-radius: var(--radius-md); padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                     <div>
                         <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Today Appts</div>
-                        <div style="font-size: 18px; font-weight: 800; color: var(--primary);">${cachedBookings.filter(b => (Array.isArray(b.staffId) ? b.staffId.includes(s.id) : b.staffId == s.id) && ((b.date && b.date.includes('T')) ? b.date.split('T')[0] : b.date) === (displayDate.getFullYear() + '-' + String(displayDate.getMonth() + 1).padStart(2, '0') + '-' + String(displayDate.getDate()).padStart(2, '0'))).length}</div>
+                        <div style="font-size: 18px; font-weight: 800; color: var(--primary);">${todayApptCount}</div>
                     </div>
                     <div>
                         <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Status</div>
@@ -14036,9 +14068,10 @@
                         Available
                     </span>
                 </div>
-            </div>`).join('');
+            </div>`;
+            }).join('');
 
-            renderStaffCommissionTable();
+            try { renderStaffCommissionTable(); } catch(e) {}
         }
 
         let currentInventoryFilter = 'all';
