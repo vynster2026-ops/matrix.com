@@ -8074,8 +8074,23 @@
                 ? 'http://localhost:5000/api'
                 : '/api'
         );
-        let cachedBookings = [];
-        let cachedClients = [];
+        let DEFAULT_CLIENTS = [
+            { id: "c1", name: "Ananya Sharma", phone: "+91 98765 43210", email: "ananya@gmail.com", gender: "Female", dob: "1995-04-12", anniversary: "2021-11-18", pts: 450, ltv: "₹18,500", lastService: "Hair Spa & Blow Dry", branchId: "Main Branch" },
+            { id: "c2", name: "Rohan Verma", phone: "+91 98234 56789", email: "rohan.v@yahoo.com", gender: "Male", dob: "1990-08-25", anniversary: "2019-02-14", pts: 280, ltv: "₹12,400", lastService: "Haircut & Styling", branchId: "Main Branch" },
+            { id: "c3", name: "Meera Nair", phone: "+91 97112 23344", email: "meera.nair@outlook.com", gender: "Female", dob: "1988-12-05", anniversary: "2015-05-20", pts: 620, ltv: "₹34,200", lastService: "24K Gold Facial", branchId: "Main Branch" },
+            { id: "c4", name: "Siddharth Rao", phone: "+91 96543 21098", email: "siddharth@tech.io", gender: "Male", dob: "1993-01-30", anniversary: "-", pts: 150, ltv: "₹6,800", lastService: "Beard Trim & Facial", branchId: "Main Branch" },
+            { id: "c5", name: "Pooja Hegde", phone: "+91 95432 10987", email: "pooja.h@gmail.com", gender: "Female", dob: "1997-09-14", anniversary: "2023-12-10", pts: 510, ltv: "₹22,100", lastService: "Keratin Treatment", branchId: "Main Branch" }
+        ];
+
+        let DEFAULT_BOOKINGS = [
+            { id: "B-101", clientName: "Ananya Sharma", clientId: "c1", phone: "+91 98765 43210", staffId: "priya", stylist: "Priya Sharma", services: ["svc-1", "svc-2"], date: toLocalISO(new Date()), time: "10:30", amount: 2000, status: "Confirmed", branchId: "Main Branch" },
+            { id: "B-102", clientName: "Rohan Verma", clientId: "c2", phone: "+91 98234 56789", staffId: "sana", stylist: "Sana Khan", services: ["svc-1"], date: toLocalISO(new Date()), time: "11:45", amount: 800, status: "Completed", branchId: "Main Branch" },
+            { id: "B-103", clientName: "Meera Nair", clientId: "c3", phone: "+91 97112 23344", staffId: "anjali", stylist: "Anjali Rao", services: ["svc-4"], date: toLocalISO(new Date()), time: "14:00", amount: 2200, status: "Ongoing", branchId: "Main Branch" },
+            { id: "B-104", clientName: "Pooja Hegde", clientId: "c5", phone: "+91 95432 10987", staffId: "riya", stylist: "Riya Patel", services: ["svc-3", "svc-5"], date: toLocalISO(new Date()), time: "16:15", amount: 6000, status: "Confirmed", branchId: "Main Branch" }
+        ];
+
+        let cachedBookings = [...DEFAULT_BOOKINGS];
+        let cachedClients = [...DEFAULT_CLIENTS];
         let cachedEvents = [];
         let cachedExpenses = [
             {
@@ -8221,6 +8236,10 @@
                     }
                 } catch (e) { }
             }
+
+            if (!cachedClients || cachedClients.length === 0) cachedClients = [...DEFAULT_CLIENTS];
+            if (!cachedBookings || cachedBookings.length === 0) cachedBookings = [...DEFAULT_BOOKINGS];
+            if (!STAFF || STAFF.length === 0) STAFF = [...DEFAULT_STAFF];
 
             // Sync Super Admin subscription plan updates
             updateSubscriptionBadgeUI();
@@ -19720,11 +19739,15 @@
                 }
             });
 
-            if (tab === 'attendance') { renderStaffAttendance(); renderLeaveRequestsTable(); }
-            if (tab === 'performance') renderStaffPerformanceNew();
-            if (tab === 'leaderboard') renderStaffLeaderboard();
-            if (tab === 'alerts') renderStaffAlerts();
-            if (tab === 'overview') calculateRetentionRate();
+            try {
+                if (tab === 'attendance') { renderStaffAttendance(); renderLeaveRequestsTable(); }
+                if (tab === 'performance') renderStaffPerformanceNew();
+                if (tab === 'leaderboard') renderStaffLeaderboard();
+                if (tab === 'alerts') renderStaffAlerts();
+                if (tab === 'overview') { renderStaffCards(); calculateRetentionRate(); }
+            } catch (tabErr) {
+                console.error(`Error rendering staff tab ${tab}:`, tabErr);
+            }
         }
 
         function renderStaffAttendance() {

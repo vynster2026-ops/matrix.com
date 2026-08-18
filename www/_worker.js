@@ -85,6 +85,8 @@ export default {
                 return new Response(JSON.stringify({
                     plan: 'Premium', price: '₹4,999/mo', status: 'Active', expiry: '2027-12-31'
                 }), { headers: { 'Content-Type': 'application/json' } });
+            if (pathname.startsWith('/api/clients') || pathname.startsWith('/api/bookings') || pathname.startsWith('/api/staff') || pathname.startsWith('/api/inventory') || pathname.startsWith('/api/services') || pathname.startsWith('/api/events') || pathname.startsWith('/api/expenses') || pathname.startsWith('/api/tickets')) {
+                return new Response(JSON.stringify([]), { headers: { 'Content-Type': 'application/json' } });
             }
 
             return new Response(JSON.stringify({ success: true, message: 'Live Edge API Active' }), { headers: { 'Content-Type': 'application/json' } });
