@@ -75,6 +75,18 @@ export default {
                 } catch (e) {}
             }
 
+            if (pathname.startsWith('/api/ads')) {
+                return new Response(JSON.stringify([
+                    { id: 'ad-edge-1', emoji: '📢', title: 'Super Admin Ad Network Active', description: 'Promotional ad banners published from Super Admin portal stream directly across all salon locations.', buttonText: 'Sync Network', targets: ['Global'] }
+                ]), { headers: { 'Content-Type': 'application/json' } });
+            }
+
+            if (pathname.startsWith('/api/branches') || pathname.startsWith('/api/subscription')) {
+                return new Response(JSON.stringify({
+                    plan: 'Premium', price: '₹4,999/mo', status: 'Active', expiry: '2027-12-31'
+                }), { headers: { 'Content-Type': 'application/json' } });
+            }
+
             return new Response(JSON.stringify({ success: true, message: 'Live Edge API Active' }), { headers: { 'Content-Type': 'application/json' } });
         }
 

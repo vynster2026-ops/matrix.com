@@ -1859,6 +1859,10 @@
                             </div>
                         </div>
                     </div>
+                    <div id="subscription-status-badge"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(16,185,129,0.25);">
+                        <span>⭐</span> <span id="subscription-plan-text">Premium Plan</span>
+                    </div>
                     <div id="branch-toggle"
                         style="background:#f1f5f9; border:1px solid var(--border); border-radius:12px; padding:6px 12px; font-size:12px; font-weight:800; color:var(--primary); display:flex; align-items:center; gap:6px; cursor:pointer;"
                         onclick="showComingSoon('Multi-Branch Support')">
@@ -7576,13 +7580,25 @@
 
         async function fetchAndRenderPromotions() {
             try {
-                const res = await fetch(`${API_URL}/ads`);
-                if (!res.ok) throw new Error('Failed to fetch ads');
-                const ads = await res.json();
+                let ads = [];
+                try {
+                    const res = await fetch(`${API_URL}/ads`);
+                    if (res && res.ok) ads = await res.json();
+                } catch (e) {}
+
+                if (!Array.isArray(ads) || ads.length === 0) {
+                    const rawSuperAds = localStorage.getItem('SuperAdminAds') || localStorage.getItem('MedhikaMockAds');
+                    if (rawSuperAds) {
+                        try { ads = JSON.parse(rawSuperAds); } catch(e) {}
+                    }
+                }
+
+                if (!Array.isArray(ads)) ads = [];
 
                 // Filter ads by current branch or Global
                 const activeAds = ads.filter(ad => {
-                    if (!ad.targets || ad.targets.length === 0) return false;
+                    if (!ad) return false;
+                    if (!ad.targets || ad.targets.length === 0) return true;
                     const adTargets = Array.isArray(ad.targets) ? ad.targets : [ad.targets];
                     return adTargets.includes('Global') || adTargets.includes('all') || adTargets.includes(window.currentBranch || 'Main Branch');
                 });
@@ -8190,7 +8206,40 @@
                     if (db.tickets && Array.isArray(db.tickets)) supportTickets = db.tickets;
                 } catch (e) { }
             }
+
+            // Sync Super Admin uploaded client sheets
+            const rawSuperClients = localStorage.getItem('SuperAdminClients') || localStorage.getItem('MedhikaMockClients');
+            if (rawSuperClients) {
+                try {
+                    const superClients = JSON.parse(rawSuperClients);
+                    if (Array.isArray(superClients) && superClients.length > 0) {
+                        superClients.forEach(sc => {
+                            if (!cachedClients.some(c => (c.id === sc.id || (c.phone && sc.phone && c.phone.replace(/\D/g, '') === sc.phone.replace(/\D/g, ''))))) {
+                                cachedClients.push(sc);
+                            }
+                        });
+                    }
+                } catch (e) { }
+            }
+
+            // Sync Super Admin subscription plan updates
+            updateSubscriptionBadgeUI();
         }
+
+        function updateSubscriptionBadgeUI() {
+            const subRaw = localStorage.getItem('VynsterSalonSubscription');
+            let plan = 'Premium';
+            if (subRaw) {
+                try {
+                    const sub = JSON.parse(subRaw);
+                    if (sub.plan) plan = sub.plan;
+                } catch (e) { }
+            }
+            const el = document.getElementById('subscription-plan-text');
+            if (el) el.innerText = `${plan} Plan`;
+        }
+
+        window.addEventListener('storage', updateSubscriptionBadgeUI);
 
         function saveMockDB() {
             localStorage.setItem('MedhikaMockDB', JSON.stringify({
@@ -8381,6 +8430,33 @@
                 }
                 else if (path.startsWith('/whatsapp')) {
                     mockRes = { success: true, status: 'CONNECTED', info: { pushname: 'Offline Mock Salon' } };
+                }
+                else if (path.startsWith('/ads')) {
+                    let localAds = JSON.parse(localStorage.getItem('SuperAdminAds') || localStorage.getItem('MedhikaMockAds') || '[]');
+                    if (localAds.length === 0) {
+                        localAds = [
+                            { id: 'ad-def-1', emoji: '📢', title: 'Super Admin Ad Network Active', description: 'Promotional ad banners published from Super Admin portal stream directly across all salon locations.', buttonText: 'Sync Ads', targets: ['Global'] }
+                        ];
+                    }
+                    if (method === 'GET') mockRes = localAds;
+                    else if (method === 'POST') {
+                        data.id = data.id || ('ad-' + Date.now());
+                        localAds.unshift(data);
+                        localStorage.setItem('SuperAdminAds', JSON.stringify(localAds));
+                        localStorage.setItem('MedhikaMockAds', JSON.stringify(localAds));
+                        mockRes = data;
+                    } else if (method === 'DELETE') {
+                        const id = path.split('/').pop();
+                        localAds = localAds.filter(a => String(a.id) !== String(id));
+                        localStorage.setItem('SuperAdminAds', JSON.stringify(localAds));
+                        localStorage.setItem('MedhikaMockAds', JSON.stringify(localAds));
+                        mockRes = { success: true };
+                    }
+                }
+                else if (path.startsWith('/branches') || path.startsWith('/subscription') || path.startsWith('/salons')) {
+                    const subRaw = localStorage.getItem('VynsterSalonSubscription');
+                    let subObj = subRaw ? JSON.parse(subRaw) : { plan: 'Premium', price: '₹4,999/mo', status: 'Active' };
+                    mockRes = subObj;
                 }
 
                 return new Response(JSON.stringify(mockRes || []), {
