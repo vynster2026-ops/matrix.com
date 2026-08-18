@@ -2580,7 +2580,7 @@
         async function confirmSuspend() {
             if (salonToSuspend) {
                 try {
-                    const response = await fetch(`http://localhost:5000/api/branches/${salonToSuspend.id}/status`, {
+                    const response = await fetch(getApiUrl(`/api/branches/${salonToSuspend.id}/status`), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ status: 'Suspended' })
@@ -2614,7 +2614,7 @@
                 };
 
                 try {
-                    const response = await fetch(`http://localhost:5000/api/branches/${id}`, {
+                    const response = await fetch(getApiUrl(`/api/branches/${id}`), {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -2638,7 +2638,7 @@
             const vendor = vendors.find(v => String(v.id) === String(id));
             if (vendor) {
                 try {
-                    const response = await fetch(`http://localhost:5000/api/branches/${id}/status`, {
+                    const response = await fetch(getApiUrl(`/api/branches/${id}/status`), {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ status: 'Active' })
@@ -2676,7 +2676,7 @@
             localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
 
             try {
-                const response = await fetch(`http://localhost:5000/api/branches/${vendor.id}`, {
+                const response = await fetch(getApiUrl(`/api/branches/${vendor.id}`), {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: accessKey, password: passcode })
@@ -2706,7 +2706,7 @@
         async function viewCredentials(id) {
             // First try to fetch from backend to get real up-to-date credentials
             try {
-                const response = await fetch('http://localhost:5000/api/branches', {
+                const response = await fetch(getApiUrl('/api/branches'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
@@ -3314,7 +3314,7 @@
                     status: 'Active'
                 };
 
-                const response = await fetch(`http://localhost:5000/api/branches/${id}`, {
+                const response = await fetch(getApiUrl(`/api/branches/${id}`), {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -3351,7 +3351,7 @@
 
         async function rejectSalon(id) {
             try {
-                const response = await fetch(`http://localhost:5000/api/branches/${id}/verify`, {
+                const response = await fetch(getApiUrl(`/api/branches/${id}/verify`), {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -3614,7 +3614,7 @@
             };
 
             try {
-                await fetch('http://localhost:5000/api/branches', {
+                await fetch(getApiUrl('/api/branches'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(reqPayload)
@@ -3642,7 +3642,7 @@
                                     branchId: reqPayload.id
                                 };
                                 try {
-                                    await fetch('http://localhost:5000/api/clients', {
+                                    await fetch(getApiUrl('/api/clients'), {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(clientPayload)
@@ -3788,7 +3788,7 @@
             }
 
             try {
-                const res = await fetch('http://localhost:5000/api/settings', {
+                const res = await fetch(getApiUrl('/api/settings'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ fee, tax, maint, razorpay, autoApprove, billAds: globalBillAds })
