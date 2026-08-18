@@ -20,8 +20,6 @@ export default {
                 }
             }
 
-            const jsonHeaders = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
-
             // Live Auth Fallback Edge Handler
             if (pathname === '/api/auth/login' && request.method === 'POST') {
                 try {
@@ -46,7 +44,7 @@ export default {
                             success: true,
                             token: 'edge_token_' + Date.now(),
                             user: { email, name: email.includes('rooter') ? 'Rooter Super Admin' : 'Salon Manager', role: email.includes('rooter') ? 'super' : 'manager', tier: email.includes('rooter') ? 1 : 2, status: 'Active', branchId: 'b1' }
-                        }), { headers: jsonHeaders });
+                        }), { headers: { 'Content-Type': 'application/json' } });
                     }
 
                     if (rawEmail.toUpperCase().startsWith('BR-') && password.length >= 4) {
@@ -55,14 +53,14 @@ export default {
                             success: true,
                             token: 'edge_branch_token_' + Date.now(),
                             user: { email: accessKey, name: 'Salon Manager (' + accessKey + ')', role: 'manager', tier: 2, status: 'Active', branchId: accessKey }
-                        }), { headers: jsonHeaders });
+                        }), { headers: { 'Content-Type': 'application/json' } });
                     }
                 } catch (e) {}
 
                 return new Response(JSON.stringify({
                     success: false,
                     error: 'Invalid Email / Access Key or Password.'
-                }), { status: 401, headers: jsonHeaders });
+                }), { status: 401, headers: { 'Content-Type': 'application/json' } });
             }
 
             if (pathname === '/api/staff/login' && request.method === 'POST') {
@@ -73,86 +71,11 @@ export default {
                         success: true,
                         token: 'edge_staff_token_' + Date.now(),
                         user: { phone, name: 'Staff Member (' + phone + ')', role: 'stylist', phone }
-                    }), { headers: jsonHeaders });
+                    }), { headers: { 'Content-Type': 'application/json' } });
                 } catch (e) {}
             }
 
-            // Standard Edge Mock Data Handlers (Prevents frontend Array method TypeError crashes when backend server is unattached)
-            if (request.method === 'GET') {
-                if (pathname.includes('/clients')) {
-                    const defaultClients = [
-                        { id: "c1", name: "Priya Reddy", phone: "+91 98400 12345", email: "priya@email.com", pts: 120, ltv: "₹4,500", av: "av-t" },
-                        { id: "c2", name: "Suresh Kumar", phone: "+91 99000 54321", email: "suresh@email.com", pts: 80, ltv: "₹2,800", av: "av-b" },
-                        { id: "c3", name: "Sindhuja", phone: "+91 6281639360", email: "sindhu@email.com", pts: 250, ltv: "₹12,400", av: "av-t", category: "VIP" },
-                        { id: "c4", name: "Sushmitha", phone: "+91 6300144813", email: "", pts: 50, ltv: "₹1,200", av: "av-b" },
-                        { id: "c5", name: "Princy", phone: "+91 6304071762", email: "", pts: 310, ltv: "₹15,800", av: "av-p", category: "VIP" }
-                    ];
-                    return new Response(JSON.stringify(defaultClients), { headers: jsonHeaders });
-                }
-
-                if (pathname.includes('/staff/summary')) {
-                    return new Response(JSON.stringify({ retentionRate: 98, totalStaff: 5, activeToday: 5 }), { headers: jsonHeaders });
-                }
-                if (pathname.includes('/staff/leaderboard') || pathname.includes('/staff/alerts') || pathname.includes('/staff/performance')) {
-                    return new Response(JSON.stringify([]), { headers: jsonHeaders });
-                }
-
-                if (pathname.includes('/staff')) {
-                    const defaultStaff = [
-                        { id: "priya", name: "Priya Sharma", role: "Senior Stylist", spec: "Senior Stylist", rating: "4.9", av: "av-t", status: "Online", commissionRate: 15 },
-                        { id: "sana", name: "Sana Khan", role: "Color Specialist", spec: "Color Specialist", rating: "4.8", av: "av-b", status: "Online", commissionRate: 15 },
-                        { id: "anjali", name: "Anjali Rao", role: "Esthetician", spec: "Esthetician", rating: "4.7", av: "av-p", status: "Online", commissionRate: 15 },
-                        { id: "riya", name: "Riya Patel", role: "Nail Artist", spec: "Nail Artist", rating: "4.6", av: "av-c", status: "Online", commissionRate: 15 },
-                        { id: "amrita", name: "Amrita Singh", role: "Makeup Artist", spec: "Makeup Artist", rating: "4.8", av: "av-k", status: "Online", commissionRate: 15 }
-                    ];
-                    return new Response(JSON.stringify(defaultStaff), { headers: jsonHeaders });
-                }
-
-                if (pathname.includes('/inventory')) {
-                    const defaultInventory = [
-                        { id: "inv-1", name: "L'Oreal Professionnel Shampoo 500ml", cat: "Hair Care", opening_stock: 25, inward_stock: 0, outward_stock: 0, stock: 20, min: 5, cost: 850 },
-                        { id: "inv-2", name: "Moroccanoil Hair Treatment 100ml", cat: "Hair Care", opening_stock: 15, inward_stock: 0, outward_stock: 0, stock: 12, min: 3, cost: 3100 },
-                        { id: "inv-3", name: "O3+ Brightening Facial Kit", cat: "Skin Care", opening_stock: 10, inward_stock: 0, outward_stock: 0, stock: 8, min: 2, cost: 2400 },
-                        { id: "inv-4", name: "Olaplex No.3 Hair Perfector", cat: "Hair Treatment", opening_stock: 12, inward_stock: 0, outward_stock: 0, stock: 4, min: 5, cost: 2950 }
-                    ];
-                    return new Response(JSON.stringify(defaultInventory), { headers: jsonHeaders });
-                }
-
-                if (pathname.includes('/services')) {
-                    const defaultServices = [
-                        { id: "svc-1", name: "Haircut & Styling", cat: "Hair Care", price: 800, duration: 45 },
-                        { id: "svc-2", name: "Hair Spa & Blow Dry", cat: "Hair Care", price: 1200, duration: 60 },
-                        { id: "svc-3", name: "Keratin Treatment", cat: "Hair Treatment", price: 4500, duration: 120 },
-                        { id: "svc-4", name: "24K Gold Facial", cat: "Skin Care", price: 2200, duration: 60 },
-                        { id: "svc-5", name: "Spa Pedicure & Manicure", cat: "Nails", price: 1500, duration: 60 }
-                    ];
-                    return new Response(JSON.stringify(defaultServices), { headers: jsonHeaders });
-                }
-
-                if (pathname.includes('/expenses')) {
-                    const defaultExpenses = [
-                        { id: "exp-1", desc: "Monthly Staff Salaries", cat: "Salaries", amount: 45000, date: "2026-05-01", method: "Bank Transfer" },
-                        { id: "exp-2", desc: "Main Branch Rent & Utilities", cat: "Rent & Utilities", amount: 18000, date: "2026-05-02", method: "UPI" },
-                        { id: "exp-3", desc: "Premium Hair Care Products Stock", cat: "Inventory Stock", amount: 8500, date: "2026-05-05", method: "Card" }
-                    ];
-                    return new Response(JSON.stringify(defaultExpenses), { headers: jsonHeaders });
-                }
-
-                if (pathname.includes('/bookings')) return new Response(JSON.stringify([]), { headers: jsonHeaders });
-                if (pathname.includes('/events')) return new Response(JSON.stringify([]), { headers: jsonHeaders });
-                if (pathname.includes('/tickets')) return new Response(JSON.stringify([]), { headers: jsonHeaders });
-                if (pathname.includes('/leave-request')) return new Response(JSON.stringify([]), { headers: jsonHeaders });
-                if (pathname.includes('/ads')) return new Response(JSON.stringify([]), { headers: jsonHeaders });
-                if (pathname.includes('/marketing/')) return new Response(JSON.stringify({ enabled: false }), { headers: jsonHeaders });
-                if (pathname.includes('/whatsapp')) return new Response(JSON.stringify({ success: true, status: 'CONNECTED', info: { pushname: 'Live Salon' } }), { headers: jsonHeaders });
-                if (pathname.includes('/settings')) return new Response(JSON.stringify({}), { headers: jsonHeaders });
-
-                // Catch-all GET fallback returning empty array
-                return new Response(JSON.stringify([]), { headers: jsonHeaders });
-            }
-
-            // Non-GET requests (POST, PUT, DELETE) fallback to success JSON
-            return new Response(JSON.stringify({ success: true, message: 'Edge API action completed successfully' }), { headers: jsonHeaders });
+            return new Response(JSON.stringify({ success: true, message: 'Live Edge API Active' }), { headers: { 'Content-Type': 'application/json' } });
         }
 
         // Subdomain dynamic edge routing & path resolution
@@ -189,6 +112,8 @@ export default {
             const rewriteUrl = new URL(filePath, request.url);
             let res = await env.ASSETS.fetch(new Request(rewriteUrl, request));
 
+            // If Cloudflare Pages asset handler returns a 301/302/307/308 redirect (e.g. stripping .html),
+            // catch it internally on the edge worker and return the target asset directly with 200 OK.
             if (res.status >= 300 && res.status < 400) {
                 const location = res.headers.get('Location');
                 if (location) {

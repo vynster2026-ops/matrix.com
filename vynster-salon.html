@@ -8057,20 +8057,8 @@
                 ? 'http://localhost:5000/api'
                 : '/api'
         );
-        let DEFAULT_CLIENTS = [
-            { id: "c1", name: "Priya Reddy", phone: "+91 98400 12345", email: "priya@email.com", pts: 120, ltv: "₹4,500", av: "av-t" },
-            { id: "c2", name: "Suresh Kumar", phone: "+91 99000 54321", email: "suresh@email.com", pts: 80, ltv: "₹2,800", av: "av-b" },
-            { id: "c3", name: "Sindhuja", phone: "+91 6281639360", email: "sindhu@email.com", pts: 250, ltv: "₹12,400", av: "av-t", category: "VIP" },
-            { id: "c4", name: "Sushmitha", phone: "+91 6300144813", email: "", pts: 50, ltv: "₹1,200", av: "av-b" },
-            { id: "c5", name: "Princy", phone: "+91 6304071762", email: "", pts: 310, ltv: "₹15,800", av: "av-p", category: "VIP" }
-        ];
-        let DEFAULT_BOOKINGS = [
-            { id: "B-101", clientName: "Priya Reddy", clientId: "c1", staffId: "priya", staff: "Priya Sharma", date: new Date().toISOString().split('T')[0], time: "10:00", services: ["svc-1"], total: 800, status: "Confirmed" },
-            { id: "B-102", clientName: "Sindhuja", clientId: "c3", staffId: "sana", staff: "Sana Khan", date: new Date().toISOString().split('T')[0], time: "11:30", services: ["svc-2"], total: 1200, status: "Confirmed" },
-            { id: "B-103", clientName: "Princy", clientId: "c5", staffId: "anjali", staff: "Anjali Rao", date: new Date().toISOString().split('T')[0], time: "14:00", services: ["svc-4"], total: 2200, status: "Confirmed" }
-        ];
-        let cachedBookings = [...DEFAULT_BOOKINGS];
-        let cachedClients = [...DEFAULT_CLIENTS];
+        let cachedBookings = [];
+        let cachedClients = [];
         let cachedEvents = [];
         let cachedExpenses = [
             {
@@ -8191,11 +8179,11 @@
             if (mockDataRaw) {
                 try {
                     const db = JSON.parse(mockDataRaw);
-                    if (db.bookings && Array.isArray(db.bookings)) cachedBookings = db.bookings;
-                    if (db.clients && Array.isArray(db.clients)) cachedClients = db.clients;
+                    if (db.bookings && Array.isArray(db.bookings) && db.bookings.length > 0) cachedBookings = db.bookings;
+                    if (db.clients && Array.isArray(db.clients) && db.clients.length > 0) cachedClients = db.clients;
                     if (db.staff && Array.isArray(db.staff) && db.staff.length > 0) STAFF = db.staff;
-                    if (db.inventory && Array.isArray(db.inventory)) cachedInventory = db.inventory;
-                    if (db.services && Array.isArray(db.services)) ALL_SERVICES = db.services;
+                    if (db.inventory && Array.isArray(db.inventory) && db.inventory.length > 0) cachedInventory = db.inventory;
+                    if (db.services && Array.isArray(db.services) && db.services.length > 0) ALL_SERVICES = db.services;
                     if (db.events && Array.isArray(db.events)) cachedEvents = db.events;
                     if (db.expenses && Array.isArray(db.expenses)) cachedExpenses = db.expenses;
                     if (db.tickets && Array.isArray(db.tickets)) supportTickets = db.tickets;
@@ -8220,30 +8208,30 @@
         loadMockData();
 
         window.fetch = async function (...args) {
-            const url = typeof args[0] === 'string' ? args[0] : args[0].url;
-            const isApi = url.includes(API_URL);
+            const url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
+            const isApi = url && API_URL && url.includes(API_URL);
 
-            if (isApi) {
+            if (isApi && !isOfflineMode) {
                 try {
                     const res = await originalFetch.call(window, ...args);
-                    if (res.ok) return res;
-                    return res;
+                    if (res && res.ok) return res;
                 } catch (err) {
-                    console.warn("Live backend fetch warning:", err);
+                    console.warn("Live backend fetch warning, switching to offline fallback mode:", err);
+                    isOfflineMode = true;
                     if (typeof updateConnectionStatus === 'function') updateConnectionStatus(true);
                 }
             }
 
-            if (isOfflineMode && isApi) {
-                // Intercept logic for offline mode
+            if (isApi) {
+                // Intercept logic for offline fallback mode
                 const method = (args[1] && args[1].method) ? args[1].method.toUpperCase() : 'GET';
                 let data = null;
                 if (args[1] && args[1].body) {
                     try { data = JSON.parse(args[1].body); } catch (e) { }
                 }
 
-                const path = url.split(API_URL)[1].split('?')[0];
-                let mockRes = {};
+                const path = url.includes(API_URL) ? url.split(API_URL)[1].split('?')[0] : url;
+                let mockRes = [];
 
                 if (path.startsWith('/clients')) {
                     if (method === 'GET') mockRes = cachedClients;
@@ -8270,9 +8258,27 @@
                     }
                 }
                 else if (path.startsWith('/staff')) {
-                    if (method === 'GET') mockRes = STAFF;
-                    else if (method === 'POST') { data.id = 'S-' + Date.now(); STAFF.push(data); mockRes = data; saveMockDB(); }
-                    else if (method === 'PUT') {
+                    if (path.includes('/performance')) {
+                        mockRes = STAFF.map(s => ({
+                            name: s.name,
+                            servicesCount: Math.floor(Math.random() * 15) + 5,
+                            revenue: (Math.floor(Math.random() * 20) + 10) * 1000,
+                            commission: (Math.floor(Math.random() * 4) + 2) * 1000,
+                            status: s.status || 'Online'
+                        }));
+                    } else if (path.includes('/alerts')) {
+                        mockRes = [
+                            { type: 'warning', title: 'Schedule Conflict', staffName: 'Priya Sharma', message: 'Double booked for 3:00 PM slot' },
+                            { type: 'info', title: 'Target Reached', staffName: 'Sana Khan', message: 'Exceeded monthly revenue milestone' }
+                        ];
+                    } else if (method === 'GET') {
+                        mockRes = STAFF && STAFF.length > 0 ? STAFF : DEFAULT_STAFF;
+                    } else if (method === 'POST') {
+                        data.id = data.id || ('S-' + Date.now());
+                        STAFF.push(data);
+                        mockRes = data;
+                        saveMockDB();
+                    } else if (method === 'PUT') {
                         const id = path.split('/').pop();
                         const idx = STAFF.findIndex(s => s.id === id);
                         if (idx !== -1) { STAFF[idx] = { ...STAFF[idx], ...data }; mockRes = STAFF[idx]; saveMockDB(); }
@@ -8367,7 +8373,7 @@
                     mockRes = { success: true, status: 'CONNECTED', info: { pushname: 'Offline Mock Salon' } };
                 }
 
-                return new Response(JSON.stringify(mockRes), {
+                return new Response(JSON.stringify(mockRes || []), {
                     status: 200,
                     headers: { 'Content-Type': 'application/json' }
                 });
@@ -8461,23 +8467,21 @@
                 try {
                     const res = await fetch(`${API_URL}/leave-requests`);
                     let requests = await res.json();
-                    if (Array.isArray(requests)) {
-                        requests = requests.filter(r => new Date(r.createdAt || r.fromDate).getTime() > clearedTime);
-                        requests.sort((a, b) => new Date(b.createdAt || b.fromDate) - new Date(a.createdAt || a.fromDate));
+                    requests = requests.filter(r => new Date(r.createdAt || r.fromDate).getTime() > clearedTime);
+                    requests.sort((a, b) => new Date(b.createdAt || b.fromDate) - new Date(a.createdAt || a.fromDate));
 
-                        requests.forEach(r => {
-                            let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
-                            notifsHTML += `
-                            <div class="notif-item">
-                                <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border);">🏃</div>
-                                <div class="notif-content">
-                                    <h4>Leave Request</h4>
-                                    <p><strong>${r.staffName || 'Staff'}</strong> requested leave (${r.reason || 'N/A'}).</p>
-                                    <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${r.status}</span>
-                                </div>
-                            </div>`;
-                        });
-                    }
+                    requests.forEach(r => {
+                        let statusColor = r.status === 'Approved' ? 'var(--success)' : r.status === 'Rejected' ? 'var(--danger)' : 'var(--warning)';
+                        notifsHTML += `
+                        <div class="notif-item">
+                            <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border);">🏃</div>
+                            <div class="notif-content">
+                                <h4>Leave Request</h4>
+                                <p><strong>${r.staffName || 'Staff'}</strong> requested leave (${r.reason || 'N/A'}).</p>
+                                <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${r.status}</span>
+                            </div>
+                        </div>`;
+                    });
                 } catch (e) {
                     notifsHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Error loading leaves</div>';
                 }
@@ -8486,27 +8490,25 @@
                     const res = await fetch(`${API_URL}/whatsapp/campaigns`);
                     const campaigns = await res.json();
 
-                    if (Array.isArray(campaigns)) {
-                        let bookingCampaigns = campaigns.filter(c => c.id && c.id.startsWith('auto-new-booking-'));
-                        bookingCampaigns = bookingCampaigns.filter(c => new Date(c.timestamp || c.createdAt).getTime() > clearedTime);
+                    let bookingCampaigns = campaigns.filter(c => c.id && c.id.startsWith('auto-new-booking-'));
+                    bookingCampaigns = bookingCampaigns.filter(c => new Date(c.timestamp || c.createdAt).getTime() > clearedTime);
 
-                        bookingCampaigns.forEach(c => {
-                            let isSuccess = c.status === 'completed' || c.status === 'successful';
-                            let statusColor = isSuccess ? 'var(--success)' : c.status === 'failed' ? 'var(--danger)' : 'var(--warning)';
-                            let icon = isSuccess ? 'fa-check-circle' : c.status === 'failed' ? 'fa-times-circle' : 'fa-clock';
-                            let displayStatus = isSuccess ? 'SUCCESSFUL' : c.status === 'failed' ? 'FAILED' : c.status.toUpperCase();
+                    bookingCampaigns.forEach(c => {
+                        let isSuccess = c.status === 'completed' || c.status === 'successful';
+                        let statusColor = isSuccess ? 'var(--success)' : c.status === 'failed' ? 'var(--danger)' : 'var(--warning)';
+                        let icon = isSuccess ? 'fa-check-circle' : c.status === 'failed' ? 'fa-times-circle' : 'fa-clock';
+                        let displayStatus = isSuccess ? 'SUCCESSFUL' : c.status === 'failed' ? 'FAILED' : c.status.toUpperCase();
 
-                            notifsHTML += `
-                            <div class="notif-item">
-                                <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border); color: ${statusColor};"><i class="fa-solid ${icon}"></i></div>
-                                <div class="notif-content">
-                                    <h4>Booking Confirmation</h4>
-                                    <p>WhatsApp message for <strong>${c.name.replace('New Booking - ', '')}</strong>.</p>
-                                    <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${displayStatus}</span>
-                                </div>
-                            </div>`;
-                        });
-                    }
+                        notifsHTML += `
+                        <div class="notif-item">
+                            <div class="notif-icon" style="background: #f8fafc; border: 1px solid var(--border); color: ${statusColor};"><i class="fa-solid ${icon}"></i></div>
+                            <div class="notif-content">
+                                <h4>Booking Confirmation</h4>
+                                <p>WhatsApp message for <strong>${c.name.replace('New Booking - ', '')}</strong>.</p>
+                                <span class="notif-time" style="color: ${statusColor}; font-weight: 700;">${displayStatus}</span>
+                            </div>
+                        </div>`;
+                    });
                 } catch (e) {
                     notifsHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Error loading logs</div>';
                 }
@@ -8642,7 +8644,7 @@
             if (isSyncing) return;
             isSyncing = true;
             document.body.classList.add('syncing');
-            isOfflineMode = false; // Attempt to reconnect to live server
+
             try {
                 const ts = new Date().getTime();
                 const [crez, brez, sRes, iRes, svRes, eRes, exRes, tRes] = await Promise.all([
@@ -8656,91 +8658,69 @@
                     fetch(`${API_URL}/tickets?_t=${ts}`)
                 ]);
 
-                const newClientsRaw = await crez.json();
-                const newBookingsRaw = await brez.json();
-                const newStaffRaw = await sRes.json();
-                const newInventoryRaw = await iRes.json();
-                const newServicesRaw = await svRes.json();
-                const newEventsRaw = await eRes.json();
-                const newExpensesRaw = await exRes.json();
-
-                const safeBookingsArray = Array.isArray(newBookingsRaw) ? newBookingsRaw : (Array.isArray(cachedBookings) ? cachedBookings : []);
-
-                // Dynamic frontend status resolution (ensures immediate updates without server restart)
-                const now = new Date();
-                const newBookings = safeBookingsArray.map(b => {
-                    const stat = (b.status || '').toLowerCase();
-                    if (['upcoming', 'confirmed', 'ongoing', 'pending', 'done'].includes(stat)) {
-                        const dateStr = (b.date && b.date.includes('T')) ? b.date.split('T')[0] : b.date;
-                        if (dateStr && b.time) {
-                            const [y, m, d] = dateStr.split('-').map(Number);
-                            const [th, tm] = b.time.split(':').map(Number);
-                            const apptEnd = new Date(y, m - 1, d, th, tm);
-                            apptEnd.setMinutes(apptEnd.getMinutes() + 60); // assume 60 min duration
-                            if (now > apptEnd) {
-                                b.status = 'Completed';
-                            }
-                        }
-                        if (stat === 'done') {
-                            b.status = 'Completed';
-                        }
-                    }
-                    return b;
-                });
-
-                if (cachedBookings.length > 0 && newBookings.length > cachedBookings.length) {
-                    playNotificationSound();
+                if (crez && crez.ok) {
+                    const data = await crez.json();
+                    if (Array.isArray(data) && data.length > 0) cachedClients = data;
                 }
-
-                cachedBookings = newBookings;
-                if (Array.isArray(newClientsRaw)) cachedClients = newClientsRaw;
-                if (Array.isArray(newStaffRaw)) STAFF = newStaffRaw;
-                if (Array.isArray(newInventoryRaw)) cachedInventory = newInventoryRaw;
-                if (Array.isArray(newServicesRaw)) ALL_SERVICES = newServicesRaw;
-                if (Array.isArray(newEventsRaw)) cachedEvents = newEventsRaw;
-                if (Array.isArray(newExpensesRaw)) cachedExpenses = newExpensesRaw;
-
-                // Parse tickets and seed defaults if server DB is empty
-                const loadedTickets = await tRes.json();
-                if (Array.isArray(loadedTickets) && loadedTickets.length > 0) {
-                    supportTickets = loadedTickets;
-                } else if (typeof supportTickets !== 'undefined' && Array.isArray(supportTickets)) {
-                    // Seed defaults to server if empty
-                    for (const tkt of supportTickets) {
-                        try {
-                            await fetch(`${API_URL}/tickets`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(tkt)
-                            });
-                        } catch (e) {
-                            console.error('Error seeding ticket:', e);
-                        }
+                if (brez && brez.ok) {
+                    const data = await brez.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        const now = new Date();
+                        const newBookings = data.map(b => {
+                            const stat = (b.status || '').toLowerCase();
+                            if (['upcoming', 'confirmed', 'ongoing', 'pending', 'done'].includes(stat)) {
+                                const dateStr = (b.date && b.date.includes('T')) ? b.date.split('T')[0] : b.date;
+                                if (dateStr && b.time) {
+                                    const [y, m, d] = dateStr.split('-').map(Number);
+                                    const [th, tm] = b.time.split(':').map(Number);
+                                    const apptEnd = new Date(y, m - 1, d, th, tm);
+                                    apptEnd.setMinutes(apptEnd.getMinutes() + 60);
+                                    if (now > apptEnd) b.status = 'Completed';
+                                }
+                                if (stat === 'done') b.status = 'Completed';
+                            }
+                            return b;
+                        });
+                        cachedBookings = newBookings;
                     }
+                }
+                if (sRes && sRes.ok) {
+                    const data = await sRes.json();
+                    if (Array.isArray(data) && data.length > 0) STAFF = data;
+                }
+                if (iRes && iRes.ok) {
+                    const data = await iRes.json();
+                    if (Array.isArray(data) && data.length > 0) cachedInventory = data;
+                }
+                if (svRes && svRes.ok) {
+                    const data = await svRes.json();
+                    if (Array.isArray(data) && data.length > 0) ALL_SERVICES = data;
+                }
+                if (eRes && eRes.ok) {
+                    const data = await eRes.json();
+                    if (Array.isArray(data)) cachedEvents = data;
+                }
+                if (exRes && exRes.ok) {
+                    const data = await exRes.json();
+                    if (Array.isArray(data)) cachedExpenses = data;
+                }
+                if (tRes && tRes.ok) {
+                    const data = await tRes.json();
+                    if (Array.isArray(data) && data.length > 0) supportTickets = data;
                 }
             } catch (err) {
-                console.warn('Backend live sync warning, retrying connection:', err);
-                isOfflineMode = false;
-                updateConnectionStatus(true);
-                try {
-                    renderDashboard();
-                    switchView(currentViewId);
-                    renderModalDaySchedule();
-                } catch (e) { }
-                showToast('Live Server Reconnected', 'success');
-                return true;
+                console.warn('Backend live sync warning, using local state:', err);
+                isOfflineMode = true;
             } finally {
                 isSyncing = false;
                 document.body.classList.remove('syncing');
             }
 
-            // If fetch succeeds, render UI
             updateConnectionStatus(true);
             try { renderDashboard(); } catch (uiErr) { console.error('Dashboard render error:', uiErr); }
             try { switchView(currentViewId); } catch (uiErr) { console.error('SwitchView error:', uiErr); }
             try { renderModalDaySchedule(); } catch (uiErr) { console.error('Modal render error:', uiErr); }
 
-            showToast('Data Synced Successfully');
             return true;
         }
 
@@ -16975,28 +16955,32 @@
                 titleEl.innerText = titles[viewId] || 'Srijes';
             }
 
-            if (viewId === 'calendar') renderFullCalendar();
-            if (viewId === 'dashboard') renderDashboard();
-            if (viewId === 'bookings') renderBookingsView();
-            if (viewId === 'clients') renderClientsView(cachedClients);
-            if (viewId === 'staff') renderStaffCards();
-            if (viewId === 'inventory') renderInventoryView();
-            if (viewId === 'expenses') renderExpensesView();
-            if (viewId === 'reports') renderReportsView();
-            if (viewId === 'services-stats') renderServicesStatsView();
-            if (viewId === 'marketing') renderMarketingView();
-            if (viewId === 'bill-return') renderBillReturnView();
-            if (viewId === 'item-return') renderItemReturnView();
-            if (viewId === 'exchange') renderExchangeView();
-            if (viewId === 'invoices') renderInvoicesView();
-            if (viewId === 'customer-features') renderCustomerFeaturesView();
-            if (viewId === 'appointment-billing') renderAppointmentBillingView();
-            if (viewId === 'automation') renderAutomationView();
-            if (viewId === 'admin-controls') renderAdminControlsView();
-            if (viewId === 'item-billing') updateBillingHubStats();
-            if (viewId === 'support') {
-                updateSystemStatus();
-                renderSupportTickets();
+            try {
+                if (viewId === 'calendar') renderFullCalendar();
+                if (viewId === 'dashboard') renderDashboard();
+                if (viewId === 'bookings') renderBookingsView();
+                if (viewId === 'clients') renderClientsView(cachedClients);
+                if (viewId === 'staff') renderStaffCards();
+                if (viewId === 'inventory') renderInventoryView();
+                if (viewId === 'expenses') renderExpensesView();
+                if (viewId === 'reports') renderReportsView();
+                if (viewId === 'services-stats') renderServicesStatsView();
+                if (viewId === 'marketing') renderMarketingView();
+                if (viewId === 'bill-return') renderBillReturnView();
+                if (viewId === 'item-return') renderItemReturnView();
+                if (viewId === 'exchange') renderExchangeView();
+                if (viewId === 'invoices') renderInvoicesView();
+                if (viewId === 'customer-features') renderCustomerFeaturesView();
+                if (viewId === 'appointment-billing') renderAppointmentBillingView();
+                if (viewId === 'automation') renderAutomationView();
+                if (viewId === 'admin-controls') renderAdminControlsView();
+                if (viewId === 'item-billing') updateBillingHubStats();
+                if (viewId === 'support') {
+                    updateSystemStatus();
+                    renderSupportTickets();
+                }
+            } catch (renderErr) {
+                console.error('Error rendering view ' + viewId + ':', renderErr);
             }
         }
 
@@ -19869,10 +19853,6 @@
             try {
                 const res = await fetch(`${API_URL}/staff/leaderboard`);
                 const stats = await res.json();
-                if (!Array.isArray(stats)) {
-                    container.innerHTML = '<div style="font-size: 13px; color: var(--text-muted);">No leaderboard stats available yet.</div>';
-                    return;
-                }
                 let html = '';
                 const medals = ['🥇', '🥈', '🥉'];
                 stats.forEach((st, idx) => {
@@ -19903,10 +19883,6 @@
             try {
                 const res = await fetch(`${API_URL}/staff/alerts`);
                 const alerts = await res.json();
-                if (!Array.isArray(alerts)) {
-                    container.innerHTML = '<div style="font-size: 13px; color: var(--text-muted);">No active alerts at this time.</div>';
-                    return;
-                }
                 let alertsHtml = '';
                 alerts.forEach(al => {
                     if (al.type === 'warning') {
@@ -19934,7 +19910,6 @@
             try {
                 const res = await fetch(`${API_URL}/staff/performance`);
                 const stats = await res.json();
-                if (!Array.isArray(stats)) return;
                 let html = '';
                 stats.forEach(st => {
                     let statColor = st.status === 'Online' ? 'var(--success)' : 'var(--text-muted)';
