@@ -207,16 +207,28 @@
             min-height: 0; /* CRITICAL: Enables smooth internal scrolling for menu items */
             overflow-y: auto;
             overflow-x: hidden;
-            padding-right: 0.35rem;
+            padding-right: 0.4rem;
+            scrollbar-width: thin;
+            scrollbar-color: #1A6B8A rgba(0, 0, 0, 0.08);
         }
 
         .nav-menu::-webkit-scrollbar {
-            width: 4px;
+            width: 7px;
+        }
+
+        .nav-menu::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 6px;
         }
 
         .nav-menu::-webkit-scrollbar-thumb {
-            background: rgba(26, 107, 138, 0.4);
-            border-radius: 4px;
+            background: linear-gradient(180deg, #1A6B8A, #2196B8);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-menu::-webkit-scrollbar-thumb:hover {
+            background: #1A6B8A;
         }
 
         .nav-item {
@@ -814,29 +826,33 @@
             box-shadow: 0 0 15px rgba(255, 0, 122, 0.4);
         }
 
-        /* Sign Out Button */
+        /* Sign Out / Logout Button */
         .btn-signout {
-            background: #e53e3e;
-            color: white;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
             border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.2rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 0.6rem;
             transition: all 0.3s ease;
-            margin: 0 auto;
-            /* perfectly bottom center */
-            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
         }
 
         .btn-signout:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -5px rgba(229, 62, 62, 0.4);
-            background: #c53030;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
         }
 
         .btn-approve {
@@ -1153,6 +1169,7 @@
 
         <button type="button" class="btn-signout" onclick="signOut()" title="Sign Out">
             <i class="fa-solid fa-power-off"></i>
+            <span>Log Out</span>
         </button>
     </nav>
 
