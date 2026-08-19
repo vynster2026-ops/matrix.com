@@ -1233,10 +1233,10 @@
                     title="Click to view Users Base">
                     <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
                     <div>
-                        <div class="stat-value">128.5k</div>
+                        <div class="stat-value" id="stat-total-users">0</div>
                         <div class="stat-label">Total Users Base</div>
                     </div>
-                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +5.2%</div>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0%</div>
                 </div>
 
                 <div class="stat-card glass-panel" onclick="switchSection('settings')" style="cursor: pointer;"
@@ -1613,23 +1613,28 @@
 
         <div id="section-users" class="content-section" style="display: none;">
             <div class="glass-panel" style="padding: 2rem;">
-                <h2>Annual Report Analytics</h2>
-                <p style="color: var(--text-muted); margin-top: 1rem; margin-bottom: 2rem;">Annual financial
-                    performance,
-                    growth trajectories, and yearly metrics.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h2>Annual Report Analytics</h2>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Annual financial performance, growth trajectories, and yearly metrics.</p>
+                    </div>
+                    <button type="button" class="sync-btn" onclick="resetAnnualReportSection()" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Analytics
+                    </button>
+                </div>
 
                 <div class="dashboard-grid">
                     <div class="stat-card glass-panel" style="grid-column: span 6;">
                         <div class="stat-icon"><i class="fa-solid fa-user-plus"></i></div>
                         <div>
-                            <div class="stat-value">12,450</div>
+                            <div class="stat-value" id="stat-new-users">0</div>
                             <div class="stat-label">New Users This Month</div>
                         </div>
                     </div>
                     <div class="stat-card glass-panel" style="grid-column: span 6;">
                         <div class="stat-icon"><i class="fa-solid fa-mobile-screen"></i></div>
                         <div>
-                            <div class="stat-value">84%</div>
+                            <div class="stat-value" id="stat-app-adoption">0%</div>
                             <div class="stat-label">Mobile App Adoption</div>
                         </div>
                     </div>
@@ -3095,6 +3100,17 @@
             const statRevEl = document.getElementById('stat-platform-revenue');
             if (statRevEl) statRevEl.textContent = `₹${Math.round(platformFees).toLocaleString('en-IN')}`;
 
+            // Dynamic user metrics update
+            const totalClients = (globalClients || []).length;
+            const newUsersEl = document.getElementById('stat-new-users');
+            if (newUsersEl) newUsersEl.textContent = totalClients;
+
+            const appAdoptionEl = document.getElementById('stat-app-adoption');
+            if (appAdoptionEl) appAdoptionEl.textContent = totalClients > 0 ? '100%' : '0%';
+
+            const totalUsersEl = document.getElementById('stat-total-users');
+            if (totalUsersEl) totalUsersEl.textContent = totalClients;
+
             // Render Full Transactions Table
             const fullTxTbody = document.getElementById('full-transactions-body');
             if (fullTxTbody) {
@@ -3750,6 +3766,17 @@
             showToast('Revenue metrics reset to zero (₹0).');
         }
 
+        function resetAnnualReportSection() {
+            const newUsersEl = document.getElementById('stat-new-users');
+            if (newUsersEl) newUsersEl.textContent = '0';
+            const appAdoptionEl = document.getElementById('stat-app-adoption');
+            if (appAdoptionEl) appAdoptionEl.textContent = '0%';
+            const totalUsersEl = document.getElementById('stat-total-users');
+            if (totalUsersEl) totalUsersEl.textContent = '0';
+            showToast('Annual Report metrics reset to zero (0 / 0%).');
+        }
+
+        window.resetAnnualReportSection = resetAnnualReportSection;
         window.processPayouts = processPayouts;
         window.resetRevenueSection = resetRevenueSection;
 
