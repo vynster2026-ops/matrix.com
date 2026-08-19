@@ -1369,17 +1369,21 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <div>
                         <h3 style="color: var(--accent-primary);">Vendor Directory</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Active: <strong
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Active: <strong id="total-active-vendors-count"
                                 style="color: var(--text-main);">342</strong></p>
                     </div>
+                    <button type="button" class="sync-btn" onclick="resetVendorDirectory()" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Directory
+                    </button>
                 </div>
 
                 <div>
                     <h3 style="margin-bottom: 1rem;">Active Vendor Network</h3>
                     <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                        <input type="text" placeholder="Search by salon name or ID..."
-                            style="flex: 1; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none;">
-                        <button type="button" class="sync-btn"><i class="fa-solid fa-filter"></i> Filter</button>
+                        <input type="text" id="vendor-search-input" placeholder="Search by salon name or ID..." onkeyup="filterVendorTable()"
+                            style="flex: 1; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                        <button type="button" class="sync-btn" onclick="filterVendorTable()"><i class="fa-solid fa-filter"></i> Filter</button>
+                        <button type="button" class="sync-btn" onclick="resetVendorDirectory()" style="background: rgba(255,255,255,0.1);"><i class="fa-solid fa-arrow-rotate-right"></i> Reset</button>
                     </div>
                     <table class="vendor-table">
                         <thead>
@@ -3002,6 +3006,12 @@
             fullTbody.innerHTML = '';
             const deletedIds = getDeletedVendorIds();
             const activeVendors = vendors.filter(v => !deletedIds.includes(String(v.id)));
+            
+            const totalActiveEl = document.getElementById('total-active-vendors-count');
+            if (totalActiveEl) totalActiveEl.textContent = activeVendors.length;
+            const statActiveEl = document.getElementById('stat-active-salons');
+            if (statActiveEl) statActiveEl.textContent = activeVendors.length;
+
             activeVendors.forEach(vendor => {
                 if (vendor.status === 'Pending Review') return; // Hide pending in active list
                 let actionBtn = vendor.status === 'Suspended' ?
@@ -3666,6 +3676,28 @@
         if (typeof exportRevenueLedger === 'function') window.exportRevenueLedger = exportRevenueLedger;
         if (typeof exportBusinessAnalysisReport === 'function') window.exportBusinessAnalysisReport = exportBusinessAnalysisReport;
         if (typeof populateBillAdForm === 'function') window.populateBillAdForm = populateBillAdForm;
+
+        function resetVendorDirectory() {
+            const input = document.getElementById('vendor-search-input');
+            if (input) input.value = '';
+            localStorage.removeItem('vynster_deleted_vendor_ids');
+            const rows = document.querySelectorAll('#full-vendor-table-body tr');
+            rows.forEach(r => r.style.display = '');
+            if (typeof fetchRealTimeData === 'function') fetchRealTimeData();
+            showToast('Vendor Directory reset to default active state.');
+        }
+
+        function filterVendorTable() {
+            const query = (document.getElementById('vendor-search-input')?.value || '').toLowerCase().trim();
+            const rows = document.querySelectorAll('#full-vendor-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = (!query || text.includes(query)) ? '' : 'none';
+            });
+        }
+
+        window.resetVendorDirectory = resetVendorDirectory;
+        window.filterVendorTable = filterVendorTable;
 
         window.renderVendorTable = renderVendorTable;
         window.renderExtendedTables = renderExtendedTables;
