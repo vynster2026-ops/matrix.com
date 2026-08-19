@@ -67,20 +67,24 @@
            #38BDF8 (Electric Blue) -> #6366F1 (Indigo) -> #8B5CF6 (Violet)
         */
 
-        /* DARK MODE (DEFAULT) */
         html,
-        body,
-        html.theme-dark,
-        body.theme-dark {
-            background-color: #030712 !important;
+        body {
             font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-            color: #E5E7EB !important;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* BRIGHT MODE */
+        /* DARK MODE (DEFAULT & WHEN .theme-dark IS PRESENT) */
+        html:not(.theme-bright),
+        body:not(.theme-bright),
+        html.theme-dark,
+        body.theme-dark {
+            background-color: #030712 !important;
+            color: #E5E7EB !important;
+        }
+
+        /* BRIGHT MODE (WHEN .theme-bright IS PRESENT) */
         html.theme-bright,
         body.theme-bright {
             background-color: #F8FAFC !important;
