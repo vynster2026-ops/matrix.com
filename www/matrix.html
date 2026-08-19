@@ -1216,17 +1216,17 @@
                         <div class="stat-value" id="stat-platform-revenue">₹0</div>
                         <div class="stat-label">Total Platform Revenue</div>
                     </div>
-                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.5%</div>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0%</div>
                 </div>
 
                 <div class="stat-card glass-panel" onclick="switchSection('salons')" style="cursor: pointer;"
                     title="Click to view Salons & Vendors">
                     <div class="stat-icon"><i class="fa-solid fa-store"></i></div>
                     <div>
-                        <div class="stat-value">342</div>
+                        <div class="stat-value" id="stat-active-salons">0</div>
                         <div class="stat-label">Active Salons/Vendors</div>
                     </div>
-                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8</div>
+                    <div class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0</div>
                 </div>
 
                 <div class="stat-card glass-panel" onclick="switchSection('users')" style="cursor: pointer;"
@@ -1370,7 +1370,7 @@
                     <div>
                         <h3 style="color: var(--accent-primary);">Vendor Directory</h3>
                         <p style="color: var(--text-muted); font-size: 0.9rem;">Total Active: <strong id="total-active-vendors-count"
-                                style="color: var(--text-main);">342</strong></p>
+                                style="color: var(--text-main);">0</strong></p>
                     </div>
                     <button type="button" class="sync-btn" onclick="resetVendorDirectory()" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">
                         <i class="fa-solid fa-rotate-left"></i> Reset Directory
@@ -3412,7 +3412,7 @@
             if (statRev && totalRev > 0) statRev.innerText = '₹' + (totalRev >= 100000 ? (totalRev / 100000).toFixed(1) + 'L' : totalRev.toLocaleString('en-IN'));
 
             const statSalons = document.querySelector('#section-overview .stat-card:nth-child(2) .stat-value');
-            if (statSalons && activeCount > 0) statSalons.innerText = activeCount;
+            if (statSalons) statSalons.innerText = activeCount;
 
             renderVendorTable();
             renderExtendedTables();
