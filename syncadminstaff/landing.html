@@ -46,32 +46,63 @@
             padding: 0;
         }
 
-        /* Base Theme Definitions - Luxury Midnight Obsidian */
+        /* EXACT COLOR PALETTE SYSTEM
+           Main Background: #080D1F (Deep Navy)
+           Secondary Background: #101936 (Midnight Blue)
+           Main Heading: #F8FAFF (White)
+           Secondary Heading: #38BDF8 (Electric Blue)
+           Gradient End: #8B5CF6 (Vivid Violet)
+           Accent: #22D3EE (Soft Cyan)
+           Navigation Text: #E2E8F0 (White)
+           Muted Text: #94A3B8 (Slate)
+           Buttons: #0284C7 (Blue)
+           Button Hover: #7C3AED (Violet)
+        */
+
         html,
         body {
-            background-color: #070B14;
+            background-color: #080D1F !important;
             font-family: 'Kanit', sans-serif;
-            color: #F8FAFC;
+            color: #E2E8F0;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* MOTION SITE SOPHISTICATED TYPOGRAPHY */
+        /* MAIN HEADING (#F8FAFF) */
         h1, h2, h3, h4, h5, h6, .section-title {
-            color: #FFFFFF !important;
+            color: #F8FAFF !important;
             font-weight: 800 !important;
             letter-spacing: -0.02em;
             text-shadow: none !important;
         }
 
+        /* MUTED TEXT (#94A3B8 SLATE) */
         p, dd, dt, label, li, .section-copy {
-            color: #CBD5E1 !important;
+            color: #94A3B8 !important;
             font-weight: 400;
             text-shadow: none !important;
         }
 
-        /* Bright Mode Theme Overrides - Sleek Minimalist Studio Aesthetic */
+        /* NAVIGATION TEXT (#E2E8F0 WHITE) */
+        .nav-link,
+        .brand-text {
+            color: #E2E8F0 !important;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #22D3EE !important;
+        }
+
+        /* ACCENT COLORS & SECONDARY HEADINGS (#38BDF8 ELECTRIC BLUE & #22D3EE SOFT CYAN) */
+        .text-accent,
+        .text-[#38BDF8],
+        .section-subtitle {
+            color: #38BDF8 !important;
+        }
+
+        /* Bright Mode Overrides */
         html.theme-bright,
         body.theme-bright {
             background-color: #F8FAFC !important;
@@ -80,13 +111,11 @@
 
         .theme-bright .brand-text {
             color: #0F172A !important;
-            text-shadow: none !important;
         }
 
         .theme-bright .nav-link {
             color: #1E293B !important;
             font-weight: 700 !important;
-            text-shadow: none !important;
         }
 
         .theme-bright .nav-link:hover {
@@ -101,7 +130,6 @@
         .theme-bright h5,
         .theme-bright h6 {
             color: #0F172A !important;
-            text-shadow: none !important;
         }
 
         .theme-bright .section-copy,
@@ -111,7 +139,6 @@
         .theme-bright label,
         .theme-bright li {
             color: #334155 !important;
-            text-shadow: none !important;
         }
 
         .theme-bright .text-white:not(a.bg-gradient-to-r):not(button.bg-gradient-to-r):not(.bg-gradient-to-r *):not(#portalModalOverlay *):not(footer *) {
@@ -122,27 +149,33 @@
             color: #334155 !important;
         }
 
+        /* BUTTONS (#0284C7 BLUE) & HOVER (#7C3AED VIOLET) */
+        .btn-primary,
+        .client-portal-btn,
+        .superadmin-btn,
+        .btn-action {
+            background-color: #0284C7 !important;
+            background-image: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35) !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .btn-primary:hover,
+        .client-portal-btn:hover,
+        .superadmin-btn:hover,
+        .btn-action:hover {
+            background-color: #7C3AED !important;
+            background-image: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%) !important;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.45) !important;
+            transform: translateY(-2px) scale(1.03) !important;
+        }
+
         .theme-bright .button-secondary {
             background: #FFFFFF !important;
             color: #0F172A !important;
             border: 1px solid rgba(15, 23, 42, 0.15) !important;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
-        }
-
-        .theme-bright .client-portal-btn {
-            background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25) !important;
-            font-weight: 700 !important;
-        }
-
-        .theme-bright .superadmin-btn {
-            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
-            color: #FFFFFF !important;
-            border: none !important;
-            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25) !important;
-            font-weight: 700 !important;
         }
 
         .theme-bright .glass-card,
@@ -152,7 +185,6 @@
         .theme-bright .motion-card {
             background: #FFFFFF !important;
             border: 1px solid rgba(15, 23, 42, 0.08) !important;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
         }
 
         .theme-bright .glass-panel,
@@ -160,27 +192,25 @@
         .theme-bright .motion-panel {
             background: rgba(255, 255, 255, 0.95) !important;
             border: 1px solid rgba(15, 23, 42, 0.1) !important;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08) !important;
         }
 
         .theme-bright .nav-pill-container {
-            background: rgba(255, 255, 255, 0.9) !important;
+            background: rgba(255, 255, 255, 0.92) !important;
             border: 1px solid rgba(15, 23, 42, 0.12) !important;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
         }
 
         .theme-bright footer {
-            background: #0F172A !important;
-            color: #F8FAFC !important;
+            background: #080D1F !important;
+            color: #E2E8F0 !important;
             border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
-        /* Hero Heading Gradient - Smooth Platinum & Sky Gradient */
+        /* HERO HEADING (#F8FAFF -> #38BDF8) */
         .hero-heading {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 50%, #94A3B8 100%);
+            background: linear-gradient(180deg, #F8FAFF 0%, #E2E8F0 50%, #38BDF8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.15));
+            filter: drop-shadow(0 4px 20px rgba(56, 189, 248, 0.2));
         }
 
         .theme-bright .hero-heading {
@@ -190,28 +220,28 @@
             filter: none;
         }
 
-        /* Vivid Metallic Cyan-Indigo Accent Text */
+        /* GRADIENT ACCENT TEXT (#38BDF8 Electric Blue to #8B5CF6 Vivid Violet with #22D3EE Soft Cyan) */
         .text-red-fill,
         .text-hero-accent {
-            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #22D3EE 50%, #8B5CF6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.35));
+            filter: drop-shadow(0 4px 15px rgba(34, 211, 238, 0.35));
         }
 
-        /* MOTION SITE GRAPHICS & CARDS (Dark Mode Default) */
+        /* SECONDARY BACKGROUND (#101936 MIDNIGHT BLUE) FOR CARDS & PANELS */
         .glass-panel,
         .neo-card,
         .skeuo-card,
         .brutal-card,
         .brutal-panel,
         .motion-card {
-            background: rgba(13, 19, 35, 0.7);
+            background: #101936 !important;
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border: 1px solid rgba(56, 189, 248, 0.2) !important;
+            border-top: 1px solid rgba(34, 211, 238, 0.35) !important;
             border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -220,34 +250,36 @@
         .skeuo-card:hover,
         .brutal-card:hover,
         .motion-card:hover {
-            border-color: rgba(56, 189, 248, 0.5);
-            border-top-color: rgba(56, 189, 248, 0.8);
-            box-shadow: 0 25px 50px -10px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            border-color: #22D3EE !important;
+            border-top-color: #38BDF8 !important;
+            box-shadow: 0 25px 50px -10px rgba(34, 211, 238, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             transform: translateY(-5px);
         }
 
+        /* NAVBAR CONTAINER (#101936 MIDNIGHT BLUE WITH TRANSPARENCY) */
         .nav-pill-container,
         .glass-pill,
         .skeuo-pill,
         .brutal-pill {
-            background: rgba(11, 16, 28, 0.85);
+            background: rgba(16, 25, 54, 0.88) !important;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            border: 1px solid rgba(56, 189, 248, 0.25) !important;
+            border-top: 1px solid rgba(34, 211, 238, 0.4) !important;
             box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             border-radius: 9999px;
             transition: all 0.3s ease;
         }
 
+        /* INPUTS (#101936 MIDNIGHT BLUE SLOTS) */
         .glass-input,
         .neo-input,
         .skeuo-input,
         .brutal-input {
-            background: rgba(6, 9, 18, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #0D142C !important;
+            border: 1px solid rgba(56, 189, 248, 0.25) !important;
             border-radius: 16px;
             transition: all 0.25s ease;
-            color: #FFFFFF;
+            color: #F8FAFF !important;
             font-weight: 500;
         }
 
@@ -255,13 +287,13 @@
         .neo-input:focus,
         .skeuo-input:focus,
         .brutal-input:focus {
-            background: rgba(13, 19, 35, 0.95);
-            border-color: #38BDF8;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+            background: #101936 !important;
+            border-color: #22D3EE !important;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.4) !important;
             outline: none;
         }
 
-        /* Motion Site Keyframe Animations */
+        /* Motion Keyframe Animations */
         @keyframes floatBadge {
             0%, 100% {
                 transform: translateY(0px) rotate(0deg);
@@ -296,7 +328,7 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #050810;
+            background: #080D1F;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -305,42 +337,29 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(56, 189, 248, 0.7);
-        }
-
-        .theme-bright ::-webkit-scrollbar-track {
-            background: #F4F7FA;
-        }
-
-        .theme-bright ::-webkit-scrollbar-thumb {
-            background: rgba(15, 23, 42, 0.2);
-            border-radius: 4px;
-        }
-
-        .theme-bright ::-webkit-scrollbar-thumb:hover {
-            background: rgba(2, 132, 199, 0.7);
+            background: #0284C7;
         }
     </style>
 </head>
 
 <body
-    class="bg-[#070B14] text-[#F8FAFC] font-['Kanit',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#060912]">
+    class="bg-[#080D1F] text-[#E2E8F0] font-['Kanit',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#080D1F]">
 
     <!-- ATMOSPHERIC BACKGROUND MESH & GLOWING ORBS -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <!-- Glowing Orb 1 -->
+        <!-- Glowing Orb 1 (#38BDF8 Electric Blue) -->
         <div id="orb1"
-            class="absolute -top-[10%] left-[15%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full blur-[140px] animate-orb-1 transition-all duration-500 bg-gradient-to-br from-[#38BDF8]/25 via-[#6366F1]/15 to-transparent">
+            class="absolute -top-[10%] left-[15%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full blur-[140px] animate-orb-1 transition-all duration-500 bg-gradient-to-br from-[#38BDF8]/20 via-[#0284C7]/15 to-transparent">
         </div>
 
-        <!-- Glowing Orb 2 -->
+        <!-- Glowing Orb 2 (#8B5CF6 Vivid Violet) -->
         <div id="orb2"
-            class="absolute top-[35%] -right-[10%] w-[550px] h-[550px] sm:w-[750px] sm:h-[750px] rounded-full blur-[150px] animate-orb-2 transition-all duration-500 bg-gradient-to-tl from-[#8B5CF6]/30 via-[#C084FC]/20 to-transparent">
+            class="absolute top-[35%] -right-[10%] w-[550px] h-[550px] sm:w-[750px] sm:h-[750px] rounded-full blur-[150px] animate-orb-2 transition-all duration-500 bg-gradient-to-tl from-[#8B5CF6]/25 via-[#7C3AED]/15 to-transparent">
         </div>
 
-        <!-- Glowing Orb 3 -->
+        <!-- Glowing Orb 3 (#22D3EE Soft Cyan) -->
         <div id="orb3"
-            class="absolute bottom-[10%] left-[5%] w-[650px] h-[650px] sm:w-[850px] sm:h-[850px] rounded-full blur-[160px] animate-orb-3 transition-all duration-500 bg-gradient-to-tr from-[#38BDF8]/20 via-[#F472B6]/15 to-transparent">
+            class="absolute bottom-[10%] left-[5%] w-[650px] h-[650px] sm:w-[850px] sm:h-[850px] rounded-full blur-[160px] animate-orb-3 transition-all duration-500 bg-gradient-to-tr from-[#22D3EE]/20 via-[#38BDF8]/15 to-transparent">
         </div>
 
         <!-- Radial grid overlay -->
