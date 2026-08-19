@@ -404,7 +404,8 @@
 </head>
 
 <body
-    class="bg-[#030712] text-[#E5E7EB] font-['Plus_Jakarta_Sans',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#030712]">
+    id="appBody"
+    class="font-['Plus_Jakarta_Sans',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#030712]">
 
     <!-- ATMOSPHERIC BACKGROUND MESH & GLOWING ORBS -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -1324,29 +1325,22 @@
         const THEME_KEY = 'vynster-theme-mode';
 
         function initAppTheme() {
-            const saved = localStorage.getItem(THEME_KEY) || 'light';
+            const saved = localStorage.getItem(THEME_KEY) || 'dark';
             applyTheme(saved);
         }
 
         function applyTheme(theme) {
-            const isDark = theme === 'dark';
+            const isBright = theme === 'bright';
             const html = document.documentElement;
+            const body = document.body;
             const btn = document.getElementById('themeToggleBtn');
             const knob = document.getElementById('themeToggleKnob');
 
-            if (isDark) {
-                html.classList.add('theme-dark');
-                document.body.classList.add('theme-dark');
-                if (knob) {
-                    knob.style.transform = 'translateX(18px)';
-                    knob.textContent = '🌙';
-                }
-                if (btn) {
-                    btn.className = 'relative flex items-center w-11 sm:w-14 h-7 sm:h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/90 hover:border-[#38BDF8]';
-                }
-            } else {
+            if (isBright) {
                 html.classList.remove('theme-dark');
-                document.body.classList.remove('theme-dark');
+                body.classList.remove('theme-dark');
+                html.classList.add('theme-bright');
+                body.classList.add('theme-bright');
                 if (knob) {
                     knob.style.transform = 'translateX(0px)';
                     knob.textContent = '☀️';
@@ -1354,12 +1348,24 @@
                 if (btn) {
                     btn.className = 'relative flex items-center w-11 sm:w-14 h-7 sm:h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-slate-300 bg-amber-50 hover:border-[#2563EB]';
                 }
+            } else {
+                html.classList.remove('theme-bright');
+                body.classList.remove('theme-bright');
+                html.classList.add('theme-dark');
+                body.classList.add('theme-dark');
+                if (knob) {
+                    knob.style.transform = 'translateX(18px)';
+                    knob.textContent = '🌙';
+                }
+                if (btn) {
+                    btn.className = 'relative flex items-center w-11 sm:w-14 h-7 sm:h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/90 hover:border-[#38BDF8]';
+                }
             }
             localStorage.setItem(THEME_KEY, theme);
         }
 
         function toggleAppTheme() {
-            const current = localStorage.getItem(THEME_KEY) === 'dark' ? 'light' : 'dark';
+            const current = localStorage.getItem(THEME_KEY) === 'bright' ? 'dark' : 'bright';
             applyTheme(current);
         }
         initAppTheme();
