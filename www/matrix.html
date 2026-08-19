@@ -1870,7 +1870,12 @@
                     </div>
 
                     <div style="flex: 2; min-width: 400px;">
-                        <h3 style="margin-bottom: 1.5rem;">Recent Manual Records</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h3>Recent Manual Records</h3>
+                            <button type="button" class="sync-btn" onclick="clearManualRecords()" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+                                <i class="fa-solid fa-rotate-left"></i> Reset Records
+                            </button>
+                        </div>
                         <div
                             style="background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
                             <table class="vendor-table" style="margin-top: 0;">
@@ -1885,24 +1890,7 @@
                                 </thead>
                                 <tbody id="manual-records-body">
                                     <tr>
-                                        <td>04 Jun 2026</td>
-                                        <td><span class="status-badge"
-                                                style="background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3);">Credit</span>
-                                        </td>
-                                        <td><strong>Glamour Lounge</strong></td>
-                                        <td style="font-weight: 700; color: #00ff88;">+ ₹15,000</td>
-                                        <td style="color: var(--text-muted); font-size: 0.85rem;">Offline settlement for
-                                            May</td>
-                                    </tr>
-                                    <tr>
-                                        <td>02 Jun 2026</td>
-                                        <td><span class="status-badge"
-                                                style="background: rgba(255, 0, 122, 0.1); color: #ff007a; border: 1px solid rgba(255, 0, 122, 0.3);">Debit</span>
-                                        </td>
-                                        <td><strong>Marketing Agency</strong></td>
-                                        <td style="font-weight: 700; color: #ff007a;">- ₹8,500</td>
-                                        <td style="color: var(--text-muted); font-size: 0.85rem;">Ad campaign adjustment
-                                        </td>
+                                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No manual records logged yet. New transaction entries will log here automatically in real-time.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -3204,7 +3192,7 @@
             if (manualTbody) {
                 manualTbody.innerHTML = '';
                 if ((globalExpenses || []).length === 0) {
-                    manualTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No manual records logged yet.</td></tr>`;
+                    manualTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No manual records logged yet. New transaction entries will log here automatically in real-time.</td></tr>`;
                 } else {
                     (globalExpenses || []).slice(0, 15).forEach(exp => {
                         const isCredit = exp.type === 'Credit' || exp.method === 'Credit';
@@ -3776,6 +3764,16 @@
             showToast('Annual Report metrics reset to zero (0 / 0%).');
         }
 
+        function clearManualRecords() {
+            globalExpenses = [];
+            const manualTbody = document.getElementById('manual-records-body');
+            if (manualTbody) {
+                manualTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No manual records logged yet. New transaction entries will log here automatically in real-time.</td></tr>`;
+            }
+            showToast('Recent manual records cleared.');
+        }
+
+        window.clearManualRecords = clearManualRecords;
         window.resetAnnualReportSection = resetAnnualReportSection;
         window.processPayouts = processPayouts;
         window.resetRevenueSection = resetRevenueSection;
