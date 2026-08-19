@@ -588,22 +588,27 @@
                                     </filter>
                                 </defs>
 
-                                <!-- OUTER DARK NAVY RING -->
+                                <!-- OUTER DARK NAVY RING (UNTOUCHED PERFECT ORIGINAL) -->
                                 <circle cx="110" cy="110" r="85.5" fill="none" stroke="#08214D" stroke-width="11" />
 
-                                <!-- CONNECTED PIN POINT LINE TO TOP-RIGHT (187.5, 59.7) -->
+                                <!-- CONNECTED PIN POINT LINE TO TOP-RIGHT (187.5, 59.7) (UNTOUCHED) -->
                                 <line x1="168" y1="73" x2="187.5" y2="59.7" stroke="#08214D" stroke-width="5" stroke-linecap="round" />
 
-                                <!-- ORIGINAL RED VYNSTER STYLIZED "V" EMBLEM -->
-                                <g>
-                                    <!-- Top Left Outer Stripe -->
-                                    <polygon points="83,60 95,60 113,102 101,102" fill="#E60000" />
-                                    <!-- Left Main Stripe -->
-                                    <polygon points="98,60 110,60 124,126 110,150 96,126" fill="#E60000" />
-                                    <!-- Right Main Stripe & Loop -->
-                                    <polygon points="122,60 110,60 110,150 124,126 136,96" fill="#E60000" />
-                                    <!-- Top Right Outer Stripe -->
-                                    <polygon points="137,60 125,60 109,96 121,96" fill="#E60000" />
+                                <!-- CENTRAL RED "V" EMBLEM: REPLACED WITH USER SECOND IMAGE (vynster-center-v.png) -->
+                                <g id="vynsterCenterVGroup">
+                                    <!-- USER SECOND IMAGE EMBEDDED DIRECTLY IN CENTER -->
+                                    <image href="vynster-center-v.png" x="52" y="52" width="116" height="116"
+                                        style="mix-blend-mode: multiply;" />
+
+                                    <!-- EXACT MATCH VECTOR FALLBACK GEOMETRY OF USER SECOND IMAGE -->
+                                    <!-- Top-Left Outer Bar -->
+                                    <polygon points="56,70 76,70 102,122 82,122" fill="#E60000" />
+                                    <!-- Main Diagonal Ribbon & Bottom Diamond Loop -->
+                                    <polygon points="78,70 98,70 148,138 110,176 86,142 98,124 110,136 128,124" fill="#E60000" />
+                                    <!-- Top-Right Inner Bar -->
+                                    <polygon points="122,70 142,70 122,110 102,110" fill="#E60000" />
+                                    <!-- Top-Right Outer Bar -->
+                                    <polygon points="144,70 164,70 134,130 114,130" fill="#E60000" />
                                 </g>
 
                                 <!-- 360 ROTATING ELECTRIC CYAN / INDIGO ARC SWEEP RING -->
