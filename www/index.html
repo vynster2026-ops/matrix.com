@@ -12,11 +12,11 @@
     <meta name="description"
         content="VYNSTER is an AI-powered enterprise salon platform — Vision, Strategy, Intelligence. Superadmin Portal, Smart Booking Suite, POS Billing Terminal, and WhatsApp Integration." />
 
-    <!-- Google Fonts: Kanit (300-900) & JetBrains Mono -->
+    <!-- Google Fonts: Plus Jakarta Sans, Inter, & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
@@ -27,15 +27,17 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Kanit', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        brandCyan: '#38BDF8',
-                        brandIndigo: '#6366F1',
-                        brandPurple: '#8B5CF6',
-                        brandDarkBg: '#0A0E1A',
-                        brandBrightBg: '#F4F7FA',
+                        bgDark: '#030712',
+                        cardDark: '#111827',
+                        electricBlue: '#00A3FF',
+                        cyanAccent: '#00E5FF',
+                        purpleAccent: '#7C3AED',
+                        pinkAccent: '#EC4899',
+                        mutedText: '#9CA3AF',
                     }
                 }
             }
@@ -63,8 +65,8 @@
         html,
         body {
             background-color: #030712 !important;
-            font-family: 'Kanit', sans-serif;
-            color: #E5E7EB;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            color: #9CA3AF;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
