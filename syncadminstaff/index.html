@@ -51,16 +51,27 @@
         body {
             background-color: #0A0E1A;
             font-family: 'Kanit', sans-serif;
-            color: #D7E2EA;
+            color: #F1F5F9;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
+        /* High-Contrast Skeuomorphic Text Styles */
+        h1, h2, h3, h4, h5, h6, .section-title {
+            color: #FFFFFF !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        p, dd, dt, label, li, .section-copy {
+            color: #E2E8F0 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+        }
+
         /* Bright Mode Theme Overrides */
         html.theme-bright,
         body.theme-bright {
-            background-color: #F4F7FA !important;
+            background-color: #F1F5F9 !important;
             color: #0F172A !important;
         }
 
@@ -70,28 +81,14 @@
 
         .theme-bright .nav-link {
             color: #1E293B !important;
+            text-shadow: none !important;
         }
 
         .theme-bright .nav-link:hover {
-            color: #38BDF8 !important;
+            color: #0284C7 !important;
         }
 
-        .theme-bright .section-title {
-            color: #0F172A !important;
-        }
-
-        .theme-bright .section-copy {
-            color: #334155 !important;
-        }
-
-        .theme-bright .section-pull {
-            color: #0F172A !important;
-        }
-
-        .theme-bright .hero-sub {
-            color: #334155 !important;
-        }
-
+        .theme-bright .section-title,
         .theme-bright h1,
         .theme-bright h2,
         .theme-bright h3,
@@ -99,14 +96,17 @@
         .theme-bright h5,
         .theme-bright h6 {
             color: #0F172A !important;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
         }
 
+        .theme-bright .section-copy,
         .theme-bright p,
         .theme-bright dd,
         .theme-bright dt,
         .theme-bright label,
         .theme-bright li {
             color: #334155 !important;
+            text-shadow: none !important;
         }
 
         .theme-bright .text-white:not(a.bg-gradient-to-r):not(button.bg-gradient-to-r):not(.bg-gradient-to-r *):not(#portalModalOverlay *):not(footer *) {
@@ -118,209 +118,146 @@
         }
 
         .theme-bright .button-secondary {
-            background: rgba(255, 255, 255, 0.9) !important;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%) !important;
             color: #0F172A !important;
-            border-color: rgba(15, 23, 42, 0.25) !important;
+            border-color: rgba(15, 23, 42, 0.2) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 3px 6px rgba(0,0,0,0.08) !important;
         }
 
         .theme-bright .button-secondary:hover {
-            color: #38BDF8 !important;
-            border-color: #38BDF8 !important;
+            color: #0284C7 !important;
+            border-color: #0284C7 !important;
         }
 
         /* Light Theme Client Portal & Super Admin Buttons */
         html.theme-bright .client-portal-btn,
-        .theme-bright .client-portal-btn,
-        html.theme-bright .client-portal-btn *,
-        .theme-bright .client-portal-btn * {
-            color: #0F172A !important;
-            -webkit-text-fill-color: #0F172A !important;
-        }
-
-        html.theme-bright .client-portal-btn,
         .theme-bright .client-portal-btn {
-            background-color: rgba(56, 189, 248, 0.08) !important;
-            border: 1.5px solid rgba(56, 189, 248, 0.6) !important;
+            background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 100%) !important;
+            color: #0369A1 !important;
+            border: 1.5px solid rgba(2, 132, 199, 0.5) !important;
             font-weight: 700 !important;
-            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.1) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(2, 132, 199, 0.15) !important;
         }
 
         html.theme-bright .client-portal-btn:hover,
         .theme-bright .client-portal-btn:hover {
-            background-color: #38BDF8 !important;
-            border-color: #38BDF8 !important;
-        }
-
-        html.theme-bright .client-portal-btn:hover *,
-        .theme-bright .client-portal-btn:hover * {
+            background: linear-gradient(180deg, #0284C7 0%, #0369A1 100%) !important;
             color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-        }
-
-        /* Light Theme Super Admin Button */
-        html.theme-bright .superadmin-btn,
-        .theme-bright .superadmin-btn,
-        html.theme-bright .superadmin-btn *,
-        .theme-bright .superadmin-btn * {
-            color: #4C1D95 !important;
-            -webkit-text-fill-color: #4C1D95 !important;
         }
 
         html.theme-bright .superadmin-btn,
         .theme-bright .superadmin-btn {
-            background-color: rgba(139, 92, 246, 0.12) !important;
-            border: 1.5px solid rgba(139, 92, 246, 0.45) !important;
+            background: linear-gradient(180deg, #F3E8FF 0%, #DDD6FE 100%) !important;
+            color: #6D28D9 !important;
+            border: 1.5px solid rgba(124, 58, 237, 0.5) !important;
             font-weight: 700 !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(124, 58, 237, 0.15) !important;
         }
 
         html.theme-bright .superadmin-btn:hover,
         .theme-bright .superadmin-btn:hover {
-            background-color: #7C3AED !important;
-            border-color: #7C3AED !important;
-        }
-
-        html.theme-bright .superadmin-btn:hover *,
-        .theme-bright .superadmin-btn:hover * {
+            background: linear-gradient(180deg, #7C3AED 0%, #6D28D9 100%) !important;
             color: #FFFFFF !important;
-            -webkit-text-fill-color: #FFFFFF !important;
         }
 
-        .theme-bright .glass-card {
-            background: rgba(255, 255, 255, 0.92) !important;
-            border-color: rgba(15, 23, 42, 0.12) !important;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+        .theme-bright .glass-card,
+        .theme-bright .skeuo-card {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+            border-color: rgba(15, 23, 42, 0.15) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(0, 0, 0, 0.05), 0 10px 25px rgba(15, 23, 42, 0.08) !important;
         }
 
-        .theme-bright .glass-card:hover {
-            background: rgba(255, 255, 255, 0.98) !important;
-            border-color: rgba(56, 189, 248, 0.45) !important;
-            box-shadow: 0 18px 40px rgba(56, 189, 248, 0.12) !important;
+        .theme-bright .glass-card:hover,
+        .theme-bright .skeuo-card:hover {
+            border-color: rgba(2, 132, 199, 0.5) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(0, 0, 0, 0.05), 0 14px 35px rgba(2, 132, 199, 0.15) !important;
         }
 
         .theme-bright .glass-panel {
-            background: rgba(255, 255, 255, 0.92) !important;
-            border-color: rgba(15, 23, 42, 0.12) !important;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08) !important;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+            border-color: rgba(15, 23, 42, 0.15) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 16px 40px rgba(15, 23, 42, 0.08) !important;
         }
 
         .theme-bright footer {
-            background-color: #02050E !important;
+            background: linear-gradient(180deg, #090D16 0%, #03060C 100%) !important;
             color: #D7E2EA !important;
         }
 
-        .theme-bright footer .text-white {
-            color: #FFFFFF !important;
-        }
-
-        .theme-bright footer p,
-        .theme-bright footer span,
-        .theme-bright footer a,
-        .theme-bright footer button {
-            color: #D7E2EA !important;
-        }
-
-        .theme-bright footer a:hover,
-        .theme-bright footer button:hover {
-            color: #FFFFFF !important;
-        }
-
-        .theme-bright a.bg-gradient-to-r,
-        .theme-bright button.bg-gradient-to-r,
-        .theme-bright .bg-gradient-to-r .text-white,
-        .theme-bright a.bg-gradient-to-r span,
-        .theme-bright button.bg-gradient-to-r span,
-        .theme-bright button[type="submit"] span {
-            color: #FFFFFF !important;
-        }
-
-        .theme-bright #portalModalOverlay .glass-panel {
-            background: #040D21 !important;
-            border-color: rgba(255, 255, 255, 0.2) !important;
-            color: #D7E2EA !important;
-        }
-
-        .theme-bright #portalModalOverlay h3,
-        .theme-bright #portalModalOverlay .text-white {
-            color: #FFFFFF !important;
-        }
-
-        .theme-bright #portalModalOverlay p,
-        .theme-bright #portalModalOverlay a span {
-            color: #D7E2EA !important;
-        }
-
-        .theme-bright #portalModalOverlay a:hover span {
-            color: #FFFFFF !important;
-        }
-
-        /* Hero Heading Gradient */
+        /* Hero Heading Gradient - Skeuomorphic Embossed Metal */
         .hero-heading {
-            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 45%, #94A3B8 100%);
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 45%, #94A3B8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6));
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.9));
         }
 
         .theme-bright .hero-heading {
             background: linear-gradient(180deg, #0F172A 0%, #1E293B 60%, #334155 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.08));
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
         }
 
-        /* Soft Eye-Pleasing Hero Accent Gradient */
+        /* Vivid Metallic Cyan-Indigo Accent Text */
         .text-red-fill,
         .text-hero-accent {
-            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 40%, #C084FC 75%, #F472B6 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 45%, #C084FC 80%, #F472B6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 20px rgba(99, 102, 241, 0.35));
+            filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.45));
         }
 
-        /* Authentic Neomorphism & Glassmorphism Design System - Dark Mode (Default) */
+        /* AUTHENTIC SKEUOMORPHISM UI DESIGN SYSTEM (Dark Mode Default) */
         .glass-panel,
-        .neo-card {
-            background: #0d1322;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .neo-card,
+        .skeuo-card {
+            background: linear-gradient(145deg, #131c30 0%, #0d1424 55%, #070b16 100%);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.7);
             border-radius: 24px;
-            box-shadow: 10px 10px 24px #04060c, -10px -10px 24px #162038, inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), inset 0 -2px 4px rgba(0, 0, 0, 0.7), 0 14px 32px -4px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.5);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .glass-card:hover,
-        .neo-card:hover {
-            box-shadow: 14px 14px 32px #030408, -14px -14px 32px #18233f, inset 0 1px 1px rgba(255, 255, 255, 0.18);
-            border-color: rgba(56, 189, 248, 0.35);
-            transform: translateY(-2px);
+        .neo-card:hover,
+        .skeuo-card:hover {
+            border-color: rgba(56, 189, 248, 0.45);
+            border-top-color: rgba(56, 189, 248, 0.7);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.7), 0 18px 40px -4px rgba(56, 189, 248, 0.25), 0 6px 15px rgba(0, 0, 0, 0.7);
+            transform: translateY(-3px);
         }
 
         .glass-pill,
-        .neo-pill {
-            background: #0d1322;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 6px 6px 16px #04060c, -6px -6px 16px #162038, inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
+        .neo-pill,
+        .skeuo-pill {
+            background: linear-gradient(180deg, #162036 0%, #0d1424 100%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-top: 1px solid rgba(255, 255, 255, 0.35);
+            border-bottom: 1.5px solid rgba(0, 0, 0, 0.6);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 8px 20px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
         }
 
         .glass-input,
-        .neo-input {
-            background: #080c16;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 3px 3px 8px #030509, inset -3px -3px 8px #0d1323;
-            transition: all 0.3s ease;
-            color: #D7E2EA;
+        .neo-input,
+        .skeuo-input {
+            background: #060912;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.75), inset 0 -1px 1px rgba(255, 255, 255, 0.08), 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.25s ease;
+            color: #FFFFFF;
         }
 
         .glass-input:focus,
-        .neo-input:focus {
-            border-color: rgba(56, 189, 248, 0.7);
-            box-shadow: inset 2px 2px 5px #030509, inset -2px -2px 5px #0d1323, 0 0 15px rgba(56, 189, 248, 0.3);
+        .neo-input:focus,
+        .skeuo-input:focus {
+            border-color: rgba(56, 189, 248, 0.8);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(56, 189, 248, 0.4);
+            outline: none;
         }
 
         /* Glassmorphism Design System - Bright Mode Overrides */
@@ -537,24 +474,24 @@
 
         <!-- HERO SECTION -->
         <section
-            class="relative min-h-screen w-full flex flex-col justify-between overflow-x-clip bg-transparent pb-16">
-            <!-- FROSTED GLASS NAVBAR -->
-            <div class="w-full z-30 px-4 sm:px-8 md:px-12 pt-5 md:pt-7 flex justify-center">
+            class="relative min-h-screen w-full flex flex-col justify-between overflow-x-clip bg-transparent pb-12 sm:pb-16">
+            <!-- FROSTED SKEUOMORPHIC NAVBAR -->
+            <div class="w-full z-30 px-3 sm:px-8 md:px-12 pt-3 sm:pt-6 flex justify-center">
                 <nav
-                    class="glass-pill rounded-full px-5 sm:px-8 py-3 flex items-center justify-between gap-3 sm:gap-6 md:gap-10 max-w-5xl w-full">
+                    class="skeuo-pill rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-6 md:gap-10 max-w-5xl w-full">
                     <!-- Left Brand Badge -> Opens Super Admin Login on click -->
-                    <a href="superadmin_login.html" class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group"
+                    <a href="superadmin_login.html" class="flex items-center gap-2 sm:gap-3 cursor-pointer group"
                         title="Super Admin Portal">
                         <img src="vynster-logo.png" alt="Vynster Symbol"
-                            class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300"
+                            class="w-7 h-7 sm:w-9 sm:h-9 object-contain drop-shadow-[0_2px_8px_rgba(56,189,248,0.5)] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <svg class="w-8 h-8 sm:w-9 sm:h-9 hidden" viewBox="0 0 220 220">
+                        <svg class="w-7 h-7 sm:w-9 sm:h-9 hidden" viewBox="0 0 220 220">
                             <circle cx="110" cy="110" r="92" fill="none" stroke="#2B2140" stroke-width="10" />
                             <path d="M44.2,72 L110,186 L175.8,72" fill="none" stroke="#38BDF8" stroke-width="16"
                                 stroke-linecap="round" stroke-linejoin="round" />
                             <circle cx="211.5" cy="62.6" r="7" fill="#38BDF8" />
                         </svg>
-                        <span class="font-black text-base sm:text-xl tracking-wider select-none text-white brand-text">
+                        <span class="font-black text-sm sm:text-xl tracking-wider select-none text-white brand-text">
                             V<span class="text-[#38BDF8]">Y</span>NSTER
                         </span>
                     </a>
@@ -562,26 +499,26 @@
                     <!-- Nav Links -->
                     <div class="hidden md:flex items-center gap-6 lg:gap-10">
                         <a href="#about"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
+                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
                             About
                             <span
                                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
                         <a href="#approach"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
+                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
                             Approach
                             <span
                                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
                         <a href="#numbers"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
+                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
                             Our Work
                             <span
                                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
 
                         <a href="#contact"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
+                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
                             Contact
                             <span
                                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
@@ -589,29 +526,29 @@
                     </div>
 
                     <!-- Right CTAs (Super Admin Button + Salon Portal Button + Theme Toggle) -->
-                    <div class="flex items-center gap-2.5 sm:gap-3">
+                    <div class="flex items-center gap-1.5 sm:gap-3">
                         <!-- Super Admin Gateway Button -->
                         <a href="superadmin_login.html"
-                            class="superadmin-btn text-[11px] sm:text-xs font-semibold tracking-wide px-3 sm:px-4 py-2 rounded-full border border-purple-500/40 bg-purple-900/20 text-purple-200 hover:text-white hover:border-purple-400 hover:bg-purple-600/30 transition-all duration-300 cursor-pointer shadow-sm hover:scale-105 flex items-center gap-1.5"
+                            class="superadmin-btn text-[10px] sm:text-xs font-bold tracking-wide px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-purple-400/40 bg-gradient-to-b from-purple-900/40 to-purple-950/80 text-purple-200 hover:text-white hover:border-purple-300 transition-all duration-300 cursor-pointer shadow-md hover:scale-105 flex items-center gap-1"
                             title="Access Master Super Admin Portal">
                             <span>👑</span>
-                            <span class="hidden sm:inline">SUPER</span> ADMIN
+                            <span class="hidden xs:inline">ADMIN</span>
                         </a>
 
                         <!-- Salon Login Button -->
                         <button onclick="navigateToSalonPortal(event)"
-                            class="client-portal-btn text-[11px] sm:text-xs font-semibold tracking-wide px-3.5 sm:px-5 py-2 rounded-full border border-sky-400/40 bg-sky-500/15 text-white hover:border-sky-400 hover:bg-sky-500/30 transition-all duration-300 cursor-pointer shadow-sm hover:scale-105 flex items-center gap-1.5">
-                            <span>💼</span> SALON PORTAL
+                            class="client-portal-btn text-[10px] sm:text-xs font-bold tracking-wide px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border border-sky-400/50 bg-gradient-to-b from-sky-500/30 to-sky-700/50 text-white hover:border-sky-300 transition-all duration-300 cursor-pointer shadow-md hover:scale-105 flex items-center gap-1">
+                            <span>💼</span> SALON<span class="hidden xs:inline">&nbsp;PORTAL</span>
                         </button>
 
                         <!-- Sleek Sliding Pill Theme Toggle Switch -->
                         <button id="themeToggleBtn" onclick="toggleAppTheme()"
-                            class="relative flex items-center w-12 sm:w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/80 hover:border-[#38BDF8]"
+                            class="relative flex items-center w-10 sm:w-14 h-7 sm:h-8 rounded-full p-0.5 sm:p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/25 bg-slate-900/90 hover:border-[#38BDF8]"
                             aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
-                            <span class="text-[10px] absolute left-2 select-none opacity-60">☀️</span>
-                            <span class="text-[10px] absolute right-2 select-none opacity-60">🌙</span>
+                            <span class="text-[9px] sm:text-[10px] absolute left-1.5 select-none opacity-60">☀️</span>
+                            <span class="text-[9px] sm:text-[10px] absolute right-1.5 select-none opacity-60">🌙</span>
                             <span id="themeToggleKnob"
-                                class="w-5 sm:w-6 h-5 sm:h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-5 sm:translate-x-6 flex items-center justify-center text-[10px] sm:text-xs">
+                                class="w-4 sm:w-6 h-4 sm:h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-4 sm:translate-x-6 flex items-center justify-center text-[9px] sm:text-xs">
                                 🌙
                             </span>
                         </button>
@@ -619,20 +556,20 @@
                 </nav>
             </div>
 
-            <!-- 3D LOGO EMBLEM BACKGROUND: CYAN-INDIGO EMBLEM + ROTATING ARC -->
+            <!-- 3D LOGO EMBLEM BACKGROUND: RESPONSIVE SKEUOMORPHIC LOGO BACKDROP -->
             <div
-                class="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 z-10 w-[340px] sm:w-[500px] md:w-[640px] lg:w-[740px] xl:w-[820px] pointer-events-none select-none">
+                class="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 z-0 sm:z-10 w-[260px] xs:w-[320px] sm:w-[500px] md:w-[640px] lg:w-[740px] xl:w-[820px] pointer-events-none select-none opacity-30 sm:opacity-80 transition-all duration-500">
                 <div class="w-full flex justify-center relative">
                     <!-- Ambient Glow Atmosphere -->
                     <div id="heroEmblemGlow"
-                        class="absolute inset-0 rounded-full blur-[90px] scale-125 pointer-events-none animate-pulse bg-gradient-to-tr from-[#38BDF8]/35 via-[#6366F1]/50 to-[#8B5CF6]/25">
+                        class="absolute inset-0 rounded-full blur-[80px] sm:blur-[100px] scale-125 pointer-events-none animate-pulse bg-gradient-to-tr from-[#38BDF8]/40 via-[#6366F1]/55 to-[#8B5CF6]/30">
                     </div>
 
                     <div class="w-full relative z-10 flex justify-center items-center">
                         <div class="relative w-full aspect-square flex items-center justify-center max-w-[680px]">
                             <!-- POLISHED LOGO EMBLEM IMAGE WITH FALLBACK SVG -->
                             <img src="vynster-logo.png?v=2" alt="Vynster Stylized Emblem"
-                                class="w-full h-auto object-contain select-none filter opacity-90 drop-shadow-[0_0_35px_rgba(56,189,248,0.4)] drop-shadow-[0_0_70px_rgba(99,102,241,0.6)]"
+                                class="w-full h-auto object-contain select-none filter drop-shadow-[0_10px_35px_rgba(56,189,248,0.5)] drop-shadow-[0_20px_60px_rgba(99,102,241,0.7)]"
                                 loading="eager"
                                 onerror="this.style.display='none'; document.getElementById('heroFallbackSvg').style.display='block';">
 
@@ -679,19 +616,19 @@
 
             <!-- HERO MAIN CONTENT -->
             <div
-                class="w-full max-w-5xl mx-auto px-6 pt-12 md:pt-16 z-20 relative text-center flex flex-col items-center">
+                class="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 md:pt-16 z-20 relative text-center flex flex-col items-center">
                 <div class="reveal">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-4 inline-block drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+                        class="font-mono text-[11px] sm:text-sm font-semibold tracking-[0.22em] text-[#38BDF8] uppercase mb-3 inline-block drop-shadow-[0_2px_8px_rgba(56,189,248,0.5)]">
                         Vision · Strategy · Customer Intelligence
                     </span>
                 </div>
 
                 <div class="reveal">
                     <h1
-                        class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] uppercase max-w-4xl hero-heading">
+                        class="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.15] uppercase max-w-4xl hero-heading">
                         Insight before instinct. <br />
-                        <em class="not-italic text-red-fill drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]">
+                        <em class="not-italic text-red-fill drop-shadow-[0_4px_25px_rgba(99,102,241,0.5)]">
                             Direction before drift.
                         </em>
                     </h1>
@@ -699,31 +636,31 @@
 
                 <div class="reveal">
                     <p
-                        class="mt-6 text-base sm:text-lg md:text-xl max-w-2xl font-light leading-relaxed drop-shadow-md hero-sub">
+                        class="mt-4 sm:mt-6 text-sm sm:text-lg md:text-xl max-w-2xl font-normal leading-relaxed drop-shadow-md text-slate-100 hero-sub px-2 sm:px-0">
                         Vynster helps leadership teams turn scattered signals about their market and customers into one
                         clear, confident direction — before the moment to act has passed.
                     </p>
                 </div>
 
-                <div class="reveal mt-8 flex flex-wrap justify-center items-center gap-4">
+                <div class="reveal mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
                     <a href="vynster-demo.html?demo=true" onclick="navigateToDemoMode(event)"
-                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#38BDF8] via-[#6366F1] to-[#8B5CF6] px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[0_10px_35px_rgba(56,189,248,0.45)] cursor-pointer">
+                        class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-b from-[#38BDF8] via-[#2563EB] to-[#1D4ED8] px-7 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_25px_rgba(37,99,235,0.5)] cursor-pointer w-full sm:w-auto">
                         <span
                             class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 animate-sheen pointer-events-none"></span>
                         <span class="relative z-10 flex items-center gap-2">
                             <span>Demo Mode</span>
-                            <span class="text-lg transition-transform duration-300 group-hover:translate-x-1">🚀</span>
+                            <span class="text-base sm:text-lg transition-transform duration-300 group-hover:translate-x-1">🚀</span>
                         </span>
                     </a>
 
                     <a href="#approach"
-                        class="rounded-full border border-white/25 bg-white/5 backdrop-blur-md px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-[#D7E2EA] hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all duration-300 cursor-pointer shadow-lg button-secondary">
+                        class="rounded-full border border-white/30 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-md px-7 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/20 transition-all duration-300 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_6px_18px_rgba(0,0,0,0.5)] button-secondary w-full sm:w-auto">
                         See how we work
                     </a>
                 </div>
 
-                <div class="reveal mt-8">
-                    <p class="font-mono text-xs tracking-wide opacity-50">
+                <div class="reveal mt-6 sm:mt-8">
+                    <p class="font-mono text-[11px] sm:text-xs tracking-wide opacity-75 text-slate-300">
                         Independent strategy &amp; intelligence partner — founded 2026
                     </p>
                 </div>
@@ -734,36 +671,36 @@
 
         <!-- ABOUT SECTION -->
         <section id="about"
-            class="relative min-h-screen w-full bg-transparent px-5 sm:px-8 md:px-10 py-24 flex flex-col items-center justify-center overflow-hidden z-10">
+            class="relative min-h-screen w-full bg-transparent px-4 sm:px-8 md:px-10 py-16 sm:py-24 flex flex-col items-center justify-center overflow-hidden z-10">
             <!-- 3D DECORATIVE CORNER ACCENTS -->
             <div class="absolute top-[4%] left-[2%] z-0 pointer-events-none opacity-80 hidden lg:block">
                 <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
                     alt="3D Moon Accent"
-                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(56,189,248,0.3)] animate-pulse">
+                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(56,189,248,0.4)] animate-pulse">
             </div>
             <div class="absolute top-[4%] right-[2%] z-0 pointer-events-none opacity-80 hidden lg:block">
                 <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
                     alt="3D Lego Accent"
-                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(56,189,248,0.3)] animate-pulse">
+                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(56,189,248,0.4)] animate-pulse">
             </div>
 
-            <!-- ABOUT GLASS CONTAINER -->
+            <!-- ABOUT SKEUOMORPHIC CONTAINER -->
             <div
-                class="relative z-10 flex flex-col items-start w-full max-w-5xl mx-auto glass-panel rounded-[40px] p-8 sm:p-12 md:p-16">
+                class="relative z-10 flex flex-col items-start w-full max-w-5xl mx-auto skeuo-card rounded-[32px] sm:rounded-[40px] p-6 sm:p-12 md:p-16">
                 <div class="reveal">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-3 block">
+                        class="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] text-[#38BDF8] uppercase mb-3 block drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                         About Vynster
                     </span>
                 </div>
                 <div class="reveal">
                     <h2
-                        class="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight leading-tight max-w-4xl section-title">
+                        class="text-xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight leading-tight max-w-4xl section-title text-white">
                         Built on a simple belief: strategy only works when it starts with genuinely knowing people.
                     </h2>
                 </div>
                 <div
-                    class="mt-8 space-y-6 text-base sm:text-lg leading-relaxed max-w-4xl font-light opacity-90 section-copy">
+                    class="mt-6 sm:mt-8 space-y-5 sm:space-y-6 text-sm sm:text-lg leading-relaxed max-w-4xl font-normal text-slate-100 section-copy">
                     <div class="reveal">
                         <p>
                             Most organisations aren't short on data — they're short on clarity. Dashboards multiply,
@@ -773,7 +710,7 @@
                     </div>
                     <div class="reveal">
                         <div
-                            class="border-l-4 border-[#38BDF8] pl-6 py-2 text-xl sm:text-2xl font-semibold my-6 text-white section-pull">
+                            class="border-l-4 border-[#38BDF8] pl-4 sm:pl-6 py-2.5 text-lg sm:text-2xl font-bold my-4 sm:my-6 text-white bg-slate-900/60 rounded-r-2xl border-y border-r border-white/10 section-pull">
                             We built Vynster to close that gap between what a business collects and what it understands.
                         </div>
                     </div>
@@ -791,11 +728,11 @@
                         </p>
                     </div>
                 </div>
-                <div class="reveal mt-10">
+                <div class="reveal mt-8 sm:mt-10 w-full sm:w-auto">
                     <button onclick="navigateToSalonPortal(event)"
-                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#38BDF8] via-[#6366F1] to-[#8B5CF6] px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer">
+                        class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-b from-[#38BDF8] via-[#2563EB] to-[#1D4ED8] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_22px_rgba(37,99,235,0.5)] cursor-pointer w-full sm:w-auto">
                         <span>Open Salon Portal</span>
-                        <span>→</span>
+                        <span class="text-base">→</span>
                     </button>
                 </div>
             </div>
@@ -804,49 +741,49 @@
 
         <!-- FOUR PILLARS / APPROACH SECTION -->
         <section id="approach"
-            class="w-full backdrop-blur-3xl rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-10 border-t border-white/15 shadow-[0_-20px_50px_rgba(0,0,0,0.7)] section-approach">
+            class="w-full backdrop-blur-3xl rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] px-4 sm:px-8 md:px-10 py-16 sm:py-24 md:py-32 relative z-10 border-t border-white/20 shadow-[0_-20px_50px_rgba(0,0,0,0.8)] section-approach">
             <div class="max-w-6xl mx-auto w-full">
-                <div class="reveal text-left mb-12 sm:mb-16 md:mb-20">
+                <div class="reveal text-left mb-10 sm:mb-16 md:mb-20">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
+                        class="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                         How we work
                     </span>
-                    <h2 class="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight section-title">
+                    <h2 class="text-2xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight section-title text-white">
                         Four disciplines, one direction.
                     </h2>
                 </div>
 
                 <!-- PILLARS GRID -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 w-full">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 w-full">
                     <!-- Pillar 01 -->
                     <div class="reveal">
                         <div
-                            class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
+                            class="skeuo-card rounded-[26px] sm:rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center justify-between mb-5">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/20 bg-slate-900/80 group-hover:border-[#38BDF8] shadow-inner transition-all">
+                                        <svg class="w-9 h-9 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <circle cx="21" cy="21" r="18" fill="none" stroke="currentColor"
                                                 stroke-width="3" />
                                             <circle cx="21" cy="21" r="6" fill="#38BDF8" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">01</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8] group-hover:text-white transition-colors">01</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-2 sm:mb-3 transition-colors text-white section-title">
                                     Vision</h3>
-                                <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">We
+                                <p class="font-normal text-sm sm:text-base leading-relaxed text-slate-200 section-copy">We
                                     help you see past this quarter's noise to where your market and your customers are
                                     actually heading.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
+                                class="mt-6 pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-300 transition-colors border-t border-white/10">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -855,32 +792,32 @@
                     <!-- Pillar 02 -->
                     <div class="reveal">
                         <div
-                            class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
+                            class="skeuo-card rounded-[26px] sm:rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center justify-between mb-5">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/20 bg-slate-900/80 group-hover:border-[#38BDF8] shadow-inner transition-all">
+                                        <svg class="w-9 h-9 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <path d="M8,32 L34,10" stroke="currentColor" stroke-width="3"
                                                 stroke-linecap="round" />
                                             <circle cx="34" cy="10" r="5" fill="#38BDF8" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">02</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8] group-hover:text-white transition-colors">02</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-2 sm:mb-3 transition-colors text-white section-title">
                                     Strategy</h3>
-                                <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">
+                                <p class="font-normal text-sm sm:text-base leading-relaxed text-slate-200 section-copy">
                                     Insight only matters once it's a decision. We turn analysis into a direction your
                                     teams can actually execute.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
+                                class="mt-6 pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-300 transition-colors border-t border-white/10">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -889,32 +826,32 @@
                     <!-- Pillar 03 -->
                     <div class="reveal">
                         <div
-                            class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
+                            class="skeuo-card rounded-[26px] sm:rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center justify-between mb-5">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/20 bg-slate-900/80 group-hover:border-[#38BDF8] shadow-inner transition-all">
+                                        <svg class="w-9 h-9 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <circle cx="21" cy="21" r="17" fill="none" stroke="currentColor"
                                                 stroke-width="3" />
                                             <circle cx="21" cy="21" r="4" fill="#38BDF8" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">03</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8] group-hover:text-white transition-colors">03</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-2 sm:mb-3 transition-colors text-white section-title">
                                     Know your customer</h3>
-                                <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">
+                                <p class="font-normal text-sm sm:text-base leading-relaxed text-slate-200 section-copy">
                                     Behind every data point is a person with a reason. We keep that person at the centre
                                     of the strategy, not a segment at the edge of it.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
+                                class="mt-6 pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-300 transition-colors border-t border-white/10">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -923,15 +860,15 @@
                     <!-- Pillar 04 -->
                     <div class="reveal">
                         <div
-                            class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
+                            class="skeuo-card rounded-[26px] sm:rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
                                 class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
-                                <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center justify-between mb-5">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/20 bg-slate-900/80 group-hover:border-[#38BDF8] shadow-inner transition-all">
+                                        <svg class="w-9 h-9 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <circle cx="10" cy="30" r="4" fill="#38BDF8" />
                                             <circle cx="21" cy="14" r="4" fill="#38BDF8" />
                                             <circle cx="32" cy="26" r="4" fill="#38BDF8" />
@@ -940,17 +877,17 @@
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">04</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8] group-hover:text-white transition-colors">04</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-2 sm:mb-3 transition-colors text-white section-title">
                                     Data intelligence</h3>
-                                <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">We
+                                <p class="font-normal text-sm sm:text-base leading-relaxed text-slate-200 section-copy">We
                                     structure the signals already sitting inside your business into something your team
                                     can actually act on.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
+                                class="mt-6 pt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-300 transition-colors border-t border-white/10">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -961,23 +898,23 @@
 
 
         <!-- NUMBERS / WORK SECTION -->
-        <section id="numbers" class="w-full py-24 px-5 sm:px-8 md:px-10 relative z-10">
+        <section id="numbers" class="w-full py-16 sm:py-24 px-4 sm:px-8 md:px-10 relative z-10">
             <div class="max-w-6xl mx-auto w-full">
                 <!-- TOP HEADER & EDIT TOGGLE -->
-                <div class="flex flex-wrap items-end justify-between gap-6 mb-12">
+                <div class="flex flex-wrap items-end justify-between gap-6 mb-8 sm:mb-12">
                     <div class="reveal">
                         <span
-                            class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
+                            class="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                             Where we stand
                         </span>
-                        <h2 class="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight section-title">
+                        <h2 class="text-2xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight section-title text-white">
                             Our work, in numbers.
                         </h2>
                     </div>
 
                     <div class="reveal">
                         <button id="toggleEditStatsBtn" onclick="toggleEditStatsPanel()"
-                            class="inline-flex items-center gap-2 border border-dashed border-white/30 rounded-full px-5 py-2.5 text-xs font-mono font-semibold uppercase tracking-wider text-[#D7E2EA] hover:text-white hover:border-[#38BDF8] transition-all cursor-pointer button-secondary">
+                            class="inline-flex items-center gap-2 border border-white/30 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-mono font-bold uppercase tracking-wider text-white hover:border-[#38BDF8] transition-all cursor-pointer button-secondary shadow-md">
                             <span>✏️</span>
                             <span id="editBtnLabel">Edit these numbers</span>
                         </button>
@@ -985,34 +922,34 @@
                 </div>
 
                 <!-- STAT CARDS GRID -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     <div class="reveal">
-                        <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
+                        <div class="skeuo-card rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 shadow-xl flex flex-col justify-between">
                             <span id="statYears"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">1</span>
-                            <span class="text-sm font-medium mt-4 opacity-80 section-copy">Years of momentum</span>
+                                class="font-mono text-3xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_2px_10px_rgba(56,189,248,0.5)]">1</span>
+                            <span class="text-sm font-medium mt-3 sm:mt-4 text-slate-100 section-copy">Years of momentum</span>
                         </div>
                     </div>
                     <div class="reveal">
-                        <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
+                        <div class="skeuo-card rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 shadow-xl flex flex-col justify-between">
                             <span id="statIndustries"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">12</span>
-                            <span class="text-sm font-medium mt-4 opacity-80 section-copy">Industries served</span>
+                                class="font-mono text-3xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_2px_10px_rgba(56,189,248,0.5)]">12</span>
+                            <span class="text-sm font-medium mt-3 sm:mt-4 text-slate-100 section-copy">Industries served</span>
                         </div>
                     </div>
                     <div class="reveal">
-                        <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
+                        <div class="skeuo-card rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 shadow-xl flex flex-col justify-between">
                             <span id="statEngagements"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">48</span>
-                            <span class="text-sm font-medium mt-4 opacity-80 section-copy">Strategic engagements
+                                class="font-mono text-3xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_2px_10px_rgba(56,189,248,0.5)]">48</span>
+                            <span class="text-sm font-medium mt-3 sm:mt-4 text-slate-100 section-copy">Strategic engagements
                                 delivered</span>
                         </div>
                     </div>
                     <div class="reveal">
-                        <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
+                        <div class="skeuo-card rounded-[24px] sm:rounded-[28px] p-6 sm:p-7 shadow-xl flex flex-col justify-between">
                             <span id="statSignals"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">9.2M</span>
-                            <span class="text-sm font-medium mt-4 opacity-80 section-copy">Data signals modelled
+                                class="font-mono text-3xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_2px_10px_rgba(56,189,248,0.5)]">9.2M</span>
+                            <span class="text-sm font-medium mt-3 sm:mt-4 text-slate-100 section-copy">Data signals modelled
                                 monthly</span>
                         </div>
                     </div>
@@ -1020,52 +957,52 @@
 
                 <!-- EDIT PANEL -->
                 <div id="statsEditPanel" class="hidden overflow-hidden mt-8">
-                    <form onsubmit="handleStatsSave(event)" class="glass-panel rounded-[28px] p-6 sm:p-8">
+                    <form onsubmit="handleStatsSave(event)" class="skeuo-card rounded-[28px] p-6 sm:p-8">
                         <h4
-                            class="text-base font-bold uppercase tracking-wider mb-6 flex items-center gap-2 section-title">
+                            class="text-base font-bold uppercase tracking-wider mb-6 flex items-center gap-2 section-title text-white">
                             <span>🔄</span> Update the numbers shown above
                         </h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                             <div>
                                 <label
-                                    class="block text-xs font-mono font-semibold uppercase tracking-wider mb-2 opacity-70 section-copy">Founded
+                                    class="block text-xs font-mono font-bold uppercase tracking-wider mb-2 text-slate-200 section-copy">Founded
                                     (year)</label>
                                 <input type="number" id="inFounded"
-                                    class="w-full glass-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
+                                    class="w-full skeuo-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
                             </div>
                             <div>
                                 <label
-                                    class="block text-xs font-mono font-semibold uppercase tracking-wider mb-2 opacity-70 section-copy">Industries
+                                    class="block text-xs font-mono font-bold uppercase tracking-wider mb-2 text-slate-200 section-copy">Industries
                                     served</label>
                                 <input type="number" id="inIndustries"
-                                    class="w-full glass-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
+                                    class="w-full skeuo-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
                             </div>
                             <div>
                                 <label
-                                    class="block text-xs font-mono font-semibold uppercase tracking-wider mb-2 opacity-70 section-copy">Engagements
+                                    class="block text-xs font-mono font-bold uppercase tracking-wider mb-2 text-slate-200 section-copy">Engagements
                                     delivered</label>
                                 <input type="number" id="inEngagements"
-                                    class="w-full glass-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
+                                    class="w-full skeuo-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
                             </div>
                             <div>
                                 <label
-                                    class="block text-xs font-mono font-semibold uppercase tracking-wider mb-2 opacity-70 section-copy">Data
+                                    class="block text-xs font-mono font-bold uppercase tracking-wider mb-2 text-slate-200 section-copy">Data
                                     signals / month</label>
                                 <input type="text" id="inSignals"
-                                    class="w-full glass-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
+                                    class="w-full skeuo-input rounded-xl px-4 py-2.5 font-mono text-sm focus:outline-none">
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <button type="submit"
-                                class="inline-flex items-center gap-2 rounded-full bg-[#38BDF8] text-white px-6 py-2.5 text-xs font-semibold uppercase tracking-wider hover:bg-[#0284C7] transition-all cursor-pointer shadow-lg">
+                                class="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#38BDF8] to-[#0284C7] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md">
                                 <span>✓</span> Save changes
                             </button>
-                            <span id="saveStatusMsg" class="text-xs font-semibold text-[#38BDF8] animate-pulse"></span>
+                            <span id="saveStatusMsg" class="text-xs font-bold text-[#38BDF8] animate-pulse"></span>
                         </div>
                     </form>
                 </div>
 
-                <p class="mt-6 font-mono text-xs leading-relaxed opacity-50">
+                <p class="mt-6 font-mono text-xs leading-relaxed opacity-75 text-slate-300">
                     "Years of momentum" updates on its own each year. Everything else here can be updated any time — no
                     code required.
                 </p>
@@ -1074,55 +1011,55 @@
 
 
         <!-- BRANDS & PARTNERS SECTION -->
-        <section id="brands" class="w-full py-24 px-5 sm:px-8 md:px-10 relative z-10 border-t border-white/10">
+        <section id="brands" class="w-full py-16 sm:py-24 px-4 sm:px-8 md:px-10 relative z-10 border-t border-white/10">
             <div class="max-w-6xl mx-auto w-full">
                 <div class="reveal mb-4">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
+                        class="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                         Who we work with
                     </span>
                     <h2
-                        class="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight max-w-3xl section-title">
+                        class="text-2xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight max-w-3xl section-title text-white">
                         Space reserved for the brands we partner with.
                     </h2>
                 </div>
 
-                <div class="reveal mb-12">
-                    <p class="text-base sm:text-lg max-w-2xl font-light leading-relaxed opacity-75 section-copy">
+                <div class="reveal mb-8 sm:mb-12">
+                    <p class="text-sm sm:text-lg max-w-2xl font-normal leading-relaxed text-slate-200 section-copy">
                         As engagements are announced, their marks go here. Each slot below is a placeholder — swap in
                         real client logos as they're confirmed.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/25 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-slate-300 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all cursor-pointer select-none shadow-sm">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/25 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-slate-300 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all cursor-pointer select-none shadow-sm">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/25 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-slate-300 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all cursor-pointer select-none shadow-sm">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/25 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-slate-300 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all cursor-pointer select-none shadow-sm">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/25 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-slate-300 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all cursor-pointer select-none shadow-sm">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/25 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-slate-300 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all cursor-pointer select-none shadow-sm">
                             + Logo</div>
                     </div>
                 </div>
@@ -1131,55 +1068,55 @@
 
 
         <!-- CONTACT SECTION -->
-        <section id="contact" class="w-full py-24 px-5 sm:px-8 md:px-10 relative z-10">
-            <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <section id="contact" class="w-full py-16 sm:py-24 px-4 sm:px-8 md:px-10 relative z-10">
+            <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
                 <!-- LEFT COLUMN -->
                 <div class="lg:col-span-5">
                     <div class="reveal">
                         <span
-                            class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
+                            class="font-mono text-xs sm:text-sm font-bold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                             Get in touch
                         </span>
                         <h2
-                            class="text-3xl sm:text-5xl font-black uppercase tracking-tight leading-tight section-title">
+                            class="text-2xl sm:text-5xl font-black uppercase tracking-tight leading-tight section-title text-white">
                             Let's talk about where you're headed.
                         </h2>
                     </div>
 
-                    <div class="mt-10 space-y-8">
+                    <div class="mt-8 sm:mt-10 space-y-4 sm:space-y-6">
                         <div class="reveal">
-                            <div class="glass-panel p-5 rounded-2xl flex items-start gap-4">
-                                <div class="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">✉️
+                            <div class="skeuo-card p-4 sm:p-5 rounded-2xl flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-slate-900 text-[#38BDF8] border border-[#38BDF8]/30 shadow-inner">✉️
                                 </div>
                                 <div>
                                     <dt
-                                        class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-1">
+                                        class="font-mono text-xs font-bold tracking-widest text-[#38BDF8] uppercase mb-1">
                                         Email</dt>
-                                    <dd class="text-base font-semibold section-title">vynster2026@gmail.com</dd>
+                                    <dd class="text-sm sm:text-base font-bold section-title text-white">vynster2026@gmail.com</dd>
                                 </div>
                             </div>
                         </div>
                         <div class="reveal">
-                            <div class="glass-panel p-5 rounded-2xl flex items-start gap-4">
-                                <div class="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">🏢
+                            <div class="skeuo-card p-4 sm:p-5 rounded-2xl flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-slate-900 text-[#38BDF8] border border-[#38BDF8]/30 shadow-inner">🏢
                                 </div>
                                 <div>
                                     <dt
-                                        class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-1">
+                                        class="font-mono text-xs font-bold tracking-widest text-[#38BDF8] uppercase mb-1">
                                         For partnerships &amp; investors</dt>
-                                    <dd class="text-base font-semibold section-title">vynster2026@gmail.com</dd>
+                                    <dd class="text-sm sm:text-base font-bold section-title text-white">vynster2026@gmail.com</dd>
                                 </div>
                             </div>
                         </div>
                         <div class="reveal">
-                            <div class="glass-panel p-5 rounded-2xl flex items-start gap-4">
-                                <div class="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">⏱️
+                            <div class="skeuo-card p-4 sm:p-5 rounded-2xl flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-slate-900 text-[#38BDF8] border border-[#38BDF8]/30 shadow-inner">⏱️
                                 </div>
                                 <div>
                                     <dt
-                                        class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-1">
+                                        class="font-mono text-xs font-bold tracking-widest text-[#38BDF8] uppercase mb-1">
                                         Response time</dt>
-                                    <dd class="text-base font-semibold section-title">Within one business day</dd>
+                                    <dd class="text-sm sm:text-base font-bold section-title text-white">Within one business day</dd>
                                 </div>
                             </div>
                         </div>
@@ -1189,46 +1126,46 @@
                 <!-- RIGHT COLUMN: FORM CARD -->
                 <div class="lg:col-span-7">
                     <div class="reveal">
-                        <div class="glass-panel rounded-[35px] p-6 sm:p-10 border-white/20">
-                            <form onsubmit="handleContactSubmit(event)" class="space-y-6">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="skeuo-card rounded-[28px] sm:rounded-[35px] p-6 sm:p-10 border-white/20">
+                            <form onsubmit="handleContactSubmit(event)" class="space-y-5 sm:space-y-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                                     <div class="space-y-2">
                                         <label
-                                            class="block text-xs font-mono font-semibold uppercase tracking-wider opacity-70 section-copy">Name
+                                            class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-200 section-copy">Name
                                             *</label>
                                         <input type="text" required placeholder="John Doe"
-                                            class="w-full glass-input rounded-2xl px-5 py-3.5 text-sm focus:outline-none">
+                                            class="w-full skeuo-input rounded-2xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm focus:outline-none">
                                     </div>
                                     <div class="space-y-2">
                                         <label
-                                            class="block text-xs font-mono font-semibold uppercase tracking-wider opacity-70 section-copy">Company</label>
+                                            class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-200 section-copy">Company</label>
                                         <input type="text" placeholder="Acme Inc."
-                                            class="w-full glass-input rounded-2xl px-5 py-3.5 text-sm focus:outline-none">
+                                            class="w-full skeuo-input rounded-2xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm focus:outline-none">
                                     </div>
                                 </div>
                                 <div class="space-y-2">
                                     <label
-                                        class="block text-xs font-mono font-semibold uppercase tracking-wider opacity-70 section-copy">Email
+                                        class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-200 section-copy">Email
                                         Address *</label>
                                     <input type="email" required placeholder="john@company.com"
-                                        class="w-full glass-input rounded-2xl px-5 py-3.5 text-sm focus:outline-none">
+                                        class="w-full skeuo-input rounded-2xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm focus:outline-none">
                                 </div>
                                 <div class="space-y-2">
                                     <label
-                                        class="block text-xs font-mono font-semibold uppercase tracking-wider opacity-70 section-copy">What
+                                        class="block text-xs font-mono font-bold uppercase tracking-wider text-slate-200 section-copy">What
                                         are you looking to solve?</label>
                                     <textarea required rows="4" placeholder="Tell us about your goals..."
-                                        class="w-full glass-input rounded-2xl px-5 py-3.5 text-sm focus:outline-none resize-y"></textarea>
+                                        class="w-full skeuo-input rounded-2xl px-4 sm:px-5 py-3 sm:py-3.5 text-sm focus:outline-none resize-y"></textarea>
                                 </div>
                                 <button type="submit"
-                                    class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#38BDF8] via-[#6366F1] to-[#8B5CF6] px-10 py-4 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg w-full">
+                                    class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-b from-[#38BDF8] via-[#2563EB] to-[#1D4ED8] px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_22px_rgba(37,99,235,0.5)] w-full cursor-pointer">
                                     <span class="relative z-10 flex items-center gap-2">
                                         <span>Send Message</span>
                                         <span>🚀</span>
                                     </span>
                                 </button>
                                 <p id="contactStatusMsg"
-                                    class="hidden text-center text-sm font-semibold text-[#38BDF8] animate-pulse pt-2">
+                                    class="hidden text-center text-sm font-bold text-[#38BDF8] animate-pulse pt-2">
                                 </p>
                             </form>
                         </div>
@@ -1240,26 +1177,26 @@
 
         <!-- FOOTER -->
         <footer
-            class="w-full bg-[#02050E] text-[#D7E2EA] border-t border-white/10 pt-16 pb-12 px-5 sm:px-8 md:px-10 relative z-10">
+            class="w-full bg-gradient-to-b from-[#090D16] to-[#03060C] text-[#D7E2EA] border-t border-white/15 pt-12 sm:pt-16 pb-8 sm:pb-12 px-4 sm:px-8 md:px-10 relative z-10">
             <div class="max-w-6xl mx-auto w-full">
-                <div class="flex flex-wrap justify-between gap-10 pb-12 border-b border-white/10">
+                <div class="flex flex-wrap justify-between gap-8 sm:gap-10 pb-8 sm:pb-12 border-b border-white/10">
                     <div>
                         <a href="landing.html" class="flex items-center gap-3">
                             <img src="vynster-logo.png" alt="Vynster Symbol" class="w-8 h-8 object-contain">
                             <span class="font-black text-xl tracking-wider text-white">V<span
                                     class="text-[#38BDF8]">Y</span>NSTER</span>
                         </a>
-                        <p class="mt-3 text-sm opacity-60 max-w-xs">
+                        <p class="mt-3 text-sm opacity-80 max-w-xs text-slate-300 font-normal">
                             Insight before instinct. A strategy and intelligence partner for teams who want to move
                             first.
                         </p>
                     </div>
 
-                    <div class="flex gap-16 flex-wrap">
+                    <div class="flex gap-10 sm:gap-16 flex-wrap">
                         <div>
-                            <h5 class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-4">
+                            <h5 class="font-mono text-xs font-bold tracking-widest text-[#38BDF8] uppercase mb-4">
                                 Site</h5>
-                            <ul class="space-y-2.5 text-sm font-light opacity-80">
+                            <ul class="space-y-2.5 text-sm font-normal text-slate-200">
                                 <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
                                 <li><a href="#approach" class="hover:text-white transition-colors">Approach</a></li>
                                 <li><a href="#numbers" class="hover:text-white transition-colors">Our Work</a></li>
@@ -1267,9 +1204,9 @@
                             </ul>
                         </div>
                         <div>
-                            <h5 class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-4">
+                            <h5 class="font-mono text-xs font-bold tracking-widest text-[#38BDF8] uppercase mb-4">
                                 Company</h5>
-                            <ul class="space-y-2.5 text-sm font-light opacity-80">
+                            <ul class="space-y-2.5 text-sm font-normal text-slate-200">
                                 <li><span>vynster2026@gmail.com</span></li>
                                 <li><button onclick="navigateToSalonPortal(event)"
                                         class="hover:text-white transition-colors underline cursor-pointer">Salon
@@ -1282,7 +1219,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap justify-between items-center gap-4 pt-8 text-xs font-mono opacity-50">
+                <div class="flex flex-wrap justify-between items-center gap-4 pt-6 sm:pt-8 text-xs font-mono text-slate-400">
                     <span id="footerYear">© 2026 Vynster. All rights reserved.</span>
                     <span>Vision · Strategy · Customer Intelligence · Data</span>
                 </div>
@@ -1294,54 +1231,54 @@
 
     <!-- CLIENT PORTAL SELECTION MODAL -->
     <div id="portalModalOverlay"
-        class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 overflow-y-auto backdrop-blur-2xl bg-black/80">
+        class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 overflow-y-auto backdrop-blur-2xl bg-black/85">
         <div
-            class="relative w-full max-w-md glass-panel rounded-[35px] p-6 sm:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.5)] z-10 my-8 overflow-hidden bg-[#040D21]/95 text-[#D7E2EA] border-white/20">
+            class="relative w-full max-w-md skeuo-card rounded-[30px] sm:rounded-[35px] p-6 sm:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.8)] z-10 my-8 overflow-hidden bg-[#070e1c] text-[#D7E2EA] border-white/20">
             <!-- Close Button -->
             <button onclick="closePortalModal()"
-                class="absolute top-5 right-5 p-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all cursor-pointer">✕</button>
+                class="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full border border-white/20 bg-slate-900/80 hover:bg-white/20 text-white transition-all cursor-pointer">✕</button>
 
-            <span class="font-mono text-xs font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-1 block">Client
+            <span class="font-mono text-xs font-bold tracking-[0.2em] text-[#38BDF8] uppercase mb-1 block">Client
                 Portal</span>
-            <h3 class="text-2xl font-black uppercase tracking-tight mb-1 text-white">Select Application</h3>
-            <p class="text-xs sm:text-sm mb-6 opacity-75">Access your engagement dashboard and applications.</p>
+            <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tight mb-1 text-white">Select Application</h3>
+            <p class="text-xs sm:text-sm mb-6 text-slate-200">Access your engagement dashboard and applications.</p>
 
             <div class="space-y-3">
                 <a href="vynster-demo.html?demo=true" onclick="navigateToDemoMode(event)"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
-                    <span class="flex items-center gap-3">
+                    class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-slate-900/80 border border-white/15 hover:border-[#38BDF8] hover:bg-[#38BDF8]/15 transition-all font-bold text-xs sm:text-sm text-white">
+                    <span class="flex items-center gap-2.5 sm:gap-3">
                         <span>✨</span>
                         <span>Demo Mode (Bypass Login - Mock Session)</span>
                     </span>
                     <span>→</span>
                 </a>
                 <a href="superadmin_login.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
-                    <span class="flex items-center gap-3">
+                    class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-slate-900/80 border border-white/15 hover:border-[#38BDF8] hover:bg-[#38BDF8]/15 transition-all font-bold text-xs sm:text-sm text-white">
+                    <span class="flex items-center gap-2.5 sm:gap-3">
                         <span>👽</span>
                         <span>Super Admin Portal</span>
                     </span>
                     <span>→</span>
                 </a>
                 <a href="staff-login.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
-                    <span class="flex items-center gap-3">
+                    class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-slate-900/80 border border-white/15 hover:border-[#38BDF8] hover:bg-[#38BDF8]/15 transition-all font-bold text-xs sm:text-sm text-white">
+                    <span class="flex items-center gap-2.5 sm:gap-3">
                         <span>🔑</span>
                         <span>Staff Login Portal</span>
                     </span>
                     <span>→</span>
                 </a>
                 <a href="whatsapp.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
-                    <span class="flex items-center gap-3">
+                    class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-slate-900/80 border border-white/15 hover:border-[#38BDF8] hover:bg-[#38BDF8]/15 transition-all font-bold text-xs sm:text-sm text-white">
+                    <span class="flex items-center gap-2.5 sm:gap-3">
                         <span>💬</span>
                         <span>WhatsApp Automation</span>
                     </span>
                     <span>→</span>
                 </a>
                 <a href="index.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
-                    <span class="flex items-center gap-3">
+                    class="flex items-center justify-between p-3.5 sm:p-4 rounded-2xl bg-slate-900/80 border border-white/15 hover:border-[#38BDF8] hover:bg-[#38BDF8]/15 transition-all font-bold text-xs sm:text-sm text-white">
+                    <span class="flex items-center gap-2.5 sm:gap-3">
                         <span>🌐</span>
                         <span>Enterprise Gateway Hub</span>
                     </span>
