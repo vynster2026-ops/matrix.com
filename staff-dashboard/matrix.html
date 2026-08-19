@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Socket.IO Client for Real-Time Synchronization -->
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="vynster-sync.js"></script>
     <style>
         :root {
             --bg-dark: #ebedee;
@@ -1446,6 +1447,30 @@
                             </select>
                         </div>
 
+                        <!-- Owner Portal Credentials -->
+                        <div>
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                Salon Owner Email / Access Key <span style="font-size: 0.78rem; color: var(--accent-primary);">(For Portal Login)</span>
+                            </label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="marketing-email" placeholder="e.g. owner@glamour.com or BR-GLAM-1024"
+                                    style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                                <button type="button" onclick="autoGenerateOnboardingCredentials()" title="Auto Generate Credentials"
+                                    style="padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--accent-secondary); background: rgba(56, 189, 248, 0.15); color: var(--accent-primary); cursor: pointer; white-space: nowrap; font-size: 0.82rem; font-weight: 600;">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Auto
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                Initial Login Password / Passcode *
+                            </label>
+                            <input type="text" id="marketing-password" placeholder="e.g. Pass@123 or 849201"
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.5); outline: none; color: var(--text-main);">
+                        </div>
+
                         <!-- Owner Photo & Identity Section -->
                         <div
                             style="grid-column: span 2; margin-top: 0.5rem; background: rgba(26, 107, 138, 0.08); padding: 1.25rem; border-radius: 12px; border: 1px dashed var(--accent-secondary);">
@@ -1539,9 +1564,14 @@
                         <div style="grid-column: span 2;">
                             <label
                                 style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Clients
-                                List (CSV: Name, Phone, Email) - Optional</label>
-                            <input type="file" id="marketing-doc-clients" accept=".csv"
+                                List Sheet / Document (CSV, Excel .xlsx/.xls, PDF, TXT) - Optional</label>
+                            <input type="file" id="marketing-doc-clients" accept=".csv,.xlsx,.xls,.pdf,.txt"
+                                onchange="previewDocFile('marketing-doc-clients', 'clients-preview-badge')"
                                 style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--accent-secondary); background: rgba(0,0,0,0.2); color: var(--text-main);">
+                            <div id="clients-preview-badge"
+                                style="display: none; margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; color: #00ff88; font-size: 0.78rem; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-check-circle"></i> <span class="doc-status-text">Client Sheet / Document Selected</span>
+                            </div>
                         </div>
 
                         <div style="grid-column: span 2; margin-top: 1.5rem;">
@@ -2890,34 +2920,38 @@
             verifyQueue.innerHTML = '';
             pendingSalons.forEach(salon => {
                 const ownerImg = salon.ownerPhoto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+                const ownerNameSafe = salon.ownerName || salon.owner || 'Rahul Sharma';
+                const salonNameSafe = salon.name || 'Salon Outlet';
+
                 verifyQueue.innerHTML += `
                     <div style="background: rgba(255,255,255,0.6); border: 1px solid var(--glass-border); border-radius: 15px; padding: 1.5rem;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
                             <div style="display: flex; gap: 0.9rem; align-items: center;">
                                 <div style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--accent-primary); overflow: hidden; flex-shrink: 0; background: rgba(0,0,0,0.1); box-shadow: 0 3px 8px rgba(0,0,0,0.15);">
-                                    <img src="${ownerImg}" alt="${salon.ownerName || 'Owner'}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';">
+                                    <img src="${ownerImg}" alt="${ownerNameSafe}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';">
                                 </div>
                                 <div>
-                                    <h3 style="margin-bottom: 0.2rem;">${salon.name}</h3>
-                                    <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-user-shield"></i> Owner: <strong>${salon.ownerName || salon.owner || 'Rahul Sharma'}</strong></p>
-                                    <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ${salon.location}</p>
+                                    <h3 style="margin-bottom: 0.2rem;">${salonNameSafe}</h3>
+                                    <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-user-shield"></i> Owner: <strong>${ownerNameSafe}</strong></p>
+                                    <p style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ${salon.location || 'N/A'}</p>
+                                    ${salon.phone ? `<p style="color: var(--text-muted); font-size: 0.82rem;"><i class="fa-solid fa-phone"></i> ${salon.phone}</p>` : ''}
                                 </div>
                             </div>
-                            <span style="background: rgba(245, 158, 11, 0.1); color: #b45309; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">Pending</span>
+                            <span style="background: rgba(245, 158, 11, 0.15); color: #b45309; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;">Pending Verification</span>
                         </div>
                         
-                        <div style="margin-bottom: 1.5rem;">
-                            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">KYC Documents & Identity</p>
+                        <div style="margin-bottom: 1.25rem;">
+                            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">KYC Documents & Identity Proofs</p>
                             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Owner Photo', '${ownerImg}', '${salon.ownerName || 'Owner of ' + salon.name}')"><i class="fa-solid fa-camera"></i> Owner Photo</button>
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Aadhaar Card', '${salon.aadhaarDoc || '8429-XXXX-4912'}', '${salon.ownerName || 'Owner of ' + salon.name}')"><i class="fa-regular fa-id-card"></i> Owner Aadhaar</button>
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('PAN Card', '${salon.panDoc || 'BWXPMXXXX1'}', '${salon.ownerName || 'Owner of ' + salon.name}')"><i class="fa-solid fa-file-invoice"></i> Owner PAN</button>
-                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Business Registration', '${salon.addressProofDoc || 'LIC-2026-9921'}', '${salon.name}')"><i class="fa-solid fa-certificate"></i> Salon License</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Owner Photo', '${ownerImg}', '${ownerNameSafe}')"><i class="fa-solid fa-camera"></i> Owner Photo</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Aadhaar Card', '${salon.aadhaarDoc || ''}', '${ownerNameSafe}')"><i class="fa-regular fa-id-card"></i> Aadhaar Card</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('PAN Card', '${salon.panDoc || ''}', '${ownerNameSafe}')"><i class="fa-solid fa-file-invoice"></i> PAN Card</button>
+                                <button type="button" class="sync-btn" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openKycModal('Business Registration / License', '${salon.addressProofDoc || ''}', '${salonNameSafe}')"><i class="fa-solid fa-certificate"></i> Salon License</button>
                             </div>
                         </div>
 
                         <div style="margin-bottom: 1rem;">
-                            <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Assign Shop Type & Provision Services:</label>
+                            <label style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Assign Shop Category & Provision Services:</label>
                             <select id="shop-type-${salon.id}" style="width: 100%; padding: 0.6rem; margin-top: 0.4rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-dark); color: var(--text-main); outline: none;">
                                 <option value="Unisex Salon" ${salon.type === 'Unisex Salon' ? 'selected' : ''}>Unisex Salon</option>
                                 <option value="Feminine Salon" ${salon.type === 'Feminine Salon' ? 'selected' : ''}>Feminine Salon</option>
@@ -2933,8 +2967,8 @@
                         </div>
 
                         <div style="display: flex; gap: 1rem;">
-                            <button type="button" class="btn-approve" style="flex: 1; padding: 0.8rem;" onclick="approveSalon('${salon.id}')"><i class="fa-solid fa-check"></i> Approve & Provision</button>
-                            <button type="button" class="action-btn btn-suspend" style="flex: 1;" onclick="rejectSalon('${salon.id}')">Reject</button>
+                            <button type="button" class="btn-approve" style="flex: 1; padding: 0.8rem;" onclick="approveSalon('${salon.id}')"><i class="fa-solid fa-check-circle"></i> Approve & Onboard Salon</button>
+                            <button type="button" class="action-btn btn-suspend" style="flex: 1;" onclick="rejectSalon('${salon.id}')">Reject Application</button>
                         </div>
                     </div>
                 `;
@@ -3179,7 +3213,8 @@
                         targetSelect.innerHTML = '<option value="global">All Salons (Global Override)</option>';
                     }
 
-                    data.forEach(branch => {
+                    const branchList = Array.isArray(data) ? data : (data && data.branches && Array.isArray(data.branches) ? data.branches : []);
+                    branchList.forEach(branch => {
                         if (deletedIds.includes(String(branch.id))) return;
 
                         if (branch.verificationStatus === 'Approved') {
@@ -3191,7 +3226,8 @@
                                 status: branch.status,
                                 type: branch.type || 'Unisex Salon',
                                 email: branch.email || '',
-                                password: branch.password || ''
+                                password: branch.password || '',
+                                ownerName: branch.ownerName || branch.owner || ''
                             });
 
                             if (targetSelect) {
@@ -3199,7 +3235,20 @@
                             }
                         } else if (branch.verificationStatus === 'Pending') {
                             pendingSalons.push({
-                                id: branch.id, name: branch.name, location: branch.location || 'N/A', applied: 'Recently', docs: 'Pending...', type: branch.type || 'Unisex Salon',
+                                id: branch.id,
+                                name: branch.name,
+                                ownerName: branch.ownerName || branch.owner || 'Salon Owner',
+                                ownerPhoto: branch.ownerPhoto || '',
+                                phone: branch.phone || '',
+                                location: branch.location || 'N/A',
+                                applied: 'Recently',
+                                docs: 'Pending...',
+                                type: branch.type || 'Unisex Salon',
+                                email: branch.email || '',
+                                password: branch.password || '',
+                                aadhaarDoc: branch.aadhaarDoc || '',
+                                panDoc: branch.panDoc || '',
+                                addressProofDoc: branch.addressProofDoc || '',
                                 subscription: branch.subscription || null
                             });
                         }
@@ -3291,32 +3340,34 @@
             const typeSelect = document.getElementById(`shop-type-${id}`);
             const selectedType = typeSelect ? typeSelect.value : 'Unisex Salon';
 
-            // Optimistic update for immediate feedback
             const salonIndex = pendingSalons.findIndex(s => String(s.id) === String(id));
             let salon = null;
             if (salonIndex > -1) {
                 salon = pendingSalons[salonIndex];
                 pendingSalons.splice(salonIndex, 1);
+            }
 
-                const planName = (salon.subscription && salon.subscription.plan) ? salon.subscription.plan : 'Basic';
-                vendors.push({
-                    id: salon.id, name: salon.name, joined: 'Just now', initials: (salon.name || 'NA').substring(0, 2).toUpperCase(),
-                    location: salon.location, plan: planName, revenue: '₹0', status: 'Active', type: selectedType
-                });
-                renderVendorTable();
-                renderExtendedTables();
+            const planName = (salon && salon.subscription && salon.subscription.plan) ? salon.subscription.plan : 'Basic';
+            const price = planName === 'Premium' ? '₹4,999/mo' : (planName === 'Deluxe' ? '₹9,999/mo' : '₹1,999/mo');
+            const subscription = {
+                plan: planName,
+                price: price,
+                expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                status: 'Active'
+            };
+
+            let accessKey = salon ? (salon.email || '') : '';
+            let passcode = salon ? (salon.password || '') : '';
+
+            if (!accessKey) {
+                const cleanName = (salon ? salon.name : 'SALN').replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 4) || 'SALN';
+                accessKey = `BR-${cleanName}-${Math.floor(1000 + Math.random() * 9000)}`;
+            }
+            if (!passcode) {
+                passcode = Math.floor(100000 + Math.random() * 900000).toString();
             }
 
             try {
-                const planName = (salon && salon.subscription && salon.subscription.plan) ? salon.subscription.plan : 'Basic';
-                const price = planName === 'Premium' ? '₹4,999/mo' : (planName === 'Deluxe' ? '₹9,999/mo' : '₹1,999/mo');
-                const subscription = {
-                    plan: planName,
-                    price: price,
-                    expiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    status: 'Active'
-                };
-
                 const response = await fetch(getApiUrl(`/api/branches/${id}`), {
                     method: 'PUT',
                     headers: {
@@ -3326,29 +3377,41 @@
                     body: JSON.stringify({
                         verificationStatus: 'Approved',
                         status: 'Active',
-                        verificationNotes: 'System Approved',
+                        verificationNotes: 'System Approved by Super Admin',
                         type: selectedType,
+                        email: accessKey,
+                        password: passcode,
                         subscription
                     })
                 });
 
                 if (response.ok) {
-                    showToast(`Provisioning services for ${selectedType}...`, 'success');
+                    if (typeof vynsterSyncEmit === 'function') {
+                        vynsterSyncEmit('branch_updated', { id: id, name: salon ? salon.name : id, status: 'Active', verificationStatus: 'Approved', type: selectedType });
+                    }
+                    showToast(`Salon ${salon ? salon.name : id} verified and onboarded live!`, 'success');
                     setTimeout(() => {
-                        showToast(`Salon has been verified and onboarded!`, 'success');
-                        fetchRealTimeData();
-                    }, 1000);
+                        alert(`🎉 Salon Verified & Onboarded Successfully!\n\nSalon Name: ${salon ? salon.name : id}\nOwner Access Key: ${accessKey}\nPassword / Passcode: ${passcode}\n\nLogin URL: login.html\n(Share these credentials with the salon owner)`);
+                    }, 400);
+                    fetchRealTimeData();
                     return;
                 }
             } catch (e) {
-                console.log("Backend offline, falling back to mock logic.");
+                console.log("Backend offline, falling back to local sync logic.");
             }
 
             if (salon) {
-                showToast(`Provisioning services for ${selectedType}...`, 'success');
+                vendors.push({
+                    id: salon.id, name: salon.name, joined: 'Just now', initials: (salon.name || 'NA').substring(0, 2).toUpperCase(),
+                    location: salon.location, plan: planName, revenue: '₹0', status: 'Active', type: selectedType,
+                    email: accessKey, password: passcode
+                });
+                renderVendorTable();
+                renderExtendedTables();
+                showToast(`${salon.name} verified and onboarded (locally)!`, 'success');
                 setTimeout(() => {
-                    showToast(`${salon.name} has been verified and onboarded (locally)!`, 'success');
-                }, 1000);
+                    alert(`🎉 Salon Verified & Onboarded Successfully!\n\nSalon Name: ${salon.name}\nOwner Access Key: ${accessKey}\nPassword / Passcode: ${passcode}\n\nLogin URL: login.html\n(Share these credentials with the salon owner)`);
+                }, 400);
             }
         }
 
@@ -3458,13 +3521,33 @@
             closeCameraModal();
         }
 
+        function autoGenerateOnboardingCredentials() {
+            const name = (document.getElementById('marketing-salon-name').value || 'Salon').trim();
+            const cleanName = name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 4) || 'SALN';
+            const randomCode = Math.floor(1000 + Math.random() * 9000);
+            const accessKey = `BR-${cleanName}-${randomCode}`;
+            const passcode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            document.getElementById('marketing-email').value = accessKey;
+            document.getElementById('marketing-password').value = passcode;
+            if (typeof showToast === 'function') showToast(`Auto-generated credentials: ${accessKey} / ${passcode}`, 'info');
+        }
+
         function previewDocFile(inputId, badgeId) {
             const input = document.getElementById(inputId);
             const badge = document.getElementById(badgeId);
-            if (input && input.files && input.files[0] && badge) {
-                badge.style.display = 'inline-flex';
-                const textElem = badge.querySelector('.doc-status-text');
-                if (textElem) textElem.innerText = `Selected: ${input.files[0].name}`;
+            if (input && input.files && input.files[0]) {
+                const file = input.files[0];
+                if (badge) {
+                    badge.style.display = 'inline-flex';
+                    const textElem = badge.querySelector('.doc-status-text');
+                    if (textElem) textElem.innerText = `Selected: ${file.name}`;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    capturedDocImages[inputId] = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -3507,15 +3590,20 @@
 
             if (!modal) return;
             if (title) title.textContent = `KYC Document: ${docType}`;
-            if (meta) meta.textContent = `Target: ${ownerName}`;
+            if (meta) meta.textContent = `Owner / Target: ${ownerName || 'Verified Salon'}`;
             if (img) {
-                if (docUrl && (docUrl.startsWith('http') || docUrl.startsWith('data:image'))) {
+                if (docUrl && (docUrl.startsWith('data:image') || docUrl.startsWith('http') || docUrl.startsWith('data:application'))) {
                     img.src = docUrl;
-                    img.style.display = 'block';
+                } else if (docType.includes('Aadhaar')) {
+                    img.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80';
+                } else if (docType.includes('PAN')) {
+                    img.src = 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80';
+                } else if (docType.includes('License') || docType.includes('Registration')) {
+                    img.src = 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80';
                 } else {
-                    img.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80';
-                    img.style.display = 'block';
+                    img.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80';
                 }
+                img.style.display = 'block';
             }
             modal.style.display = 'flex';
         }
@@ -3526,6 +3614,7 @@
         }
 
         // Bind functions to window object safely
+        if (typeof autoGenerateOnboardingCredentials === 'function') window.autoGenerateOnboardingCredentials = autoGenerateOnboardingCredentials;
         if (typeof previewDocFile === 'function') window.previewDocFile = previewDocFile;
         if (typeof previewOwnerPhoto === 'function') window.previewOwnerPhoto = previewOwnerPhoto;
         if (typeof selectSampleOwnerPhoto === 'function') window.selectSampleOwnerPhoto = selectSampleOwnerPhoto;
@@ -3574,10 +3663,15 @@
         });
 
         async function submitSalonApplication() {
-            const name = document.getElementById('marketing-salon-name').value;
-            const owner = document.getElementById('marketing-owner-name').value;
-            const phone = document.getElementById('marketing-phone').value;
-            const location = document.getElementById('marketing-location').value;
+            const name = document.getElementById('marketing-salon-name').value.trim();
+            const owner = document.getElementById('marketing-owner-name').value.trim();
+            const phone = document.getElementById('marketing-phone').value.trim();
+            const location = document.getElementById('marketing-location').value.trim();
+
+            const emailInput = document.getElementById('marketing-email');
+            const passwordInput = document.getElementById('marketing-password');
+            let email = emailInput ? emailInput.value.trim() : '';
+            let password = passwordInput ? passwordInput.value.trim() : '';
 
             const aadhaar = document.getElementById('marketing-doc-aadhaar').files[0];
             const pan = document.getElementById('marketing-doc-pan').files[0];
@@ -3587,6 +3681,15 @@
             if (!name || !owner || !phone || !location) {
                 showToast('Please fill all required fields.', 'error');
                 return;
+            }
+
+            // Auto-generate email and password if empty
+            if (!email) {
+                const cleanName = name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 4) || 'SALN';
+                email = `BR-${cleanName}-${Math.floor(1000 + Math.random() * 9000)}`;
+            }
+            if (!password) {
+                password = Math.floor(100000 + Math.random() * 900000).toString();
             }
 
             const ownerPhotoUrl = selectedOwnerPhotoBase64 || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
@@ -3603,10 +3706,13 @@
                 ownerPhoto: ownerPhotoUrl,
                 phone: phone,
                 location: location,
+                email: email,
+                password: password,
                 verificationStatus: 'Pending',
-                aadhaarDoc: aadhaarCaptured || (aadhaar ? aadhaar.name : 'aadhaar_mock.pdf'),
-                panDoc: panCaptured || (pan ? pan.name : 'pan_mock.pdf'),
-                addressProofDoc: licenseCaptured || (license ? license.name : 'license_mock.pdf'),
+                status: 'Suspended',
+                aadhaarDoc: aadhaarCaptured || (aadhaar ? aadhaar.name : 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'),
+                panDoc: panCaptured || (pan ? pan.name : 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80'),
+                addressProofDoc: licenseCaptured || (license ? license.name : 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80'),
                 date: new Date().toISOString(),
                 subscription: {
                     plan: subscriptionPlan,
@@ -3616,51 +3722,73 @@
                 }
             };
 
+            // 1. INSTANT LOCAL SYNC: Add directly to pending array & localStorage immediately (0ms delay)
+            const existingIdx = pendingSalons.findIndex(s => String(s.id) === String(reqPayload.id));
+            if (existingIdx === -1) pendingSalons.unshift(reqPayload);
+            localStorage.setItem('medhika_pending_salons', JSON.stringify(pendingSalons));
+
+            // Render extended verification cards instantly
+            renderExtendedTables();
+            renderVendorTable();
+
+            // 2. Process clients file if attached
+            if (clientsFile) {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const result = e.target.result;
+                    let parsedClients = [];
+                    if (typeof result === 'string' && (clientsFile.name.endsWith('.csv') || clientsFile.name.endsWith('.txt'))) {
+                        const lines = result.split('\n');
+                        for (let i = 1; i < lines.length; i++) {
+                            const line = lines[i].trim();
+                            if (!line) continue;
+                            const parts = line.split(',');
+                            if (parts.length >= 2) {
+                                const cObj = {
+                                    id: 'c' + Date.now() + '_' + i,
+                                    name: parts[0] ? parts[0].trim() : 'Client ' + i,
+                                    phone: parts[1] ? parts[1].trim() : '',
+                                    email: parts[2] ? parts[2].trim() : '',
+                                    pts: 100,
+                                    ltv: "₹2,500",
+                                    branchId: reqPayload.id
+                                };
+                                parsedClients.push(cObj);
+                            }
+                        }
+                    }
+                    if (parsedClients.length > 0) {
+                        let existingSuperClients = JSON.parse(localStorage.getItem('SuperAdminClients') || localStorage.getItem('MedhikaMockClients') || '[]');
+                        existingSuperClients = [...parsedClients, ...existingSuperClients];
+                        localStorage.setItem('SuperAdminClients', JSON.stringify(existingSuperClients));
+                        localStorage.setItem('MedhikaMockClients', JSON.stringify(existingSuperClients));
+                        for (const c of parsedClients) {
+                            try {
+                                await fetch(getApiUrl('/api/clients'), {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(c)
+                                });
+                            } catch (err) { }
+                        }
+                    }
+                };
+                if (clientsFile.name.endsWith('.csv') || clientsFile.name.endsWith('.txt')) {
+                    reader.readAsText(clientsFile);
+                } else {
+                    reader.readAsDataURL(clientsFile);
+                }
+            }
+
+            // 3. Network POST request
             try {
                 await fetch(getApiUrl('/api/branches'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(reqPayload)
                 });
-
-                // Process clients CSV file if provided
-                if (clientsFile) {
-                    const reader = new FileReader();
-                    reader.onload = async (e) => {
-                        const text = e.target.result;
-                        const lines = text.split('\n');
-                        for (let i = 1; i < lines.length; i++) { // Skip header line
-                            const line = lines[i].trim();
-                            if (!line) continue;
-
-                            const parts = line.split(',');
-                            if (parts.length >= 2) {
-                                const clientPayload = {
-                                    id: 'c' + Date.now() + i,
-                                    name: parts[0] ? parts[0].trim() : 'Unknown',
-                                    phone: parts[1] ? parts[1].trim() : '',
-                                    email: parts[2] ? parts[2].trim() : '',
-                                    pts: 0,
-                                    ltv: "₹0",
-                                    branchId: reqPayload.id
-                                };
-                                try {
-                                    await fetch(getApiUrl('/api/clients'), {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(clientPayload)
-                                    });
-                                } catch (err) {
-                                    console.error('Failed to upload client row', err);
-                                }
-                            }
-                        }
-                    };
-                    reader.readAsText(clientsFile);
-                }
             } catch (e) {
-                console.log("Backend offline, pushing to local pending array.");
-                pendingSalons.push(reqPayload);
+                console.warn("Network POST fallback notice:", e);
             }
 
             // Clear form
@@ -3668,54 +3796,31 @@
             document.getElementById('marketing-owner-name').value = '';
             document.getElementById('marketing-phone').value = '';
             document.getElementById('marketing-location').value = '';
+            if (emailInput) emailInput.value = '';
+            if (passwordInput) passwordInput.value = '';
             document.getElementById('marketing-doc-aadhaar').value = '';
             document.getElementById('marketing-doc-pan').value = '';
             document.getElementById('marketing-doc-license').value = '';
             document.getElementById('marketing-doc-clients').value = '';
             clearOwnerPhoto();
             capturedDocImages = {};
-            ['aadhaar-preview-badge', 'pan-preview-badge', 'license-preview-badge'].forEach(id => {
+            ['aadhaar-preview-badge', 'pan-preview-badge', 'license-preview-badge', 'clients-preview-badge'].forEach(id => {
                 const b = document.getElementById(id);
                 if (b) b.style.display = 'none';
             });
 
-            showToast('Application submitted to KYC queue! Clients uploaded if provided.', 'success');
+            showToast('Application submitted live to KYC Verification Queue!', 'success');
 
-            // Re-fetch to populate the Verification queue immediately
+            if (typeof vynsterSyncEmit === 'function') {
+                vynsterSyncEmit('branch_created', reqPayload);
+            }
+
+            // Re-fetch to synchronize state
             fetchRealTimeData();
         }
 
         function renderMarketingTables() {
             // Placeholder logic if needed
-        }
-
-        // KYC Modal Logic
-        function openKycModal(docType, docNumber, ownerName) {
-            document.getElementById('kyc-doc-type').innerText = docType;
-            document.getElementById('kyc-doc-number').innerText = (docNumber && !docNumber.startsWith('data:image') && !docNumber.startsWith('http')) ? docNumber : 'VERIFIED-DOC-2026';
-            document.getElementById('kyc-owner-name').innerText = ownerName;
-
-            const imgElem = document.getElementById('kyc-doc-preview-img');
-            const placeholderElem = document.getElementById('kyc-doc-preview-placeholder');
-
-            if (docType === 'Owner Photo' || (docNumber && (docNumber.startsWith('data:image') || docNumber.startsWith('http')))) {
-                if (imgElem && placeholderElem) {
-                    imgElem.src = docNumber || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
-                    imgElem.style.display = 'block';
-                    placeholderElem.style.display = 'none';
-                }
-            } else {
-                if (imgElem && placeholderElem) {
-                    imgElem.style.display = 'none';
-                    placeholderElem.style.display = 'block';
-                }
-            }
-
-            document.getElementById('kyc-modal').classList.add('active');
-        }
-
-        function closeKycModal() {
-            document.getElementById('kyc-modal').classList.remove('active');
         }
 
         let globalBillAds = {};
@@ -4434,6 +4539,14 @@
                     console.warn("Socket.io initialization warning:", err);
                 }
             }
+
+            if (typeof vynsterSyncOn === 'function') {
+                vynsterSyncOn(['branch_created', 'branch_updated', 'branch_deleted', 'newAppointment'], function (data) {
+                    console.log('⚡ Vynster Real-Time Sync event received live on www.vynster.com:', data);
+                    if (typeof fetchRealTimeData === 'function') fetchRealTimeData();
+                });
+            }
+        }
         }
 
         setupRealTimeSocketAndPolling();

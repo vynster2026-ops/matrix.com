@@ -376,9 +376,9 @@ async function connectMongoDB() {
     console.log('[MONGO] Connecting to MongoDB Atlas...');
     try {
         await mongoose.connect(MONGODB_URI, { 
-            serverSelectionTimeoutMS: 30000,
-            socketTimeoutMS: 45000,
-            connectTimeoutMS: 30000
+            serverSelectionTimeoutMS: 4000,
+            socketTimeoutMS: 10000,
+            connectTimeoutMS: 5000
         });
         console.log('✅ Connected to MongoDB Atlas successfully!');
         isConnected = true;
@@ -2515,8 +2515,8 @@ function initWhatsAppClient() {
     });
 }
 
-if (activeProvider === 'local') {
-    initWhatsAppClient();
+if (process.env.ENABLE_WA === 'true' && activeProvider === 'local') {
+    setTimeout(() => { initWhatsAppClient(); }, 2000);
 }
 
 // 0. Logout Endpoint

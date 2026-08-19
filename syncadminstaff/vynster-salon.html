@@ -8239,6 +8239,29 @@
 
             // Sync Super Admin subscription plan updates
             updateSubscriptionBadgeUI();
+            initSalonSessionDetails();
+        }
+
+        function initSalonSessionDetails() {
+            try {
+                const userRaw = localStorage.getItem('adminUser') || sessionStorage.getItem('adminUser');
+                const selectedBranch = localStorage.getItem('selectedBranch');
+                let salonName = selectedBranch;
+                if (userRaw) {
+                    const user = JSON.parse(userRaw);
+                    salonName = user.name || user.branchName || user.salonName || selectedBranch || user.email;
+                }
+                if (salonName && salonName !== 'Main Branch') {
+                    window.currentBranch = salonName;
+                    localStorage.setItem('selectedBranch', salonName);
+                    const branchBtn = document.getElementById('branch-toggle');
+                    if (branchBtn) branchBtn.innerHTML = `<span style="font-size:14px;">📍</span> ${salonName} ▾`;
+                    const dashTitle = document.getElementById('view-title');
+                    if (dashTitle && (typeof currentViewId === 'undefined' || currentViewId === 'dashboard')) {
+                        dashTitle.innerText = `${salonName} Dashboard`;
+                    }
+                }
+            } catch (e) { }
         }
 
         function updateSubscriptionBadgeUI() {
@@ -17982,8 +18005,9 @@
             if (banner) banner.style.display = 'none';
         }
 
+        if (typeof initSalonSessionDetails === 'function') initSalonSessionDetails();
         switchView(currentViewId);
-        refreshData(); // Replaced loadFromDB() with refreshData() as it's the actual data loader
+        refreshData();
     </script>
 
     <!-- Offers Modal -->
