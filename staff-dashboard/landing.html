@@ -559,19 +559,23 @@
             </div>
         </div>
 
-            <!-- LOGO EMBLEM BACKGROUND: SEAMLESS VECTOR MOTION BACKDROP (NO WHITE SQUARE BOX) -->
+            <!-- LOGO EMBLEM BACKGROUND: EXACT ORIGINAL V EMBLEM (100% TRANSPARENT BACKGROUND) -->
             <div
-                class="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 z-0 w-[280px] xs:w-[360px] sm:w-[540px] md:w-[680px] lg:w-[780px] pointer-events-none select-none opacity-45 sm:opacity-55 transition-all duration-500 scale-100 sm:scale-105">
+                class="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2 z-0 w-[260px] xs:w-[340px] sm:w-[500px] md:w-[640px] lg:w-[720px] pointer-events-none select-none opacity-80 sm:opacity-90 transition-all duration-500 scale-100">
                 <div class="w-full flex justify-center relative">
                     <!-- Ambient Glow Atmosphere -->
                     <div id="heroEmblemGlow"
-                        class="absolute inset-0 rounded-full blur-[80px] sm:blur-[120px] scale-125 pointer-events-none animate-pulse-glow bg-gradient-to-tr from-[#38BDF8]/35 via-[#6366F1]/40 to-[#8B5CF6]/30">
+                        class="absolute inset-0 rounded-full blur-[80px] sm:blur-[120px] scale-110 pointer-events-none animate-pulse-glow bg-gradient-to-tr from-[#38BDF8]/35 via-[#6366F1]/40 to-[#8B5CF6]/30">
                     </div>
 
                     <div class="w-full relative z-10 flex justify-center items-center">
                         <div class="relative w-full aspect-square flex items-center justify-center max-w-[650px]">
-                            <!-- PURE TRANSPARENT VECTOR SVG EMBLEM (SEAMLESS 100% BLEND, ZERO WHITE BOX) -->
-                            <svg viewBox="0 0 220 220" class="w-full h-auto select-none pointer-events-none overflow-visible filter drop-shadow-[0_15px_45px_rgba(56,189,248,0.4)]">
+                            <!-- EXACT UNTOUCHED ORIGINAL RED V EMBLEM IMAGE -->
+                            <img src="vynster-logo-emblem.png?v=2" alt="Vynster Original Emblem"
+                                class="w-full h-auto object-contain select-none filter drop-shadow-[0_15px_45px_rgba(56,189,248,0.45)] brightness-105 contrast-105">
+
+                            <!-- OVERLAID 360 DEGREE ROTATING ELECTRIC CYAN / INDIGO ARC SWEEP RING -->
+                            <svg viewBox="0 0 220 220" class="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-20">
                                 <defs>
                                     <linearGradient id="vynsterArcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" stop-color="#38BDF8" stop-opacity="1" />
@@ -588,37 +592,17 @@
                                     </filter>
                                 </defs>
 
-                                <!-- OUTER DARK NAVY RING -->
-                                <circle cx="110" cy="110" r="85.5" fill="none" stroke="#08214D" stroke-width="11" />
-
-                                <!-- CONNECTED PIN POINT LINE TO TOP-RIGHT (187.5, 59.7) -->
-                                <line x1="168" y1="73" x2="187.5" y2="59.7" stroke="#08214D" stroke-width="5" stroke-linecap="round" />
-
-                                <!-- RED VYNSTER STYLIZED "V" RIBBON EMBLEM -->
-                                <g>
-                                    <!-- Left Outer Bar -->
-                                    <polygon points="56,72 70,72 96,128 82,128" fill="#E60000" />
-                                    <!-- Center Left Drop -->
-                                    <polygon points="96,128 82,128 110,166 124,166" fill="#E60000" />
-                                    <!-- Center Right Up -->
-                                    <polygon points="124,166 110,166 124,138 138,138" fill="#E60000" />
-                                    <!-- Right Outer Bar -->
-                                    <polygon points="158,72 144,72 124,124 138,124" fill="#E60000" />
-                                    <!-- Right Inner Stripe -->
-                                    <polygon points="132,72 118,72 136,104 150,104" fill="#E60000" />
-                                </g>
-
-                                <!-- 360 ROTATING ELECTRIC CYAN / INDIGO ARC SWEEP RING -->
-                                <g class="animate-arc-sweep" style="transform-origin: 110px 110px;">
-                                    <circle cx="110" cy="110" r="85.5" fill="none" stroke="url(#vynsterArcGrad)"
-                                        stroke-width="7.5" stroke-dasharray="140 390" stroke-linecap="round"
+                                <!-- ROTATING GRADIENT ARC SWEEP RING (Matched to ring outer edge) -->
+                                <g class="animate-arc-sweep" style="transform-origin: 104px 113px; transform-box: fill-box;">
+                                    <circle cx="104" cy="113" r="77" fill="none" stroke="url(#vynsterArcGrad)"
+                                        stroke-width="7.5" stroke-dasharray="140 370" stroke-linecap="round"
                                         filter="url(#vynsterGlowFilter)" />
                                 </g>
 
-                                <!-- BLINKING RED PIN POINT AT (187.5, 59.7) -->
-                                <g class="animate-pin-blink" style="transform-origin: 187.5px 59.7px;">
-                                    <circle cx="187.5" cy="59.7" r="8.5" fill="#F40606" filter="url(#vynsterGlowFilter)" />
-                                    <circle cx="187.5" cy="59.7" r="4.5" fill="#FFFFFF" />
+                                <!-- BLINKING RED PIN POINT AT (173, 73) OVER THE ORIGINAL RED PIN -->
+                                <g class="animate-pin-blink" style="transform-origin: 173px 73px; transform-box: fill-box;">
+                                    <circle cx="173" cy="73" r="8.5" fill="#F40606" filter="url(#vynsterGlowFilter)" />
+                                    <circle cx="173" cy="73" r="4.5" fill="#FFFFFF" />
                                 </g>
                             </svg>
                         </div>
