@@ -185,7 +185,17 @@ export default {
                     res = await env.ASSETS.fetch(new Request(cleanUrl, request));
                 }
             }
-            return res;
+
+            const headers = new Headers(res.headers);
+            headers.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+            headers.set('Pragma', 'no-cache');
+            headers.set('Expires', '0');
+
+            return new Response(res.body, {
+                status: res.status,
+                statusText: res.statusText,
+                headers
+            });
         }
 
         if (targetFile) {
