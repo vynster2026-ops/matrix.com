@@ -1250,17 +1250,17 @@
                     knob.textContent = '☀️';
                 }
                 if (btn) {
-                    btn.className = 'relative flex items-center w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-slate-300 bg-amber-100 hover:border-[#F40606]';
+                    btn.className = 'relative flex items-center w-11 sm:w-14 h-7 sm:h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-slate-300 bg-amber-100 hover:border-[#00A3FF]';
                 }
             } else {
                 html.classList.remove('theme-bright');
                 document.body.classList.remove('theme-bright');
                 if (knob) {
-                    knob.style.transform = 'translateX(24px)';
+                    knob.style.transform = 'translateX(18px)';
                     knob.textContent = '🌙';
                 }
                 if (btn) {
-                    btn.className = 'relative flex items-center w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/80 hover:border-[#F40606]';
+                    btn.className = 'relative flex items-center w-11 sm:w-14 h-7 sm:h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/90 hover:border-[#00E5FF]';
                 }
             }
             localStorage.setItem(THEME_KEY, theme);
