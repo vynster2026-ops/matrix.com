@@ -28,9 +28,10 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        brandRed: '#F40606',
-                        brandRedDark: '#C40000',
-                        brandDarkBg: '#030814',
+                        brandCyan: '#38BDF8',
+                        brandIndigo: '#6366F1',
+                        brandPurple: '#8B5CF6',
+                        brandDarkBg: '#0A0E1A',
                         brandBrightBg: '#F4F7FA',
                     }
                 }
@@ -48,7 +49,7 @@
         /* Base Theme Definitions */
         html,
         body {
-            background-color: #030814;
+            background-color: #0A0E1A;
             font-family: 'Kanit', sans-serif;
             color: #D7E2EA;
             overflow-x: clip;
@@ -72,7 +73,7 @@
         }
 
         .theme-bright .nav-link:hover {
-            color: #F40606 !important;
+            color: #38BDF8 !important;
         }
 
         .theme-bright .section-title {
@@ -123,8 +124,8 @@
         }
 
         .theme-bright .button-secondary:hover {
-            color: #F40606 !important;
-            border-color: #F40606 !important;
+            color: #38BDF8 !important;
+            border-color: #38BDF8 !important;
         }
 
         /* Light Theme Client Portal & Super Admin Buttons */
@@ -138,16 +139,16 @@
 
         html.theme-bright .client-portal-btn,
         .theme-bright .client-portal-btn {
-            background-color: rgba(244, 6, 6, 0.08) !important;
-            border: 1.5px solid rgba(244, 6, 6, 0.6) !important;
+            background-color: rgba(56, 189, 248, 0.08) !important;
+            border: 1.5px solid rgba(56, 189, 248, 0.6) !important;
             font-weight: 700 !important;
-            box-shadow: 0 2px 8px rgba(244, 6, 6, 0.1) !important;
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.1) !important;
         }
 
         html.theme-bright .client-portal-btn:hover,
         .theme-bright .client-portal-btn:hover {
-            background-color: #F40606 !important;
-            border-color: #F40606 !important;
+            background-color: #38BDF8 !important;
+            border-color: #38BDF8 !important;
         }
 
         html.theme-bright .client-portal-btn:hover *,
@@ -192,8 +193,8 @@
 
         .theme-bright .glass-card:hover {
             background: rgba(255, 255, 255, 0.98) !important;
-            border-color: rgba(244, 6, 6, 0.45) !important;
-            box-shadow: 0 18px 40px rgba(244, 6, 6, 0.12) !important;
+            border-color: rgba(56, 189, 248, 0.45) !important;
+            box-shadow: 0 18px 40px rgba(56, 189, 248, 0.12) !important;
         }
 
         .theme-bright .glass-panel {
@@ -267,59 +268,59 @@
             filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.08));
         }
 
-        .text-red-fill {
-            background: linear-gradient(180deg, #FF3344 0%, #F40606 60%, #C40000 100%);
+        /* Soft Eye-Pleasing Hero Accent Gradient */
+        .text-red-fill,
+        .text-hero-accent {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 40%, #C084FC 75%, #F472B6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 20px rgba(99, 102, 241, 0.35));
         }
 
-        /* Glassmorphism Design System - Dark Mode (Default) */
-        .glass-panel {
-            background: rgba(4, 19, 48, 0.35);
+        /* Authentic Neomorphism & Glassmorphism Design System - Dark Mode (Default) */
+        .glass-panel,
+        .neo-card {
+            background: #0d1322;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-            transition: all 0.4s ease;
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(4, 19, 48, 0.25) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            box-shadow: 10px 10px 24px #04060c, -10px -10px 24px #162038, inset 0 1px 1px rgba(255, 255, 255, 0.1);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .glass-card:hover {
-            background: linear-gradient(135deg, rgba(244, 6, 6, 0.1) 0%, rgba(4, 19, 48, 0.35) 100%);
-            border-color: rgba(244, 6, 6, 0.45);
-            box-shadow: 0 20px 45px rgba(244, 6, 6, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        .glass-card:hover,
+        .neo-card:hover {
+            box-shadow: 14px 14px 32px #030408, -14px -14px 32px #18233f, inset 0 1px 1px rgba(255, 255, 255, 0.18);
+            border-color: rgba(56, 189, 248, 0.35);
+            transform: translateY(-2px);
         }
 
-        .glass-pill {
-            background: rgba(4, 19, 48, 0.45);
+        .glass-pill,
+        .neo-pill {
+            background: #0d1322;
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 6px 6px 16px #04060c, -6px -6px 16px #162038, inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: all 0.4s ease;
         }
 
-        .glass-input {
-            background: rgba(3, 8, 20, 0.6);
+        .glass-input,
+        .neo-input {
+            background: #080c16;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 3px 3px 8px #030509, inset -3px -3px 8px #0d1323;
             transition: all 0.3s ease;
             color: #D7E2EA;
         }
 
-        .glass-input:focus {
-            background: rgba(3, 8, 20, 0.85);
-            border-color: rgba(244, 6, 6, 0.7);
-            box-shadow: 0 0 20px rgba(244, 6, 6, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        .glass-input:focus,
+        .neo-input:focus {
+            border-color: rgba(56, 189, 248, 0.7);
+            box-shadow: inset 2px 2px 5px #030509, inset -2px -2px 5px #0d1323, 0 0 15px rgba(56, 189, 248, 0.3);
         }
 
         /* Glassmorphism Design System - Bright Mode Overrides */
@@ -512,17 +513,17 @@
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <!-- Glowing Orb 1 -->
         <div id="orb1"
-            class="absolute -top-[10%] left-[15%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full blur-[140px] animate-orb-1 transition-all duration-500 bg-gradient-to-br from-[#F40606]/20 via-[#B30000]/15 to-transparent">
+            class="absolute -top-[10%] left-[15%] w-[600px] h-[600px] sm:w-[800px] sm:h-[800px] rounded-full blur-[140px] animate-orb-1 transition-all duration-500 bg-gradient-to-br from-[#38BDF8]/25 via-[#6366F1]/15 to-transparent">
         </div>
 
         <!-- Glowing Orb 2 -->
         <div id="orb2"
-            class="absolute top-[35%] -right-[10%] w-[550px] h-[550px] sm:w-[750px] sm:h-[750px] rounded-full blur-[150px] animate-orb-2 transition-all duration-500 bg-gradient-to-tl from-[#041330]/50 via-[#0A2254]/30 to-transparent">
+            class="absolute top-[35%] -right-[10%] w-[550px] h-[550px] sm:w-[750px] sm:h-[750px] rounded-full blur-[150px] animate-orb-2 transition-all duration-500 bg-gradient-to-tl from-[#8B5CF6]/30 via-[#C084FC]/20 to-transparent">
         </div>
 
         <!-- Glowing Orb 3 -->
         <div id="orb3"
-            class="absolute bottom-[10%] left-[5%] w-[650px] h-[650px] sm:w-[850px] sm:h-[850px] rounded-full blur-[160px] animate-orb-3 transition-all duration-500 bg-gradient-to-tr from-[#990000]/25 via-[#F40606]/10 to-transparent">
+            class="absolute bottom-[10%] left-[5%] w-[650px] h-[650px] sm:w-[850px] sm:h-[850px] rounded-full blur-[160px] animate-orb-3 transition-all duration-500 bg-gradient-to-tr from-[#38BDF8]/20 via-[#F472B6]/15 to-transparent">
         </div>
 
         <!-- Radial grid overlay -->
@@ -545,16 +546,16 @@
                     <a href="superadmin_login.html" class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group"
                         title="Super Admin Portal">
                         <img src="vynster-logo.png" alt="Vynster Symbol"
-                            class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[0_0_10px_rgba(244,6,6,0.4)] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300"
+                            class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[0_0_10px_rgba(56,189,248,0.4)] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <svg class="w-8 h-8 sm:w-9 sm:h-9 hidden" viewBox="0 0 220 220">
                             <circle cx="110" cy="110" r="92" fill="none" stroke="#2B2140" stroke-width="10" />
-                            <path d="M44.2,72 L110,186 L175.8,72" fill="none" stroke="#FF6F59" stroke-width="16"
+                            <path d="M44.2,72 L110,186 L175.8,72" fill="none" stroke="#38BDF8" stroke-width="16"
                                 stroke-linecap="round" stroke-linejoin="round" />
-                            <circle cx="211.5" cy="62.6" r="7" fill="#FF6F59" />
+                            <circle cx="211.5" cy="62.6" r="7" fill="#38BDF8" />
                         </svg>
                         <span class="font-black text-base sm:text-xl tracking-wider select-none text-white brand-text">
-                            V<span class="text-[#F40606]">Y</span>NSTER
+                            V<span class="text-[#38BDF8]">Y</span>NSTER
                         </span>
                     </a>
 
@@ -564,26 +565,26 @@
                             class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
                             About
                             <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
                         <a href="#approach"
                             class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
                             Approach
                             <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
                         <a href="#numbers"
                             class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
                             Our Work
                             <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
 
                         <a href="#contact"
                             class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-[#D7E2EA] hover:text-white relative group nav-link">
                             Contact
                             <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#F40606] to-[#041330] group-hover:w-full transition-all duration-300"></span>
+                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                         </a>
                     </div>
 
@@ -599,13 +600,13 @@
 
                         <!-- Salon Login Button -->
                         <button onclick="navigateToSalonPortal(event)"
-                            class="client-portal-btn text-[11px] sm:text-xs font-semibold tracking-wide px-3.5 sm:px-5 py-2 rounded-full border border-[#F40606]/50 bg-[#F40606]/15 text-white hover:border-[#F40606] hover:bg-[#F40606] transition-all duration-300 cursor-pointer shadow-sm hover:scale-105 flex items-center gap-1.5">
+                            class="client-portal-btn text-[11px] sm:text-xs font-semibold tracking-wide px-3.5 sm:px-5 py-2 rounded-full border border-sky-400/40 bg-sky-500/15 text-white hover:border-sky-400 hover:bg-sky-500/30 transition-all duration-300 cursor-pointer shadow-sm hover:scale-105 flex items-center gap-1.5">
                             <span>💼</span> SALON PORTAL
                         </button>
 
                         <!-- Sleek Sliding Pill Theme Toggle Switch -->
                         <button id="themeToggleBtn" onclick="toggleAppTheme()"
-                            class="relative flex items-center w-12 sm:w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/80 hover:border-[#F40606]"
+                            class="relative flex items-center w-12 sm:w-14 h-8 rounded-full p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/20 bg-slate-900/80 hover:border-[#38BDF8]"
                             aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
                             <span class="text-[10px] absolute left-2 select-none opacity-60">☀️</span>
                             <span class="text-[10px] absolute right-2 select-none opacity-60">🌙</span>
@@ -618,20 +619,20 @@
                 </nav>
             </div>
 
-            <!-- 3D LOGO EMBLEM BACKGROUND: RED V EMBLEM + ROTATING RED ARC & BLINKING PIN -->
+            <!-- 3D LOGO EMBLEM BACKGROUND: CYAN-INDIGO EMBLEM + ROTATING ARC -->
             <div
                 class="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 z-10 w-[340px] sm:w-[500px] md:w-[640px] lg:w-[740px] xl:w-[820px] pointer-events-none select-none">
                 <div class="w-full flex justify-center relative">
                     <!-- Ambient Glow Atmosphere -->
                     <div id="heroEmblemGlow"
-                        class="absolute inset-0 rounded-full blur-[90px] scale-125 pointer-events-none animate-pulse bg-gradient-to-tr from-[#F40606]/35 via-[#041330]/70 to-[#990000]/25">
+                        class="absolute inset-0 rounded-full blur-[90px] scale-125 pointer-events-none animate-pulse bg-gradient-to-tr from-[#38BDF8]/35 via-[#6366F1]/50 to-[#8B5CF6]/25">
                     </div>
 
                     <div class="w-full relative z-10 flex justify-center items-center">
                         <div class="relative w-full aspect-square flex items-center justify-center max-w-[680px]">
                             <!-- POLISHED LOGO EMBLEM IMAGE WITH FALLBACK SVG -->
-                            <img src="vynster-logo.png?v=2" alt="Vynster Stylized Red V Emblem"
-                                class="w-full h-auto object-contain select-none filter opacity-90 drop-shadow-[0_0_35px_rgba(244,6,6,0.4)] drop-shadow-[0_0_70px_rgba(4,19,48,0.6)]"
+                            <img src="vynster-logo.png?v=2" alt="Vynster Stylized Emblem"
+                                class="w-full h-auto object-contain select-none filter opacity-90 drop-shadow-[0_0_35px_rgba(56,189,248,0.4)] drop-shadow-[0_0_70px_rgba(99,102,241,0.6)]"
                                 loading="eager"
                                 onerror="this.style.display='none'; document.getElementById('heroFallbackSvg').style.display='block';">
 
@@ -639,23 +640,23 @@
                             <svg id="heroFallbackSvg" viewBox="0 0 220 220" class="w-full h-auto hidden">
                                 <circle cx="110" cy="110" r="85.5" fill="none" stroke="#08214D" stroke-width="11" />
                                 <line x1="168" y1="73" x2="187.5" y2="59.7" stroke="#08214D" stroke-width="4.5" stroke-linecap="round" />
-                                <circle cx="187.5" cy="59.7" r="7.5" fill="#F40606" />
+                                <circle cx="187.5" cy="59.7" r="7.5" fill="#38BDF8" />
 
-                                <!-- Center Red V Emblem Precision Vector Strokes -->
-                                <polygon points="58.0,74.2 71.1,74.2 83.3,116.2 70.2,116.2" fill="#F40606" />
-                                <polygon points="83.1,73.9 95.3,74.2 129.8,132.4 108.5,169.1 87.1,133.1" fill="#F40606" />
-                                <polygon points="124.4,74.2 137.4,74.2 120.7,104.0 107.7,104.0" fill="#F40606" />
-                                <polygon points="148.6,74.2 161.8,74.2 135.7,120.7 122.5,120.7" fill="#F40606" />
+                                <!-- Center Emblem Precision Vector Strokes -->
+                                <polygon points="58.0,74.2 71.1,74.2 83.3,116.2 70.2,116.2" fill="#38BDF8" />
+                                <polygon points="83.1,73.9 95.3,74.2 129.8,132.4 108.5,169.1 87.1,133.1" fill="#38BDF8" />
+                                <polygon points="124.4,74.2 137.4,74.2 120.7,104.0 107.7,104.0" fill="#38BDF8" />
+                                <polygon points="148.6,74.2 161.8,74.2 135.7,120.7 122.5,120.7" fill="#38BDF8" />
                             </svg>
 
-                            <!-- OVERLAID ROTATING ELECTRIC RED ARC -->
+                            <!-- OVERLAID ROTATING ELECTRIC CYAN ARC -->
                             <svg viewBox="0 0 220 220"
                                 class="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
                                 <defs>
                                     <linearGradient id="vynsterRedRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#FF3344" stop-opacity="1" />
-                                        <stop offset="60%" stop-color="#F40606" stop-opacity="0.9" />
-                                        <stop offset="100%" stop-color="#990000" stop-opacity="0.15" />
+                                        <stop offset="0%" stop-color="#38BDF8" stop-opacity="1" />
+                                        <stop offset="60%" stop-color="#6366F1" stop-opacity="0.9" />
+                                        <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.15" />
                                     </linearGradient>
                                     <filter id="vynsterRedGlow" x="-50%" y="-50%" width="200%" height="200%">
                                         <feGaussianBlur stdDeviation="3.5" result="blur" />
@@ -681,7 +682,7 @@
                 class="w-full max-w-5xl mx-auto px-6 pt-12 md:pt-16 z-20 relative text-center flex flex-col items-center">
                 <div class="reveal">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-4 inline-block drop-shadow-[0_0_15px_rgba(244,6,6,0.4)]">
+                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-4 inline-block drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">
                         Vision · Strategy · Customer Intelligence
                     </span>
                 </div>
@@ -690,7 +691,7 @@
                     <h1
                         class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] uppercase max-w-4xl hero-heading">
                         Insight before instinct. <br />
-                        <em class="not-italic text-red-fill drop-shadow-[0_0_30px_rgba(244,6,6,0.5)]">
+                        <em class="not-italic text-red-fill drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]">
                             Direction before drift.
                         </em>
                     </h1>
@@ -706,7 +707,7 @@
 
                 <div class="reveal mt-8 flex flex-wrap justify-center items-center gap-4">
                     <a href="vynster-demo.html?demo=true" onclick="navigateToDemoMode(event)"
-                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[0_10px_35px_rgba(244,6,6,0.55)] cursor-pointer">
+                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#38BDF8] via-[#6366F1] to-[#8B5CF6] px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[0_10px_35px_rgba(56,189,248,0.45)] cursor-pointer">
                         <span
                             class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 animate-sheen pointer-events-none"></span>
                         <span class="relative z-10 flex items-center gap-2">
@@ -716,7 +717,7 @@
                     </a>
 
                     <a href="#approach"
-                        class="rounded-full border border-white/25 bg-white/5 backdrop-blur-md px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-[#D7E2EA] hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all duration-300 cursor-pointer shadow-lg button-secondary">
+                        class="rounded-full border border-white/25 bg-white/5 backdrop-blur-md px-8 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-semibold uppercase tracking-widest text-[#D7E2EA] hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all duration-300 cursor-pointer shadow-lg button-secondary">
                         See how we work
                     </a>
                 </div>
@@ -738,12 +739,12 @@
             <div class="absolute top-[4%] left-[2%] z-0 pointer-events-none opacity-80 hidden lg:block">
                 <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
                     alt="3D Moon Accent"
-                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(244,6,6,0.3)] animate-pulse">
+                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(56,189,248,0.3)] animate-pulse">
             </div>
             <div class="absolute top-[4%] right-[2%] z-0 pointer-events-none opacity-80 hidden lg:block">
                 <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
                     alt="3D Lego Accent"
-                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(244,6,6,0.3)] animate-pulse">
+                    class="w-[180px] h-auto filter drop-shadow-[0_20px_40px_rgba(56,189,248,0.3)] animate-pulse">
             </div>
 
             <!-- ABOUT GLASS CONTAINER -->
@@ -751,7 +752,7 @@
                 class="relative z-10 flex flex-col items-start w-full max-w-5xl mx-auto glass-panel rounded-[40px] p-8 sm:p-12 md:p-16">
                 <div class="reveal">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-3 block">
+                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-3 block">
                         About Vynster
                     </span>
                 </div>
@@ -772,7 +773,7 @@
                     </div>
                     <div class="reveal">
                         <div
-                            class="border-l-4 border-[#F40606] pl-6 py-2 text-xl sm:text-2xl font-semibold my-6 text-white section-pull">
+                            class="border-l-4 border-[#38BDF8] pl-6 py-2 text-xl sm:text-2xl font-semibold my-6 text-white section-pull">
                             We built Vynster to close that gap between what a business collects and what it understands.
                         </div>
                     </div>
@@ -792,7 +793,7 @@
                 </div>
                 <div class="reveal mt-10">
                     <button onclick="navigateToSalonPortal(event)"
-                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer">
+                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#38BDF8] via-[#6366F1] to-[#8B5CF6] px-8 py-3.5 text-xs sm:text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer">
                         <span>Open Salon Portal</span>
                         <span>→</span>
                     </button>
@@ -807,7 +808,7 @@
             <div class="max-w-6xl mx-auto w-full">
                 <div class="reveal text-left mb-12 sm:mb-16 md:mb-20">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-2 block">
+                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                         How we work
                     </span>
                     <h2 class="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight section-title">
@@ -822,30 +823,30 @@
                         <div
                             class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-[#F40606]/0 group-hover:bg-[#F40606]/15 rounded-full blur-2xl transition-all duration-500">
+                                class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-6">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#F40606]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#F40606]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
+                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <circle cx="21" cy="21" r="18" fill="none" stroke="currentColor"
                                                 stroke-width="3" />
-                                            <circle cx="21" cy="21" r="6" fill="#F40606" />
+                                            <circle cx="21" cy="21" r="6" fill="#38BDF8" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#F40606]/80 group-hover:text-[#F40606] transition-colors">01</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">01</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-red-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
                                     Vision</h3>
                                 <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">We
                                     help you see past this quarter's noise to where your market and your customers are
                                     actually heading.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#F40606] group-hover:text-red-500 transition-colors border-t border-white/5">
+                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -856,30 +857,30 @@
                         <div
                             class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-[#F40606]/0 group-hover:bg-[#F40606]/15 rounded-full blur-2xl transition-all duration-500">
+                                class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-6">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#F40606]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#F40606]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
+                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <path d="M8,32 L34,10" stroke="currentColor" stroke-width="3"
                                                 stroke-linecap="round" />
-                                            <circle cx="34" cy="10" r="5" fill="#F40606" />
+                                            <circle cx="34" cy="10" r="5" fill="#38BDF8" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#F40606]/80 group-hover:text-[#F40606] transition-colors">02</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">02</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-red-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
                                     Strategy</h3>
                                 <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">
                                     Insight only matters once it's a decision. We turn analysis into a direction your
                                     teams can actually execute.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#F40606] group-hover:text-red-500 transition-colors border-t border-white/5">
+                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -890,30 +891,30 @@
                         <div
                             class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-[#F40606]/0 group-hover:bg-[#F40606]/15 rounded-full blur-2xl transition-all duration-500">
+                                class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-6">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#F40606]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#F40606]" viewBox="0 0 42 42">
+                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
+                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
                                             <circle cx="21" cy="21" r="17" fill="none" stroke="currentColor"
                                                 stroke-width="3" />
-                                            <circle cx="21" cy="21" r="4" fill="#F40606" />
+                                            <circle cx="21" cy="21" r="4" fill="#38BDF8" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#F40606]/80 group-hover:text-[#F40606] transition-colors">03</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">03</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-red-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
                                     Know your customer</h3>
                                 <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">
                                     Behind every data point is a person with a reason. We keep that person at the centre
                                     of the strategy, not a segment at the edge of it.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#F40606] group-hover:text-red-500 transition-colors border-t border-white/5">
+                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -924,32 +925,32 @@
                         <div
                             class="glass-card rounded-[30px] p-6 sm:p-8 h-full flex flex-col justify-between group cursor-pointer relative overflow-hidden">
                             <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-[#F40606]/0 group-hover:bg-[#F40606]/15 rounded-full blur-2xl transition-all duration-500">
+                                class="absolute top-0 right-0 w-32 h-32 bg-[#38BDF8]/0 group-hover:bg-[#38BDF8]/15 rounded-full blur-2xl transition-all duration-500">
                             </div>
                             <div>
                                 <div class="flex items-center justify-between mb-6">
                                     <div
-                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#F40606]/40 transition-all">
-                                        <svg class="w-10 h-10 text-[#F40606]" viewBox="0 0 42 42">
-                                            <circle cx="10" cy="30" r="4" fill="#F40606" />
-                                            <circle cx="21" cy="14" r="4" fill="#F40606" />
-                                            <circle cx="32" cy="26" r="4" fill="#F40606" />
+                                        class="p-2.5 rounded-2xl border border-white/10 bg-white/5 group-hover:border-[#38BDF8]/40 transition-all">
+                                        <svg class="w-10 h-10 text-[#38BDF8]" viewBox="0 0 42 42">
+                                            <circle cx="10" cy="30" r="4" fill="#38BDF8" />
+                                            <circle cx="21" cy="14" r="4" fill="#38BDF8" />
+                                            <circle cx="32" cy="26" r="4" fill="#38BDF8" />
                                             <path d="M10,30 L21,14 L32,26" stroke="currentColor" stroke-width="2.5"
                                                 fill="none" />
                                         </svg>
                                     </div>
                                     <span
-                                        class="font-mono font-black text-2xl text-[#F40606]/80 group-hover:text-[#F40606] transition-colors">04</span>
+                                        class="font-mono font-black text-2xl text-[#38BDF8]/80 group-hover:text-[#38BDF8] transition-colors">04</span>
                                 </div>
                                 <h3
-                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-red-100 section-title">
+                                    class="font-bold uppercase text-xl sm:text-2xl tracking-tight mb-3 transition-colors text-white group-hover:text-sky-100 section-title">
                                     Data intelligence</h3>
                                 <p class="font-light text-sm sm:text-base leading-relaxed opacity-80 section-copy">We
                                     structure the signals already sitting inside your business into something your team
                                     can actually act on.</p>
                             </div>
                             <span
-                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#F40606] group-hover:text-red-500 transition-colors border-t border-white/5">
+                                class="mt-8 pt-4 flex items-center text-xs font-semibold uppercase tracking-widest text-[#38BDF8] group-hover:text-sky-400 transition-colors border-t border-white/5">
                                 Pillar discipline &rarr;
                             </span>
                         </div>
@@ -966,7 +967,7 @@
                 <div class="flex flex-wrap items-end justify-between gap-6 mb-12">
                     <div class="reveal">
                         <span
-                            class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-2 block">
+                            class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                             Where we stand
                         </span>
                         <h2 class="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight section-title">
@@ -976,7 +977,7 @@
 
                     <div class="reveal">
                         <button id="toggleEditStatsBtn" onclick="toggleEditStatsPanel()"
-                            class="inline-flex items-center gap-2 border border-dashed border-white/30 rounded-full px-5 py-2.5 text-xs font-mono font-semibold uppercase tracking-wider text-[#D7E2EA] hover:text-white hover:border-[#F40606] transition-all cursor-pointer button-secondary">
+                            class="inline-flex items-center gap-2 border border-dashed border-white/30 rounded-full px-5 py-2.5 text-xs font-mono font-semibold uppercase tracking-wider text-[#D7E2EA] hover:text-white hover:border-[#38BDF8] transition-all cursor-pointer button-secondary">
                             <span>✏️</span>
                             <span id="editBtnLabel">Edit these numbers</span>
                         </button>
@@ -988,21 +989,21 @@
                     <div class="reveal">
                         <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
                             <span id="statYears"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#F40606] drop-shadow-[0_0_15px_rgba(244,6,6,0.4)]">1</span>
+                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">1</span>
                             <span class="text-sm font-medium mt-4 opacity-80 section-copy">Years of momentum</span>
                         </div>
                     </div>
                     <div class="reveal">
                         <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
                             <span id="statIndustries"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#F40606] drop-shadow-[0_0_15px_rgba(244,6,6,0.4)]">12</span>
+                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">12</span>
                             <span class="text-sm font-medium mt-4 opacity-80 section-copy">Industries served</span>
                         </div>
                     </div>
                     <div class="reveal">
                         <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
                             <span id="statEngagements"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#F40606] drop-shadow-[0_0_15px_rgba(244,6,6,0.4)]">48</span>
+                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">48</span>
                             <span class="text-sm font-medium mt-4 opacity-80 section-copy">Strategic engagements
                                 delivered</span>
                         </div>
@@ -1010,7 +1011,7 @@
                     <div class="reveal">
                         <div class="glass-card rounded-[28px] p-7 shadow-xl flex flex-col justify-between">
                             <span id="statSignals"
-                                class="font-mono text-4xl sm:text-5xl font-black text-[#F40606] drop-shadow-[0_0_15px_rgba(244,6,6,0.4)]">9.2M</span>
+                                class="font-mono text-4xl sm:text-5xl font-black text-[#38BDF8] drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]">9.2M</span>
                             <span class="text-sm font-medium mt-4 opacity-80 section-copy">Data signals modelled
                                 monthly</span>
                         </div>
@@ -1056,10 +1057,10 @@
                         </div>
                         <div class="flex items-center gap-4">
                             <button type="submit"
-                                class="inline-flex items-center gap-2 rounded-full bg-[#F40606] text-white px-6 py-2.5 text-xs font-semibold uppercase tracking-wider hover:bg-[#C40000] transition-all cursor-pointer shadow-lg">
+                                class="inline-flex items-center gap-2 rounded-full bg-[#38BDF8] text-white px-6 py-2.5 text-xs font-semibold uppercase tracking-wider hover:bg-[#0284C7] transition-all cursor-pointer shadow-lg">
                                 <span>✓</span> Save changes
                             </button>
-                            <span id="saveStatusMsg" class="text-xs font-semibold text-[#F40606] animate-pulse"></span>
+                            <span id="saveStatusMsg" class="text-xs font-semibold text-[#38BDF8] animate-pulse"></span>
                         </div>
                     </form>
                 </div>
@@ -1077,7 +1078,7 @@
             <div class="max-w-6xl mx-auto w-full">
                 <div class="reveal mb-4">
                     <span
-                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-2 block">
+                        class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                         Who we work with
                     </span>
                     <h2
@@ -1096,32 +1097,32 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
                             + Logo</div>
                     </div>
                     <div class="reveal">
                         <div
-                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#F40606] hover:bg-[#F40606]/5 transition-all cursor-pointer select-none">
+                            class="aspect-[1.6/1] border-2 border-dashed border-white/20 rounded-2xl flex items-center justify-center font-mono font-bold text-sm text-[#D7E2EA]/60 hover:text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/5 transition-all cursor-pointer select-none">
                             + Logo</div>
                     </div>
                 </div>
@@ -1136,7 +1137,7 @@
                 <div class="lg:col-span-5">
                     <div class="reveal">
                         <span
-                            class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-2 block">
+                            class="font-mono text-xs sm:text-sm font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-2 block">
                             Get in touch
                         </span>
                         <h2
@@ -1148,11 +1149,11 @@
                     <div class="mt-10 space-y-8">
                         <div class="reveal">
                             <div class="glass-panel p-5 rounded-2xl flex items-start gap-4">
-                                <div class="p-3 rounded-xl bg-[#F40606]/10 text-[#F40606] border border-[#F40606]/20">✉️
+                                <div class="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">✉️
                                 </div>
                                 <div>
                                     <dt
-                                        class="font-mono text-xs font-semibold tracking-widest text-[#F40606] uppercase mb-1">
+                                        class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-1">
                                         Email</dt>
                                     <dd class="text-base font-semibold section-title">vynster2026@gmail.com</dd>
                                 </div>
@@ -1160,11 +1161,11 @@
                         </div>
                         <div class="reveal">
                             <div class="glass-panel p-5 rounded-2xl flex items-start gap-4">
-                                <div class="p-3 rounded-xl bg-[#F40606]/10 text-[#F40606] border border-[#F40606]/20">🏢
+                                <div class="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">🏢
                                 </div>
                                 <div>
                                     <dt
-                                        class="font-mono text-xs font-semibold tracking-widest text-[#F40606] uppercase mb-1">
+                                        class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-1">
                                         For partnerships &amp; investors</dt>
                                     <dd class="text-base font-semibold section-title">vynster2026@gmail.com</dd>
                                 </div>
@@ -1172,11 +1173,11 @@
                         </div>
                         <div class="reveal">
                             <div class="glass-panel p-5 rounded-2xl flex items-start gap-4">
-                                <div class="p-3 rounded-xl bg-[#F40606]/10 text-[#F40606] border border-[#F40606]/20">⏱️
+                                <div class="p-3 rounded-xl bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/20">⏱️
                                 </div>
                                 <div>
                                     <dt
-                                        class="font-mono text-xs font-semibold tracking-widest text-[#F40606] uppercase mb-1">
+                                        class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-1">
                                         Response time</dt>
                                     <dd class="text-base font-semibold section-title">Within one business day</dd>
                                 </div>
@@ -1220,14 +1221,14 @@
                                         class="w-full glass-input rounded-2xl px-5 py-3.5 text-sm focus:outline-none resize-y"></textarea>
                                 </div>
                                 <button type="submit"
-                                    class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#F40606] via-[#D10404] to-[#B30000] px-10 py-4 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg w-full">
+                                    class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-[#38BDF8] via-[#6366F1] to-[#8B5CF6] px-10 py-4 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-lg w-full">
                                     <span class="relative z-10 flex items-center gap-2">
                                         <span>Send Message</span>
                                         <span>🚀</span>
                                     </span>
                                 </button>
                                 <p id="contactStatusMsg"
-                                    class="hidden text-center text-sm font-semibold text-[#F40606] animate-pulse pt-2">
+                                    class="hidden text-center text-sm font-semibold text-[#38BDF8] animate-pulse pt-2">
                                 </p>
                             </form>
                         </div>
@@ -1246,7 +1247,7 @@
                         <a href="landing.html" class="flex items-center gap-3">
                             <img src="vynster-logo.png" alt="Vynster Symbol" class="w-8 h-8 object-contain">
                             <span class="font-black text-xl tracking-wider text-white">V<span
-                                    class="text-[#F40606]">Y</span>NSTER</span>
+                                    class="text-[#38BDF8]">Y</span>NSTER</span>
                         </a>
                         <p class="mt-3 text-sm opacity-60 max-w-xs">
                             Insight before instinct. A strategy and intelligence partner for teams who want to move
@@ -1256,7 +1257,7 @@
 
                     <div class="flex gap-16 flex-wrap">
                         <div>
-                            <h5 class="font-mono text-xs font-semibold tracking-widest text-[#F40606] uppercase mb-4">
+                            <h5 class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-4">
                                 Site</h5>
                             <ul class="space-y-2.5 text-sm font-light opacity-80">
                                 <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
@@ -1266,7 +1267,7 @@
                             </ul>
                         </div>
                         <div>
-                            <h5 class="font-mono text-xs font-semibold tracking-widest text-[#F40606] uppercase mb-4">
+                            <h5 class="font-mono text-xs font-semibold tracking-widest text-[#38BDF8] uppercase mb-4">
                                 Company</h5>
                             <ul class="space-y-2.5 text-sm font-light opacity-80">
                                 <li><span>vynster2026@gmail.com</span></li>
@@ -1300,14 +1301,14 @@
             <button onclick="closePortalModal()"
                 class="absolute top-5 right-5 p-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 text-white transition-all cursor-pointer">✕</button>
 
-            <span class="font-mono text-xs font-semibold tracking-[0.2em] text-[#F40606] uppercase mb-1 block">Client
+            <span class="font-mono text-xs font-semibold tracking-[0.2em] text-[#38BDF8] uppercase mb-1 block">Client
                 Portal</span>
             <h3 class="text-2xl font-black uppercase tracking-tight mb-1 text-white">Select Application</h3>
             <p class="text-xs sm:text-sm mb-6 opacity-75">Access your engagement dashboard and applications.</p>
 
             <div class="space-y-3">
                 <a href="vynster-demo.html?demo=true" onclick="navigateToDemoMode(event)"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
                     <span class="flex items-center gap-3">
                         <span>✨</span>
                         <span>Demo Mode (Bypass Login - Mock Session)</span>
@@ -1315,7 +1316,7 @@
                     <span>→</span>
                 </a>
                 <a href="superadmin_login.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
                     <span class="flex items-center gap-3">
                         <span>👽</span>
                         <span>Super Admin Portal</span>
@@ -1323,7 +1324,7 @@
                     <span>→</span>
                 </a>
                 <a href="staff-login.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
                     <span class="flex items-center gap-3">
                         <span>🔑</span>
                         <span>Staff Login Portal</span>
@@ -1331,7 +1332,7 @@
                     <span>→</span>
                 </a>
                 <a href="whatsapp.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
                     <span class="flex items-center gap-3">
                         <span>💬</span>
                         <span>WhatsApp Automation</span>
@@ -1339,7 +1340,7 @@
                     <span>→</span>
                 </a>
                 <a href="index.html"
-                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F40606] hover:bg-[#F40606]/10 transition-all font-semibold text-sm">
+                    class="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-[#38BDF8] hover:bg-[#38BDF8]/10 transition-all font-semibold text-sm">
                     <span class="flex items-center gap-3">
                         <span>🌐</span>
                         <span>Enterprise Gateway Hub</span>
