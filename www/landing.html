@@ -46,51 +46,51 @@
             padding: 0;
         }
 
-        /* Base Theme Definitions */
+        /* Base Theme Definitions - Luxury Midnight Obsidian */
         html,
         body {
-            background-color: #0A0E1A;
+            background-color: #070B14;
             font-family: 'Kanit', sans-serif;
-            color: #FFFFFF;
+            color: #F8FAFC;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* NEO-BRUTALISM STARK HIGH-CONTRAST TYPOGRAPHY */
+        /* MOTION SITE SOPHISTICATED TYPOGRAPHY */
         h1, h2, h3, h4, h5, h6, .section-title {
             color: #FFFFFF !important;
-            font-weight: 900 !important;
-            text-transform: uppercase;
+            font-weight: 800 !important;
             letter-spacing: -0.02em;
-            text-shadow: 2px 2px 0px #000000, -1px -1px 0px #000000;
+            text-shadow: none !important;
         }
 
         p, dd, dt, label, li, .section-copy {
-            color: #F8FAFC !important;
-            font-weight: 500;
-            text-shadow: 1px 1px 0px #000000;
+            color: #CBD5E1 !important;
+            font-weight: 400;
+            text-shadow: none !important;
         }
 
-        /* Bright Mode Theme Overrides - Neo Brutalism */
+        /* Bright Mode Theme Overrides - Sleek Minimalist Studio Aesthetic */
         html.theme-bright,
         body.theme-bright {
-            background-color: #F1F5F9 !important;
+            background-color: #F8FAFC !important;
             color: #0F172A !important;
         }
 
         .theme-bright .brand-text {
             color: #0F172A !important;
+            text-shadow: none !important;
         }
 
         .theme-bright .nav-link {
-            color: #0F172A !important;
-            font-weight: 800 !important;
+            color: #1E293B !important;
+            font-weight: 700 !important;
             text-shadow: none !important;
         }
 
         .theme-bright .nav-link:hover {
-            color: #2563EB !important;
+            color: #0284C7 !important;
         }
 
         .theme-bright .section-title,
@@ -110,7 +110,7 @@
         .theme-bright dt,
         .theme-bright label,
         .theme-bright li {
-            color: #1E293B !important;
+            color: #334155 !important;
             text-shadow: none !important;
         }
 
@@ -119,64 +119,72 @@
         }
 
         .theme-bright .text-\[\#D7E2EA\]:not(#portalModalOverlay *):not(footer *) {
-            color: #1E293B !important;
+            color: #334155 !important;
         }
 
         .theme-bright .button-secondary {
             background: #FFFFFF !important;
             color: #0F172A !important;
-            border: 3px solid #0F172A !important;
-            box-shadow: 4px 4px 0px #0F172A !important;
+            border: 1px solid rgba(15, 23, 42, 0.15) !important;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
         }
 
         .theme-bright .client-portal-btn {
-            background: #38BDF8 !important;
-            color: #0F172A !important;
-            border: 3px solid #0F172A !important;
-            box-shadow: 4px 4px 0px #0F172A !important;
-            font-weight: 800 !important;
+            background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25) !important;
+            font-weight: 700 !important;
         }
 
         .theme-bright .superadmin-btn {
-            background: #C084FC !important;
-            color: #0F172A !important;
-            border: 3px solid #0F172A !important;
-            box-shadow: 4px 4px 0px #0F172A !important;
-            font-weight: 800 !important;
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25) !important;
+            font-weight: 700 !important;
         }
 
         .theme-bright .glass-card,
         .theme-bright .neo-card,
         .theme-bright .skeuo-card,
-        .theme-bright .brutal-card {
+        .theme-bright .brutal-card,
+        .theme-bright .motion-card {
             background: #FFFFFF !important;
-            border: 3.5px solid #0F172A !important;
-            box-shadow: 6px 6px 0px #0F172A !important;
+            border: 1px solid rgba(15, 23, 42, 0.08) !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;
         }
 
         .theme-bright .glass-panel,
-        .theme-bright .brutal-panel {
-            background: #FFFFFF !important;
-            border: 3.5px solid #0F172A !important;
-            box-shadow: 8px 8px 0px #0F172A !important;
+        .theme-bright .brutal-panel,
+        .theme-bright .motion-panel {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(15, 23, 42, 0.1) !important;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .theme-bright .nav-pill-container {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(15, 23, 42, 0.12) !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
         }
 
         .theme-bright footer {
             background: #0F172A !important;
-            color: #FFFFFF !important;
-            border-top: 4px solid #000000 !important;
+            color: #F8FAFC !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
-        /* Hero Heading Gradient - Bold Brutalist Stencil Effect */
+        /* Hero Heading Gradient - Smooth Platinum & Sky Gradient */
         .hero-heading {
-            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%);
+            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 50%, #94A3B8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(4px 4px 0px #000000);
+            filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.15));
         }
 
         .theme-bright .hero-heading {
-            background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+            background: linear-gradient(180deg, #0F172A 0%, #1E293B 60%, #334155 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: none;
@@ -185,216 +193,101 @@
         /* Vivid Metallic Cyan-Indigo Accent Text */
         .text-red-fill,
         .text-hero-accent {
-            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 45%, #F472B6 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(3px 3px 0px #000000);
+            filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.35));
         }
 
-        /* NEO-BRUTALISM DESIGN SYSTEM RULES (Dark Mode Default) */
+        /* MOTION SITE GRAPHICS & CARDS (Dark Mode Default) */
         .glass-panel,
         .neo-card,
         .skeuo-card,
         .brutal-card,
-        .brutal-panel {
-            background: #0D1322;
-            border: 3.5px solid #38BDF8;
-            box-shadow: 6px 6px 0px #000000, 6px 6px 0px 3.5px #38BDF8;
-            border-radius: 20px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        .brutal-panel,
+        .motion-card {
+            background: rgba(13, 19, 35, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .glass-card:hover,
         .neo-card:hover,
         .skeuo-card:hover,
-        .brutal-card:hover {
-            border-color: #FACC15;
-            box-shadow: 9px 9px 0px #000000, 9px 9px 0px 3.5px #FACC15;
-            transform: translate(-3px, -3px);
+        .brutal-card:hover,
+        .motion-card:hover {
+            border-color: rgba(56, 189, 248, 0.5);
+            border-top-color: rgba(56, 189, 248, 0.8);
+            box-shadow: 0 25px 50px -10px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
         }
 
+        .nav-pill-container,
         .glass-pill,
-        .neo-pill,
         .skeuo-pill,
         .brutal-pill {
-            background: #0D1322;
-            border: 3px solid #38BDF8;
-            box-shadow: 5px 5px 0px #000000;
-            border-radius: 20px;
-            transition: all 0.2s ease;
+            background: rgba(11, 16, 28, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+            transition: all 0.3s ease;
         }
 
         .glass-input,
         .neo-input,
         .skeuo-input,
         .brutal-input {
-            background: #060912;
-            border: 3px solid #38BDF8;
-            box-shadow: 4px 4px 0px #000000;
-            border-radius: 14px;
-            transition: all 0.2s ease;
+            background: rgba(6, 9, 18, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            transition: all 0.25s ease;
             color: #FFFFFF;
-            font-weight: 700;
+            font-weight: 500;
         }
 
         .glass-input:focus,
         .neo-input:focus,
         .skeuo-input:focus,
         .brutal-input:focus {
-            background: #0D1322;
-            border-color: #FACC15;
-            box-shadow: 5px 5px 0px #FACC15;
+            background: rgba(13, 19, 35, 0.95);
+            border-color: #38BDF8;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
             outline: none;
         }
 
-        /* Glassmorphism Design System - Bright Mode Overrides */
-        .theme-bright .glass-panel {
-            background: rgba(255, 255, 255, 0.88) !important;
-            border-color: rgba(15, 23, 42, 0.12) !important;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-        }
-
-        .theme-bright .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.85) 100%) !important;
-            border-color: rgba(15, 23, 42, 0.1) !important;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05) !important;
-        }
-
-        .theme-bright .glass-card:hover {
-            background: linear-gradient(135deg, rgba(254, 242, 242, 0.95) 0%, rgba(254, 226, 226, 0.5) 100%) !important;
-            border-color: rgba(244, 6, 6, 0.45) !important;
-            box-shadow: 0 18px 40px rgba(244, 6, 6, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
-        }
-
-        .theme-bright .glass-pill {
-            background: rgba(255, 255, 255, 0.9) !important;
-            border-color: rgba(15, 23, 42, 0.15) !important;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-        }
-
-        .theme-bright .glass-input {
-            background: rgba(241, 245, 249, 0.95) !important;
-            border-color: rgba(15, 23, 42, 0.15) !important;
-            color: #0F172A !important;
-        }
-
-        .theme-bright .glass-input:focus {
-            background: #FFFFFF !important;
-            border-color: rgba(244, 6, 6, 0.7) !important;
-            box-shadow: 0 0 20px rgba(244, 6, 6, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-        }
-
-        /* Background Orbs Bright Mode */
-        .theme-bright #orb1 {
-            background: radial-gradient(circle, rgba(244, 6, 6, 0.15), rgba(255, 107, 107, 0.1), transparent 70%) !important;
-        }
-
-        .theme-bright #orb2 {
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.15), transparent 70%) !important;
-        }
-
-        .theme-bright #orb3 {
-            background: radial-gradient(circle, rgba(244, 63, 94, 0.15), rgba(251, 113, 133, 0.1), transparent 70%) !important;
-        }
-
-        /* Logo Circular Moving Red Ring Sweep Animation */
-        @keyframes logoRingSweep {
-            0% {
-                transform: rotate(0deg);
+        /* Motion Site Keyframe Animations */
+        @keyframes floatBadge {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
             }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .animate-logo-ring-sweep {
-            transform-origin: 110px 110px;
-            animation: logoRingSweep 5s linear infinite;
-        }
-
-        /* Atmospheric Glowing Background Orbs Keyframes */
-        @keyframes floatOrb1 {
-
-            0%,
-            100% {
-                transform: translate(0px, 0px) scale(1);
-            }
-
-            33% {
-                transform: translate(80px, -60px) scale(1.15);
-            }
-
-            66% {
-                transform: translate(-40px, 50px) scale(0.9);
-            }
-        }
-
-        @keyframes floatOrb2 {
-
-            0%,
-            100% {
-                transform: translate(0px, 0px) scale(1);
-            }
-
-            33% {
-                transform: translate(-90px, 70px) scale(0.85);
-            }
-
-            66% {
-                transform: translate(60px, -40px) scale(1.2);
-            }
-        }
-
-        @keyframes floatOrb3 {
-
-            0%,
-            100% {
-                transform: translate(0px, 0px) scale(1);
-            }
-
             50% {
-                transform: translate(50px, 50px) scale(1.1);
+                transform: translateY(-8px) rotate(1deg);
             }
         }
 
-        .animate-orb-1 {
-            animation: floatOrb1 18s ease-in-out infinite;
+        .animate-float-badge {
+            animation: floatBadge 5s ease-in-out infinite;
         }
 
-        .animate-orb-2 {
-            animation: floatOrb2 22s ease-in-out infinite;
-        }
-
-        .animate-orb-3 {
-            animation: floatOrb3 15s ease-in-out infinite;
-        }
-
-        /* Action Sheen Sweep Animation */
-        @keyframes sheenSweep {
-            0% {
-                transform: translateX(-150%) rotate(25deg);
+        @keyframes pulseGlow {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(1);
             }
-
-            100% {
-                transform: translateX(250%) rotate(25deg);
+            50% {
+                opacity: 0.8;
+                transform: scale(1.08);
             }
         }
 
-        .animate-sheen {
-            animation: sheenSweep 4s ease-in-out infinite;
-        }
-
-        /* Reveal on scroll */
-        .reveal {
-            opacity: 0;
-            transform: translateY(22px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-
-        .reveal.in {
-            opacity: 1;
-            transform: translateY(0);
+        .animate-pulse-glow {
+            animation: pulseGlow 6s ease-in-out infinite;
         }
 
         /* Custom scrollbars */
@@ -403,7 +296,7 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #030814;
+            background: #050810;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -431,7 +324,7 @@
 </head>
 
 <body
-    class="bg-[#030814] text-[#D7E2EA] font-['Kanit',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#060912]">
+    class="bg-[#070B14] text-[#F8FAFC] font-['Kanit',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#060912]">
 
     <!-- ATMOSPHERIC BACKGROUND MESH & GLOWING ORBS -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -573,58 +466,30 @@
             </div>
         </div>
 
-            <!-- 3D LOGO EMBLEM BACKGROUND: RESPONSIVE SKEUOMORPHIC LOGO BACKDROP -->
+            <!-- LOGO EMBLEM BACKGROUND: AMBIENT LUXURY MOTION BACKDROP -->
             <div
-                class="absolute left-1/2 top-[50%] -translate-x-1/2 -translate-y-1/2 z-0 sm:z-10 w-[260px] xs:w-[320px] sm:w-[500px] md:w-[640px] lg:w-[740px] xl:w-[820px] pointer-events-none select-none opacity-30 sm:opacity-80 transition-all duration-500">
+                class="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-0 w-[240px] xs:w-[300px] sm:w-[460px] md:w-[580px] lg:w-[680px] pointer-events-none select-none opacity-15 sm:opacity-20 transition-all duration-500 scale-90 sm:scale-100">
                 <div class="w-full flex justify-center relative">
                     <!-- Ambient Glow Atmosphere -->
                     <div id="heroEmblemGlow"
-                        class="absolute inset-0 rounded-full blur-[80px] sm:blur-[100px] scale-125 pointer-events-none animate-pulse bg-gradient-to-tr from-[#38BDF8]/40 via-[#6366F1]/55 to-[#8B5CF6]/30">
+                        class="absolute inset-0 rounded-full blur-[90px] sm:blur-[120px] scale-125 pointer-events-none animate-pulse-glow bg-gradient-to-tr from-[#38BDF8]/30 via-[#6366F1]/40 to-[#8B5CF6]/20">
                     </div>
 
                     <div class="w-full relative z-10 flex justify-center items-center">
-                        <div class="relative w-full aspect-square flex items-center justify-center max-w-[680px]">
+                        <div class="relative w-full aspect-square flex items-center justify-center max-w-[620px]">
                             <!-- POLISHED LOGO EMBLEM IMAGE WITH FALLBACK SVG -->
                             <img src="vynster-logo.png?v=2" alt="Vynster Stylized Emblem"
-                                class="w-full h-auto object-contain select-none filter drop-shadow-[0_10px_35px_rgba(56,189,248,0.5)] drop-shadow-[0_20px_60px_rgba(99,102,241,0.7)]"
+                                class="w-full h-auto object-contain select-none filter drop-shadow-[0_10px_35px_rgba(56,189,248,0.3)]"
                                 loading="eager"
                                 onerror="this.style.display='none'; document.getElementById('heroFallbackSvg').style.display='block';">
 
                             <!-- PRECISION SVG FALLBACK LOGO EMBLEM -->
                             <svg id="heroFallbackSvg" viewBox="0 0 220 220" class="w-full h-auto hidden">
                                 <circle cx="110" cy="110" r="85.5" fill="none" stroke="#08214D" stroke-width="11" />
-                                <line x1="168" y1="73" x2="187.5" y2="59.7" stroke="#08214D" stroke-width="4.5" stroke-linecap="round" />
-                                <circle cx="187.5" cy="59.7" r="7.5" fill="#38BDF8" />
-
-                                <!-- Center Emblem Precision Vector Strokes -->
                                 <polygon points="58.0,74.2 71.1,74.2 83.3,116.2 70.2,116.2" fill="#38BDF8" />
                                 <polygon points="83.1,73.9 95.3,74.2 129.8,132.4 108.5,169.1 87.1,133.1" fill="#38BDF8" />
                                 <polygon points="124.4,74.2 137.4,74.2 120.7,104.0 107.7,104.0" fill="#38BDF8" />
                                 <polygon points="148.6,74.2 161.8,74.2 135.7,120.7 122.5,120.7" fill="#38BDF8" />
-                            </svg>
-
-                            <!-- OVERLAID ROTATING ELECTRIC CYAN ARC -->
-                            <svg viewBox="0 0 220 220"
-                                class="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
-                                <defs>
-                                    <linearGradient id="vynsterRedRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#38BDF8" stop-opacity="1" />
-                                        <stop offset="60%" stop-color="#6366F1" stop-opacity="0.9" />
-                                        <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.15" />
-                                    </linearGradient>
-                                    <filter id="vynsterRedGlow" x="-50%" y="-50%" width="200%" height="200%">
-                                        <feGaussianBlur stdDeviation="3.5" result="blur" />
-                                        <feMerge>
-                                            <feMergeNode in="blur" />
-                                            <feMergeNode in="SourceGraphic" />
-                                        </feMerge>
-                                    </filter>
-                                </defs>
-                                <g class="animate-logo-ring-sweep">
-                                    <circle cx="110" cy="110" r="85.5" fill="none" stroke="url(#vynsterRedRingGrad)"
-                                        stroke-width="6.5" stroke-dasharray="140 370" stroke-linecap="round"
-                                        filter="url(#vynsterRedGlow)" />
-                                </g>
                             </svg>
                         </div>
                     </div>
@@ -633,19 +498,21 @@
 
             <!-- HERO MAIN CONTENT -->
             <div
-                class="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 md:pt-16 z-20 relative text-center flex flex-col items-center">
-                <div class="reveal">
-                    <span
-                        class="font-mono text-[11px] sm:text-sm font-semibold tracking-[0.22em] text-[#38BDF8] uppercase mb-3 inline-block drop-shadow-[0_2px_8px_rgba(56,189,248,0.5)]">
-                        Vision · Strategy · Customer Intelligence
-                    </span>
+                class="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 md:pt-20 z-20 relative text-center flex flex-col items-center">
+                <!-- FLOATING MOTION STATUS BADGE -->
+                <div class="reveal mb-4">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 border border-sky-400/30 text-sky-300 text-xs font-mono font-semibold uppercase tracking-widest backdrop-blur-md shadow-lg animate-float-badge">
+                        <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+                        <span>Vision · Strategy · Intelligence</span>
+                    </div>
                 </div>
 
                 <div class="reveal">
                     <h1
-                        class="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.15] uppercase max-w-4xl hero-heading">
+                        class="text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.08] uppercase max-w-4xl hero-heading">
                         Insight before instinct. <br />
-                        <em class="not-italic text-red-fill drop-shadow-[0_4px_25px_rgba(99,102,241,0.5)]">
+                        <em class="not-italic text-red-fill">
                             Direction before drift.
                         </em>
                     </h1>
@@ -653,15 +520,15 @@
 
                 <div class="reveal">
                     <p
-                        class="mt-4 sm:mt-6 text-sm sm:text-lg md:text-xl max-w-2xl font-normal leading-relaxed drop-shadow-md text-slate-100 hero-sub px-2 sm:px-0">
+                        class="mt-5 sm:mt-8 text-base sm:text-xl md:text-2xl max-w-2xl font-normal leading-relaxed text-slate-300 hero-sub px-2 sm:px-0">
                         Vynster helps leadership teams turn scattered signals about their market and customers into one
                         clear, confident direction — before the moment to act has passed.
                     </p>
                 </div>
 
-                <div class="reveal mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full sm:w-auto px-4 sm:px-0">
+                <div class="reveal mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center items-center gap-4 w-full sm:w-auto px-4 sm:px-0">
                     <a href="vynster-demo.html?demo=true" onclick="navigateToDemoMode(event)"
-                        class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-b from-[#38BDF8] via-[#2563EB] to-[#1D4ED8] px-7 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_25px_rgba(37,99,235,0.5)] cursor-pointer w-full sm:w-auto">
+                        class="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-sky-400 via-indigo-500 to-purple-600 px-8 py-4 sm:px-10 sm:py-4.5 text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest text-white transition-all duration-300 hover:scale-105 shadow-[0_10px_30px_rgba(56,189,248,0.35)] cursor-pointer w-full sm:w-auto">
                         <span
                             class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-12 animate-sheen pointer-events-none"></span>
                         <span class="relative z-10 flex items-center gap-2">
@@ -670,8 +537,8 @@
                         </span>
                     </a>
 
-                    <a href="#approach"
-                        class="rounded-full border border-white/30 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-md px-7 py-3.5 sm:px-10 sm:py-4 text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest text-white hover:border-[#38BDF8] hover:bg-[#38BDF8]/20 transition-all duration-300 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_6px_18px_rgba(0,0,0,0.5)] button-secondary w-full sm:w-auto">
+                    <a href="#about"
+                        class="rounded-full border border-white/20 bg-slate-900/60 backdrop-blur-md px-8 py-4 sm:px-10 sm:py-4.5 text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest text-white hover:border-sky-400 hover:bg-sky-400/10 transition-all duration-300 cursor-pointer shadow-lg button-secondary w-full sm:w-auto">
                         See how we work
                     </a>
                 </div>
