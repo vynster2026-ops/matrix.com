@@ -51,27 +51,31 @@
         body {
             background-color: #0A0E1A;
             font-family: 'Kanit', sans-serif;
-            color: #F1F5F9;
+            color: #FFFFFF;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* High-Contrast Skeuomorphic Text Styles */
+        /* NEO-BRUTALISM STARK HIGH-CONTRAST TYPOGRAPHY */
         h1, h2, h3, h4, h5, h6, .section-title {
             color: #FFFFFF !important;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.1);
+            font-weight: 900 !important;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            text-shadow: 2px 2px 0px #000000, -1px -1px 0px #000000;
         }
 
         p, dd, dt, label, li, .section-copy {
-            color: #E2E8F0 !important;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+            color: #F8FAFC !important;
+            font-weight: 500;
+            text-shadow: 1px 1px 0px #000000;
         }
 
-        /* Bright Mode Theme Overrides */
+        /* Bright Mode Theme Overrides - Neo Brutalism */
         html.theme-bright,
         body.theme-bright {
-            background-color: #F1F5F9 !important;
+            background-color: #FEF08A !important;
             color: #0F172A !important;
         }
 
@@ -80,12 +84,13 @@
         }
 
         .theme-bright .nav-link {
-            color: #1E293B !important;
+            color: #0F172A !important;
+            font-weight: 800 !important;
             text-shadow: none !important;
         }
 
         .theme-bright .nav-link:hover {
-            color: #0284C7 !important;
+            color: #2563EB !important;
         }
 
         .theme-bright .section-title,
@@ -96,7 +101,7 @@
         .theme-bright h5,
         .theme-bright h6 {
             color: #0F172A !important;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+            text-shadow: none !important;
         }
 
         .theme-bright .section-copy,
@@ -105,7 +110,7 @@
         .theme-bright dt,
         .theme-bright label,
         .theme-bright li {
-            color: #334155 !important;
+            color: #1E293B !important;
             text-shadow: none !important;
         }
 
@@ -114,149 +119,131 @@
         }
 
         .theme-bright .text-\[\#D7E2EA\]:not(#portalModalOverlay *):not(footer *) {
-            color: #334155 !important;
+            color: #1E293B !important;
         }
 
         .theme-bright .button-secondary {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%) !important;
+            background: #FFFFFF !important;
             color: #0F172A !important;
-            border-color: rgba(15, 23, 42, 0.2) !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 3px 6px rgba(0,0,0,0.08) !important;
+            border: 3px solid #0F172A !important;
+            box-shadow: 4px 4px 0px #0F172A !important;
         }
 
-        .theme-bright .button-secondary:hover {
-            color: #0284C7 !important;
-            border-color: #0284C7 !important;
-        }
-
-        /* Light Theme Client Portal & Super Admin Buttons */
-        html.theme-bright .client-portal-btn,
         .theme-bright .client-portal-btn {
-            background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 100%) !important;
-            color: #0369A1 !important;
-            border: 1.5px solid rgba(2, 132, 199, 0.5) !important;
-            font-weight: 700 !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(2, 132, 199, 0.15) !important;
+            background: #38BDF8 !important;
+            color: #0F172A !important;
+            border: 3px solid #0F172A !important;
+            box-shadow: 4px 4px 0px #0F172A !important;
+            font-weight: 800 !important;
         }
 
-        html.theme-bright .client-portal-btn:hover,
-        .theme-bright .client-portal-btn:hover {
-            background: linear-gradient(180deg, #0284C7 0%, #0369A1 100%) !important;
-            color: #FFFFFF !important;
-        }
-
-        html.theme-bright .superadmin-btn,
         .theme-bright .superadmin-btn {
-            background: linear-gradient(180deg, #F3E8FF 0%, #DDD6FE 100%) !important;
-            color: #6D28D9 !important;
-            border: 1.5px solid rgba(124, 58, 237, 0.5) !important;
-            font-weight: 700 !important;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 3px 6px rgba(124, 58, 237, 0.15) !important;
-        }
-
-        html.theme-bright .superadmin-btn:hover,
-        .theme-bright .superadmin-btn:hover {
-            background: linear-gradient(180deg, #7C3AED 0%, #6D28D9 100%) !important;
-            color: #FFFFFF !important;
+            background: #C084FC !important;
+            color: #0F172A !important;
+            border: 3px solid #0F172A !important;
+            box-shadow: 4px 4px 0px #0F172A !important;
+            font-weight: 800 !important;
         }
 
         .theme-bright .glass-card,
-        .theme-bright .skeuo-card {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%) !important;
-            border-color: rgba(15, 23, 42, 0.15) !important;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(0, 0, 0, 0.05), 0 10px 25px rgba(15, 23, 42, 0.08) !important;
+        .theme-bright .neo-card,
+        .theme-bright .skeuo-card,
+        .theme-bright .brutal-card {
+            background: #FFFFFF !important;
+            border: 3.5px solid #0F172A !important;
+            box-shadow: 6px 6px 0px #0F172A !important;
         }
 
-        .theme-bright .glass-card:hover,
-        .theme-bright .skeuo-card:hover {
-            border-color: rgba(2, 132, 199, 0.5) !important;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px rgba(0, 0, 0, 0.05), 0 14px 35px rgba(2, 132, 199, 0.15) !important;
-        }
-
-        .theme-bright .glass-panel {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%) !important;
-            border-color: rgba(15, 23, 42, 0.15) !important;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+        .theme-bright .glass-panel,
+        .theme-bright .brutal-panel {
+            background: #FFFFFF !important;
+            border: 3.5px solid #0F172A !important;
+            box-shadow: 8px 8px 0px #0F172A !important;
         }
 
         .theme-bright footer {
-            background: linear-gradient(180deg, #090D16 0%, #03060C 100%) !important;
-            color: #D7E2EA !important;
+            background: #0F172A !important;
+            color: #FFFFFF !important;
+            border-top: 4px solid #000000 !important;
         }
 
-        /* Hero Heading Gradient - Skeuomorphic Embossed Metal */
+        /* Hero Heading Gradient - Bold Brutalist Stencil Effect */
         .hero-heading {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 45%, #94A3B8 100%);
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.9));
+            filter: drop-shadow(4px 4px 0px #000000);
         }
 
         .theme-bright .hero-heading {
-            background: linear-gradient(180deg, #0F172A 0%, #1E293B 60%, #334155 100%);
+            background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+            filter: none;
         }
 
         /* Vivid Metallic Cyan-Indigo Accent Text */
         .text-red-fill,
         .text-hero-accent {
-            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 45%, #C084FC 80%, #F472B6 100%);
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 45%, #F472B6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(56, 189, 248, 0.45));
+            filter: drop-shadow(3px 3px 0px #000000);
         }
 
-        /* AUTHENTIC SKEUOMORPHISM UI DESIGN SYSTEM (Dark Mode Default) */
+        /* NEO-BRUTALISM DESIGN SYSTEM RULES (Dark Mode Default) */
         .glass-panel,
         .neo-card,
-        .skeuo-card {
-            background: linear-gradient(145deg, #131c30 0%, #0d1424 55%, #070b16 100%);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            border-bottom: 2px solid rgba(0, 0, 0, 0.7);
-            border-radius: 24px;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.22), inset 0 -2px 4px rgba(0, 0, 0, 0.7), 0 14px 32px -4px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.5);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        .skeuo-card,
+        .brutal-card,
+        .brutal-panel {
+            background: #0D1322;
+            border: 3.5px solid #38BDF8;
+            box-shadow: 6px 6px 0px #000000, 6px 6px 0px 3.5px #38BDF8;
+            border-radius: 20px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .glass-card:hover,
         .neo-card:hover,
-        .skeuo-card:hover {
-            border-color: rgba(56, 189, 248, 0.45);
-            border-top-color: rgba(56, 189, 248, 0.7);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.7), 0 18px 40px -4px rgba(56, 189, 248, 0.25), 0 6px 15px rgba(0, 0, 0, 0.7);
-            transform: translateY(-3px);
+        .skeuo-card:hover,
+        .brutal-card:hover {
+            border-color: #FACC15;
+            box-shadow: 9px 9px 0px #000000, 9px 9px 0px 3.5px #FACC15;
+            transform: translate(-3px, -3px);
         }
 
         .glass-pill,
         .neo-pill,
-        .skeuo-pill {
-            background: linear-gradient(180deg, #162036 0%, #0d1424 100%);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-top: 1px solid rgba(255, 255, 255, 0.35);
-            border-bottom: 1.5px solid rgba(0, 0, 0, 0.6);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 8px 20px rgba(0, 0, 0, 0.6);
-            transition: all 0.3s ease;
+        .skeuo-pill,
+        .brutal-pill {
+            background: #0D1322;
+            border: 3px solid #38BDF8;
+            box-shadow: 5px 5px 0px #000000;
+            border-radius: 20px;
+            transition: all 0.2s ease;
         }
 
         .glass-input,
         .neo-input,
-        .skeuo-input {
+        .skeuo-input,
+        .brutal-input {
             background: #060912;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-bottom-color: rgba(255, 255, 255, 0.2);
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.75), inset 0 -1px 1px rgba(255, 255, 255, 0.08), 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.25s ease;
+            border: 3px solid #38BDF8;
+            box-shadow: 4px 4px 0px #000000;
+            border-radius: 14px;
+            transition: all 0.2s ease;
             color: #FFFFFF;
+            font-weight: 700;
         }
 
         .glass-input:focus,
         .neo-input:focus,
-        .skeuo-input:focus {
-            border-color: rgba(56, 189, 248, 0.8);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 0 16px rgba(56, 189, 248, 0.4);
+        .skeuo-input:focus,
+        .brutal-input:focus {
+            background: #0D1322;
+            border-color: #FACC15;
+            box-shadow: 5px 5px 0px #FACC15;
             outline: none;
         }
 
@@ -475,86 +462,116 @@
         <!-- HERO SECTION -->
         <section
             class="relative min-h-screen w-full flex flex-col justify-between overflow-x-clip bg-transparent pb-12 sm:pb-16">
-            <!-- FROSTED SKEUOMORPHIC NAVBAR -->
-            <div class="w-full z-30 px-3 sm:px-8 md:px-12 pt-3 sm:pt-6 flex justify-center">
-                <nav
-                    class="skeuo-pill rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-6 md:gap-10 max-w-5xl w-full">
-                    <!-- Left Brand Badge -> Opens Super Admin Login on click -->
-                    <a href="superadmin_login.html" class="flex items-center gap-2 sm:gap-3 cursor-pointer group"
-                        title="Super Admin Portal">
-                        <img src="vynster-logo.png" alt="Vynster Symbol"
-                            class="w-7 h-7 sm:w-9 sm:h-9 object-contain drop-shadow-[0_2px_8px_rgba(56,189,248,0.5)] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300"
-                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <svg class="w-7 h-7 sm:w-9 sm:h-9 hidden" viewBox="0 0 220 220">
-                            <circle cx="110" cy="110" r="92" fill="none" stroke="#2B2140" stroke-width="10" />
-                            <path d="M44.2,72 L110,186 L175.8,72" fill="none" stroke="#38BDF8" stroke-width="16"
-                                stroke-linecap="round" stroke-linejoin="round" />
-                            <circle cx="211.5" cy="62.6" r="7" fill="#38BDF8" />
-                        </svg>
-                        <span class="font-black text-sm sm:text-xl tracking-wider select-none text-white brand-text">
+        <!-- FROSTED NEO-BRUTALIST NAVBAR -->
+        <div class="w-full z-40 px-3 sm:px-8 md:px-12 pt-3 sm:pt-6 flex flex-col items-center relative">
+            <nav
+                class="brutal-pill rounded-2xl sm:rounded-full px-3.5 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-6 md:gap-10 max-w-5xl w-full relative z-30">
+                <!-- Left Brand Badge / Mobile Menu Toggle -> Opens navigation dropdown on click on mobile -->
+                <button id="brandLogoBtn" onclick="toggleMobileNavMenu(event)"
+                    class="flex items-center gap-2 sm:gap-3 cursor-pointer group bg-transparent border-none outline-none text-left"
+                    title="Click logo to open mobile navigation menu">
+                    <img src="vynster-logo.png" alt="Vynster Symbol"
+                        class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[2px_2px_0px_#000000] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300">
+                    <div class="flex items-center gap-1">
+                        <span class="font-black text-base sm:text-xl tracking-wider select-none text-white brand-text">
                             V<span class="text-[#38BDF8]">Y</span>NSTER
                         </span>
+                        <!-- Mobile Indicator Caret Badge -->
+                        <span class="inline-flex md:hidden text-[10px] font-bold bg-[#38BDF8] text-[#0F172A] px-1.5 py-0.5 rounded border border-black shadow-[1px_1px_0px_#000]">
+                            MENU ▾
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center gap-6 lg:gap-10">
+                    <a href="#about"
+                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        About
+                    </a>
+                    <a href="#approach"
+                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        Approach
+                    </a>
+                    <a href="#numbers"
+                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        Our Work
+                    </a>
+                    <a href="#contact"
+                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        Contact
+                    </a>
+                </div>
+
+                <!-- Right CTAs (Super Admin Button + Salon Portal Button + Theme Toggle) -->
+                <div class="flex items-center gap-1.5 sm:gap-3">
+                    <!-- Super Admin Gateway Button -->
+                    <a href="superadmin_login.html"
+                        class="superadmin-btn text-[10px] sm:text-xs font-black tracking-wide px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#C084FC] text-[#0F172A] border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all duration-200 cursor-pointer flex items-center gap-1"
+                        title="Access Master Super Admin Portal">
+                        <span>👑</span>
+                        <span class="hidden xs:inline">ADMIN</span>
                     </a>
 
-                    <!-- Nav Links -->
-                    <div class="hidden md:flex items-center gap-6 lg:gap-10">
-                        <a href="#about"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
-                            About
-                            <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
-                        </a>
-                        <a href="#approach"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
-                            Approach
-                            <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
-                        </a>
-                        <a href="#numbers"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
-                            Our Work
-                            <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
-                        </a>
+                    <!-- Salon Login Button -->
+                    <button onclick="navigateToSalonPortal(event)"
+                        class="client-portal-btn text-[10px] sm:text-xs font-black tracking-wide px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl bg-[#38BDF8] text-[#0F172A] border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all duration-200 cursor-pointer flex items-center gap-1">
+                        <span>💼</span> SALON<span class="hidden xs:inline">&nbsp;PORTAL</span>
+                    </button>
 
-                        <a href="#contact"
-                            class="font-medium uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-200 hover:text-white relative group nav-link">
-                            Contact
-                            <span
-                                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
-                        </a>
-                    </div>
+                    <!-- Sleek Sliding Pill Theme Toggle Switch -->
+                    <button id="themeToggleBtn" onclick="toggleAppTheme()"
+                        class="relative flex items-center w-10 sm:w-14 h-7 sm:h-8 rounded-xl p-0.5 sm:p-1 border-2 border-black shadow-[2px_2px_0px_#000] bg-slate-900 cursor-pointer hover:border-[#38BDF8]"
+                        aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
+                        <span class="text-[9px] sm:text-[10px] absolute left-1.5 select-none opacity-60">☀️</span>
+                        <span class="text-[9px] sm:text-[10px] absolute right-1.5 select-none opacity-60">🌙</span>
+                        <span id="themeToggleKnob"
+                            class="w-4 sm:w-6 h-4 sm:h-6 rounded-lg bg-white border border-black shadow transform transition-transform duration-300 translate-x-4 sm:translate-x-6 flex items-center justify-center text-[9px] sm:text-xs">
+                            🌙
+                        </span>
+                    </button>
+                </div>
+            </nav>
 
-                    <!-- Right CTAs (Super Admin Button + Salon Portal Button + Theme Toggle) -->
-                    <div class="flex items-center gap-1.5 sm:gap-3">
-                        <!-- Super Admin Gateway Button -->
-                        <a href="superadmin_login.html"
-                            class="superadmin-btn text-[10px] sm:text-xs font-bold tracking-wide px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-purple-400/40 bg-gradient-to-b from-purple-900/40 to-purple-950/80 text-purple-200 hover:text-white hover:border-purple-300 transition-all duration-300 cursor-pointer shadow-md hover:scale-105 flex items-center gap-1"
-                            title="Access Master Super Admin Portal">
-                            <span>👑</span>
-                            <span class="hidden xs:inline">ADMIN</span>
-                        </a>
-
-                        <!-- Salon Login Button -->
-                        <button onclick="navigateToSalonPortal(event)"
-                            class="client-portal-btn text-[10px] sm:text-xs font-bold tracking-wide px-3 sm:px-5 py-1.5 sm:py-2 rounded-full border border-sky-400/50 bg-gradient-to-b from-sky-500/30 to-sky-700/50 text-white hover:border-sky-300 transition-all duration-300 cursor-pointer shadow-md hover:scale-105 flex items-center gap-1">
-                            <span>💼</span> SALON<span class="hidden xs:inline">&nbsp;PORTAL</span>
-                        </button>
-
-                        <!-- Sleek Sliding Pill Theme Toggle Switch -->
-                        <button id="themeToggleBtn" onclick="toggleAppTheme()"
-                            class="relative flex items-center w-10 sm:w-14 h-7 sm:h-8 rounded-full p-0.5 sm:p-1 border transition-all duration-300 cursor-pointer shadow-md border-white/25 bg-slate-900/90 hover:border-[#38BDF8]"
-                            aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
-                            <span class="text-[9px] sm:text-[10px] absolute left-1.5 select-none opacity-60">☀️</span>
-                            <span class="text-[9px] sm:text-[10px] absolute right-1.5 select-none opacity-60">🌙</span>
-                            <span id="themeToggleKnob"
-                                class="w-4 sm:w-6 h-4 sm:h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-4 sm:translate-x-6 flex items-center justify-center text-[9px] sm:text-xs">
-                                🌙
-                            </span>
-                        </button>
-                    </div>
-                </nav>
+            <!-- MOBILE LOGO CLICK DROPDOWN MENU PANEL -->
+            <div id="mobileNavDropdownMenu"
+                class="hidden w-full max-w-5xl mt-2 p-4 bg-[#0D1322] border-3 border-[#38BDF8] rounded-2xl shadow-[6px_6px_0px_#000000] z-50 flex-col gap-2 transition-all duration-300">
+                <div class="flex items-center justify-between pb-2 border-b-2 border-white/20 mb-1">
+                    <span class="text-xs font-black tracking-widest text-[#38BDF8] uppercase flex items-center gap-1.5">
+                        <span>🚀</span> NAVIGATION MENU
+                    </span>
+                    <button onclick="closeMobileNavMenu()" class="text-xs font-bold px-2 py-0.5 bg-rose-500 text-white rounded border border-black shadow-[1px_1px_0px_#000]">✕ CLOSE</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="#about" onclick="closeMobileNavMenu()"
+                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        <span>📌</span> About
+                    </a>
+                    <a href="#approach" onclick="closeMobileNavMenu()"
+                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        <span>⚡</span> Approach
+                    </a>
+                    <a href="#numbers" onclick="closeMobileNavMenu()"
+                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        <span>📊</span> Our Work
+                    </a>
+                    <a href="#contact" onclick="closeMobileNavMenu()"
+                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        <span>✉️</span> Contact
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-1 pt-2 border-t border-white/10">
+                    <a href="superadmin_login.html" onclick="closeMobileNavMenu()"
+                        class="flex items-center justify-center gap-1.5 p-2.5 bg-[#C084FC] text-black font-black text-xs rounded-xl border-2 border-black shadow-[2px_2px_0px_#000]">
+                        <span>👑</span> Super Admin
+                    </a>
+                    <button onclick="navigateToSalonPortal(event); closeMobileNavMenu();"
+                        class="flex items-center justify-center gap-1.5 p-2.5 bg-[#38BDF8] text-black font-black text-xs rounded-xl border-2 border-black shadow-[2px_2px_0px_#000]">
+                        <span>💼</span> Salon Portal
+                    </button>
+                </div>
             </div>
+        </div>
 
             <!-- 3D LOGO EMBLEM BACKGROUND: RESPONSIVE SKEUOMORPHIC LOGO BACKDROP -->
             <div
@@ -1290,6 +1307,31 @@
 
 
     <script>
+        // Interactive Mobile Logo Click Navigation Dropdown
+        function toggleMobileNavMenu(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const menu = document.getElementById('mobileNavDropdownMenu');
+            if (!menu) return;
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                menu.classList.add('flex');
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }
+        }
+
+        function closeMobileNavMenu() {
+            const menu = document.getElementById('mobileNavDropdownMenu');
+            if (menu) {
+                menu.classList.add('hidden');
+                menu.classList.remove('flex');
+            }
+        }
+
         // Theme Persistence & Toggle Switch Controller
         const THEME_KEY = 'vynster-theme-mode';
 
