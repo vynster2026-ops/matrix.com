@@ -67,39 +67,78 @@
            #38BDF8 (Electric Blue) -> #6366F1 (Indigo) -> #8B5CF6 (Violet)
         */
 
+        /* DARK MODE (DEFAULT) */
         html,
-        body {
-            background-color: #F8FAFC !important;
+        body,
+        html.theme-dark,
+        body.theme-dark {
+            background-color: #030712 !important;
             font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-            color: #0F172A !important;
+            color: #E5E7EB !important;
             overflow-x: clip;
             width: 100%;
             transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* PRIMARY HEADINGS (#0F172A) */
-        h1, h2, h3, h4, h5, h6, .section-title {
+        /* BRIGHT MODE */
+        html.theme-bright,
+        body.theme-bright {
+            background-color: #F8FAFC !important;
             color: #0F172A !important;
+        }
+
+        /* PRIMARY HEADINGS */
+        h1, h2, h3, h4, h5, h6, .section-title {
+            color: #FFFFFF !important;
             font-weight: 800 !important;
             letter-spacing: -0.025em;
             text-shadow: none !important;
         }
 
-        /* SECONDARY TEXT / MUTED COPY (#475569) */
+        .theme-bright h1,
+        .theme-bright h2,
+        .theme-bright h3,
+        .theme-bright h4,
+        .theme-bright h5,
+        .theme-bright h6,
+        .theme-bright .section-title {
+            color: #0F172A !important;
+        }
+
+        /* SECONDARY COPY / MUTED TEXT */
         p, dd, dt, label, li, .section-copy, .hero-sub {
-            color: #475569 !important;
+            color: #9CA3AF !important;
             font-weight: 400;
             text-shadow: none !important;
         }
 
-        /* NAVIGATION TEXT (#0F172A) */
+        .theme-bright p,
+        .theme-bright dd,
+        .theme-bright dt,
+        .theme-bright label,
+        .theme-bright li,
+        .theme-bright .section-copy,
+        .theme-bright .hero-sub {
+            color: #475569 !important;
+        }
+
+        /* NAVIGATION TEXT */
         .nav-link,
         .brand-text {
-            color: #0F172A !important;
+            color: #FFFFFF !important;
             font-weight: 700;
         }
 
+        .theme-bright .nav-link,
+        .theme-bright .brand-text {
+            color: #0F172A !important;
+        }
+
         .nav-link:hover {
+            color: #38BDF8 !important;
+        }
+
+        .theme-bright .nav-link:hover {
             color: #2563EB !important;
         }
 
@@ -108,18 +147,22 @@
         .text-\[\#38BDF8\],
         .text-\[\#00A3FF\],
         .section-subtitle {
+            color: #38BDF8 !important;
+        }
+
+        .theme-bright .section-subtitle {
             color: #2563EB !important;
         }
 
-        /* BUTTONS (#2563EB ROYAL BLUE TO #38BDF8 ELECTRIC BLUE) & HOVER (#6366F1 TO #8B5CF6 VIOLET) */
+        /* BUTTONS & HOVER STATES */
         .btn-primary,
         .client-portal-btn,
         .btn-action {
-            background-color: #2563EB !important;
-            background-image: linear-gradient(135deg, #2563EB 0%, #38BDF8 100%) !important;
+            background-color: #0284C7 !important;
+            background-image: linear-gradient(135deg, #38BDF8 0%, #2563EB 100%) !important;
             color: #FFFFFF !important;
             border: none !important;
-            box-shadow: 0 4px 18px rgba(37, 99, 235, 0.3) !important;
+            box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35) !important;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
             font-weight: 700 !important;
         }
@@ -129,7 +172,7 @@
         .btn-action:hover {
             background-color: #6366F1 !important;
             background-image: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4) !important;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.45) !important;
             transform: translateY(-2px) scale(1.03) !important;
         }
 
@@ -148,6 +191,13 @@
         }
 
         .button-secondary {
+            background: rgba(17, 24, 39, 0.7) !important;
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .theme-bright .button-secondary {
             background: #FFFFFF !important;
             color: #0F172A !important;
             border: 1px solid #E2E8F0 !important;
@@ -156,15 +206,25 @@
 
         .button-secondary:hover {
             border-color: #38BDF8 !important;
-            color: #2563EB !important;
-            background: #F1F5F9 !important;
+            color: #38BDF8 !important;
         }
 
-        /* LIGHT LUXURY HIGHLIGHT CALLOUT CONTAINERS */
+        /* HIGHLIGHT CALLOUT CONTAINERS */
         .bg-slate-800\/60,
         .bg-slate-800,
         .bg-slate-900\/60,
         .highlight-box {
+            background: #111827 !important;
+            border: 1px solid rgba(56, 189, 248, 0.25) !important;
+            border-left: 4px solid #38BDF8 !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .theme-bright .bg-slate-800\/60,
+        .theme-bright .bg-slate-800,
+        .theme-bright .bg-slate-900\/60,
+        .theme-bright .highlight-box {
             background: #EEF2FF !important;
             border: 1px solid #C7D2FE !important;
             border-left: 4px solid #2563EB !important;
@@ -172,12 +232,10 @@
             box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08) !important;
         }
 
-        .bg-slate-800\/60 p,
-        .bg-slate-800 p,
-        .bg-slate-900\/60 p,
-        .bg-slate-800\/60 span,
-        .bg-slate-800 span,
-        .highlight-box p {
+        .theme-bright .bg-slate-800\/60 p,
+        .theme-bright .bg-slate-800 p,
+        .theme-bright .bg-slate-900\/60 p,
+        .theme-bright .highlight-box p {
             color: #0F172A !important;
             font-weight: 600 !important;
         }
@@ -188,88 +246,104 @@
             background: linear-gradient(135deg, #38BDF8 0%, #6366F1 50%, #8B5CF6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(99, 102, 241, 0.25));
+            filter: drop-shadow(0 4px 15px rgba(99, 102, 241, 0.35));
         }
 
-        /* HERO HEADING GRADIENT (#0F172A SLATE TO #2563EB ROYAL BLUE) */
+        /* HERO HEADING GRADIENT */
         .hero-heading {
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 55%, #38BDF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 20px rgba(56, 189, 248, 0.25));
+        }
+
+        .theme-bright .hero-heading {
             background: linear-gradient(180deg, #0F172A 0%, #1E293B 55%, #2563EB 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: none;
         }
 
-        /* WHITE CARD SURFACES (#FFFFFF CARD WITH #E2E8F0 BORDER) */
+        /* CARDS & PANELS */
         .glass-panel,
         .neo-card,
         .skeuo-card,
         .brutal-card,
         .brutal-panel,
         .motion-card {
-            background: #FFFFFF !important;
+            background: #111827 !important;
             backdrop-filter: blur(16px);
-            border: 1px solid #E2E8F0 !important;
+            border: 1px solid rgba(56, 189, 248, 0.25) !important;
             border-top: 3px solid #38BDF8 !important;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .glass-card:hover,
-        .neo-card:hover,
-        .skeuo-card:hover,
-        .brutal-card:hover,
+        .theme-bright .glass-panel,
+        .theme-bright .neo-card,
+        .theme-bright .skeuo-card,
+        .theme-bright .brutal-card,
+        .theme-bright .brutal-panel,
+        .theme-bright .motion-card {
+            background: #FFFFFF !important;
+            border: 1px solid #E2E8F0 !important;
+            border-top: 3px solid #38BDF8 !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+        }
+
         .motion-card:hover {
-            border-color: #2563EB !important;
-            border-top-color: #6366F1 !important;
-            box-shadow: 0 20px 45px rgba(37, 99, 235, 0.15), 0 4px 12px rgba(15, 23, 42, 0.04);
+            border-color: #38BDF8 !important;
+            box-shadow: 0 20px 45px rgba(56, 189, 248, 0.25);
             transform: translateY(-5px);
         }
 
-        /* NAVBAR CONTAINER (#FFFFFF PILL WITH #E2E8F0 BORDER) */
-        .nav-pill-container,
-        .glass-pill,
-        .skeuo-pill,
-        .brutal-pill {
-            background: rgba(255, 255, 255, 0.94) !important;
+        /* NAVBAR CONTAINER */
+        .nav-pill-container {
+            background: rgba(17, 24, 39, 0.88) !important;
             backdrop-filter: blur(20px);
-            border: 1px solid #E2E8F0 !important;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.3) !important;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
             border-radius: 9999px;
             transition: all 0.3s ease;
         }
 
-        /* INPUT SLOTS (#FFFFFF SLOTS WITH #E2E8F0 BORDER) */
-        .glass-input,
-        .neo-input,
-        .skeuo-input,
-        .brutal-input {
-            background: #FFFFFF !important;
+        .theme-bright .nav-pill-container {
+            background: rgba(255, 255, 255, 0.94) !important;
             border: 1px solid #E2E8F0 !important;
-            border-radius: 16px;
-            transition: all 0.25s ease;
-            color: #0F172A !important;
-            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
         }
 
-        .glass-input:focus,
-        .neo-input:focus,
-        .skeuo-input:focus,
-        .brutal-input:focus {
-            background: #FFFFFF !important;
-            border-color: #2563EB !important;
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.25) !important;
-            outline: none;
+        /* ROTATING ARC SWEEP RING ANIMATION */
+        @keyframes arcSweep {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
-        footer {
-            background: #0F172A !important;
-            color: #F8FAFC !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        .animate-arc-sweep {
+            animation: arcSweep 3.2s linear infinite;
+            transform-origin: 110px 110px;
         }
 
-        footer p, footer span, footer a {
-            color: #CBD5E1 !important;
+        /* BLINKING PIN POINT PULSE ANIMATION AT TOP-RIGHT (187.5px, 59.7px) */
+        @keyframes pinBlink {
+            0%, 80%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 4px rgba(244, 6, 6, 0.8));
+            }
+            90% {
+                transform: scale(1.65);
+                filter: drop-shadow(0 0 18px rgba(56, 189, 248, 1)) drop-shadow(0 0 28px rgba(244, 6, 6, 1));
+            }
+        }
+
+        .animate-pin-blink {
+            animation: pinBlink 3.2s ease-in-out infinite;
+            transform-origin: 187.5px 59.7px;
         }
 
         /* Motion Keyframe Animations */
@@ -292,7 +366,7 @@
                 transform: scale(1);
             }
             50% {
-                opacity: 0.9;
+                opacity: 0.95;
                 transform: scale(1.08);
             }
         }
@@ -307,22 +381,30 @@
         }
 
         ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+
+        .theme-bright ::-webkit-scrollbar-track {
             background: #F8FAFC;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #CBD5E1;
+            background: #374151;
             border-radius: 4px;
         }
 
+        .theme-bright ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+        }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #2563EB;
+            background: #38BDF8;
         }
     </style>
 </head>
 
 <body
-    class="bg-[#F8FAFC] text-[#0F172A] font-['Plus_Jakarta_Sans',sans-serif] antialiased overflow-x-clip selection:bg-[#22D3EE] selection:text-[#0F172A]">
+    class="bg-[#030712] text-[#E5E7EB] font-['Plus_Jakarta_Sans',sans-serif] antialiased overflow-x-clip selection:bg-[#38BDF8] selection:text-[#030712]">
 
     <!-- ATMOSPHERIC BACKGROUND MESH & GLOWING ORBS -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -472,22 +554,55 @@
             </div>
         </div>
 
-            <!-- LOGO EMBLEM BACKGROUND: AMBIENT LUXURY MOTION BACKDROP -->
+            <!-- LOGO EMBLEM BACKGROUND: AMBIENT BRIGHT MOTION BACKDROP -->
             <div
-                class="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-0 w-[240px] xs:w-[300px] sm:w-[460px] md:w-[580px] lg:w-[680px] pointer-events-none select-none opacity-15 sm:opacity-20 transition-all duration-500 scale-90 sm:scale-100">
+                class="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-0 w-[260px] xs:w-[320px] sm:w-[480px] md:w-[600px] lg:w-[700px] pointer-events-none select-none opacity-90 sm:opacity-100 transition-all duration-500 scale-95 sm:scale-100">
                 <div class="w-full flex justify-center relative">
                     <!-- Ambient Glow Atmosphere -->
                     <div id="heroEmblemGlow"
-                        class="absolute inset-0 rounded-full blur-[90px] sm:blur-[120px] scale-125 pointer-events-none animate-pulse-glow bg-gradient-to-tr from-[#38BDF8]/30 via-[#6366F1]/40 to-[#8B5CF6]/20">
+                        class="absolute inset-0 rounded-full blur-[70px] sm:blur-[100px] scale-110 pointer-events-none animate-pulse-glow bg-gradient-to-tr from-[#38BDF8]/40 via-[#6366F1]/45 to-[#8B5CF6]/30">
                     </div>
 
                     <div class="w-full relative z-10 flex justify-center items-center">
                         <div class="relative w-full aspect-square flex items-center justify-center max-w-[620px]">
-                            <!-- POLISHED LOGO EMBLEM IMAGE WITH FALLBACK SVG -->
-                            <img src="vynster-logo.png?v=2" alt="Vynster Stylized Emblem"
-                                class="w-full h-auto object-contain select-none filter drop-shadow-[0_10px_35px_rgba(56,189,248,0.3)]"
+                            <!-- POLISHED LOGO EMBLEM IMAGE -->
+                            <img src="vynster-logo.png?v=5" alt="Vynster Stylized Emblem"
+                                class="w-full h-auto object-contain select-none filter drop-shadow-[0_15px_40px_rgba(56,189,248,0.45)] brightness-105 contrast-105"
                                 loading="eager"
                                 onerror="this.style.display='none'; document.getElementById('heroFallbackSvg').style.display='block';">
+
+                            <!-- OVERLAID DYNAMIC ROTATING ELECTRIC ARC RING & BLINKING PIN POINT -->
+                            <svg viewBox="0 0 220 220" class="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-20">
+                                <defs>
+                                    <linearGradient id="vynsterArcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#38BDF8" stop-opacity="1" />
+                                        <stop offset="50%" stop-color="#6366F1" stop-opacity="0.9" />
+                                        <stop offset="85%" stop-color="#8B5CF6" stop-opacity="0.35" />
+                                        <stop offset="100%" stop-color="#EC4899" stop-opacity="0" />
+                                    </linearGradient>
+                                    <filter id="vynsterGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+                                        <feGaussianBlur stdDeviation="3.5" result="blur" />
+                                        <feMerge>
+                                            <feMergeNode in="blur" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                </defs>
+                                
+                                <!-- ROTATING GRADIENT ARC SWEEP RING -->
+                                <g class="animate-arc-sweep" style="transform-origin: 110px 110px;">
+                                    <circle cx="110" cy="110" r="85.5" fill="none" stroke="url(#vynsterArcGrad)"
+                                        stroke-width="7" stroke-dasharray="140 390" stroke-linecap="round"
+                                        filter="url(#vynsterGlowFilter)" />
+                                </g>
+
+                                <!-- CONNECTED PIN POINT AT TOP-RIGHT (187.5, 59.7) WITH BLINKING FLASH -->
+                                <g class="animate-pin-blink" style="transform-origin: 187.5px 59.7px;">
+                                    <line x1="168" y1="73" x2="187.5" y2="59.7" stroke="#08214D" stroke-width="4.5" stroke-linecap="round" />
+                                    <circle cx="187.5" cy="59.7" r="8" fill="#F40606" filter="url(#vynsterGlowFilter)" />
+                                    <circle cx="187.5" cy="59.7" r="4" fill="#FFFFFF" />
+                                </g>
+                            </svg>
 
                             <!-- PRECISION SVG FALLBACK LOGO EMBLEM -->
                             <svg id="heroFallbackSvg" viewBox="0 0 220 220" class="w-full h-auto hidden">
