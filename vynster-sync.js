@@ -15,7 +15,12 @@
     let socket = null;
     if (typeof io !== 'undefined') {
         try {
-            socket = io();
+            const host = window.location.hostname;
+            const port = window.location.port;
+            const socketHost = ((host === 'localhost' || host === '127.0.0.1' || window.location.protocol === 'file:') && port !== '5000')
+                ? 'http://localhost:5000'
+                : window.location.origin;
+            socket = io(socketHost, { transports: ['websocket', 'polling'], timeout: 5000 });
             window.vynsterSocket = socket;
         } catch (e) {
             console.log('Socket.IO init notice:', e);

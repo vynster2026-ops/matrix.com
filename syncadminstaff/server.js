@@ -1,7 +1,10 @@
 require('dotenv').config();
-// Global error handler to prevent whatsapp-web.js background errors from crashing the server
+// Global error handlers to prevent background errors from crashing the server
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('[CRITICAL] Unhandled Rejection (often WA file lock):', reason);
+    console.error('[CRITICAL] Unhandled Rejection:', reason);
+});
+process.on('uncaughtException', (err, origin) => {
+    console.error('[CRITICAL] Uncaught Exception:', err);
 });
 
 const express = require('express');
@@ -367,7 +370,13 @@ if (fs.existsSync(DB_FILE)) {
         }
     } catch (e) { console.error('Error reading db.json'); }
 }
-const saveLocal = () => fs.writeFileSync(DB_FILE, JSON.stringify(localDb, null, 2));
+const saveLocal = () => {
+    try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(localDb, null, 2));
+    } catch (e) {
+        console.error('Error writing to db.json:', e.message);
+    }
+};
 
 mongoose.set('bufferCommands', false);
 
