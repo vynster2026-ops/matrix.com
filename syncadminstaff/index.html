@@ -355,71 +355,79 @@
         <!-- HERO SECTION -->
         <section
             class="relative min-h-screen w-full flex flex-col justify-between overflow-x-clip bg-transparent pb-12 sm:pb-16">
-        <!-- FROSTED NEO-BRUTALIST NAVBAR -->
+        <!-- SOPHISTICATED MOTION SITE NAVBAR -->
         <div class="w-full z-40 px-3 sm:px-8 md:px-12 pt-3 sm:pt-6 flex flex-col items-center relative">
             <nav
-                class="brutal-pill rounded-2xl sm:rounded-full px-3.5 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-6 md:gap-10 max-w-5xl w-full relative z-30">
-                <!-- Left Brand Badge / Mobile Menu Toggle -> Opens navigation dropdown on click on mobile -->
+                class="nav-pill-container rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-6 md:gap-10 max-w-5xl w-full relative z-30">
+                <!-- Left Brand Badge / Mobile Menu Toggle -->
                 <button id="brandLogoBtn" onclick="toggleMobileNavMenu(event)"
-                    class="flex items-center gap-2 sm:gap-3 cursor-pointer group bg-transparent border-none outline-none text-left"
+                    class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group bg-transparent border-none outline-none text-left"
                     title="Click logo to open mobile navigation menu">
                     <img src="vynster-logo.png" alt="Vynster Symbol"
-                        class="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow-[2px_2px_0px_#000000] brightness-105 contrast-110 group-hover:scale-110 transition-transform duration-300">
-                    <div class="flex items-center gap-1">
-                        <span class="font-black text-base sm:text-xl tracking-wider select-none text-white brand-text">
+                        class="w-7 h-7 sm:w-9 sm:h-9 object-contain drop-shadow-[0_2px_10px_rgba(56,189,248,0.4)] brightness-105 contrast-110 group-hover:scale-105 transition-transform duration-300">
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-extrabold text-base sm:text-xl tracking-wider select-none text-white brand-text">
                             V<span class="text-[#38BDF8]">Y</span>NSTER
                         </span>
-                        <!-- Mobile Indicator Caret Badge -->
-                        <span class="inline-flex md:hidden text-[10px] font-bold bg-[#38BDF8] text-[#0F172A] px-1.5 py-0.5 rounded border border-black shadow-[1px_1px_0px_#000]">
+                        <!-- Mobile Navigation Badge -->
+                        <span class="inline-flex md:hidden text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/40 px-2 py-0.5 rounded-full backdrop-blur-md">
                             MENU ▾
                         </span>
                     </div>
                 </button>
 
-                <!-- Desktop Nav Links -->
+                <!-- Desktop Navigation Links -->
                 <div class="hidden md:flex items-center gap-6 lg:gap-10">
                     <a href="#about"
-                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        class="font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
                         About
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                     </a>
                     <a href="#approach"
-                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        class="font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
                         Approach
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                     </a>
                     <a href="#numbers"
-                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        class="font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
                         Our Work
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                     </a>
                     <a href="#contact"
-                        class="font-black uppercase tracking-wider text-xs sm:text-sm transition-all duration-200 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
+                        class="font-semibold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 hover:scale-105 cursor-pointer text-slate-100 hover:text-[#38BDF8] relative group nav-link">
                         Contact
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#38BDF8] to-[#6366F1] group-hover:w-full transition-all duration-300"></span>
                     </a>
                 </div>
 
-                <!-- Right CTAs (Super Admin Button + Salon Portal Button + Theme Toggle) -->
-                <div class="flex items-center gap-1.5 sm:gap-3">
+                <!-- Right Action CTAs -->
+                <div class="flex items-center gap-2 sm:gap-3">
                     <!-- Super Admin Gateway Button -->
                     <a href="superadmin_login.html"
-                        class="superadmin-btn text-[10px] sm:text-xs font-black tracking-wide px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#C084FC] text-[#0F172A] border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all duration-200 cursor-pointer flex items-center gap-1"
+                        class="superadmin-btn text-[10px] sm:text-xs font-bold tracking-wide px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 text-white shadow-[0_4px_14px_rgba(124,58,237,0.35)] hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-1.5 border border-purple-400/30"
                         title="Access Master Super Admin Portal">
                         <span>👑</span>
                         <span class="hidden xs:inline">ADMIN</span>
                     </a>
 
-                    <!-- Salon Login Button -->
+                    <!-- Salon Portal Login Button -->
                     <button onclick="navigateToSalonPortal(event)"
-                        class="client-portal-btn text-[10px] sm:text-xs font-black tracking-wide px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl bg-[#38BDF8] text-[#0F172A] border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all duration-200 cursor-pointer flex items-center gap-1">
+                        class="client-portal-btn text-[10px] sm:text-xs font-bold tracking-wide px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 text-white shadow-[0_4px_14px_rgba(56,189,248,0.35)] hover:scale-105 transition-all duration-300 cursor-pointer flex items-center gap-1.5 border border-sky-300/30">
                         <span>💼</span> SALON<span class="hidden xs:inline">&nbsp;PORTAL</span>
                     </button>
 
-                    <!-- Sleek Sliding Pill Theme Toggle Switch -->
+                    <!-- Theme Toggle Switch -->
                     <button id="themeToggleBtn" onclick="toggleAppTheme()"
-                        class="relative flex items-center w-10 sm:w-14 h-7 sm:h-8 rounded-xl p-0.5 sm:p-1 border-2 border-black shadow-[2px_2px_0px_#000] bg-slate-900 cursor-pointer hover:border-[#38BDF8]"
+                        class="relative flex items-center w-11 sm:w-14 h-7 sm:h-8 rounded-full p-1 transition-all duration-300 cursor-pointer border border-white/20 bg-slate-900/90 hover:border-sky-400 shadow-inner"
                         aria-label="Toggle Bright/Dark Theme" title="Switch Bright / Dark Mode">
                         <span class="text-[9px] sm:text-[10px] absolute left-1.5 select-none opacity-60">☀️</span>
                         <span class="text-[9px] sm:text-[10px] absolute right-1.5 select-none opacity-60">🌙</span>
                         <span id="themeToggleKnob"
-                            class="w-4 sm:w-6 h-4 sm:h-6 rounded-lg bg-white border border-black shadow transform transition-transform duration-300 translate-x-4 sm:translate-x-6 flex items-center justify-center text-[9px] sm:text-xs">
+                            class="w-4 sm:w-6 h-4 sm:h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 translate-x-4 sm:translate-x-6 flex items-center justify-center text-[9px] sm:text-xs text-slate-900">
                             🌙
                         </span>
                     </button>
@@ -428,38 +436,38 @@
 
             <!-- MOBILE LOGO CLICK DROPDOWN MENU PANEL -->
             <div id="mobileNavDropdownMenu"
-                class="hidden w-full max-w-5xl mt-2 p-4 bg-[#0D1322] border-3 border-[#38BDF8] rounded-2xl shadow-[6px_6px_0px_#000000] z-50 flex-col gap-2 transition-all duration-300">
-                <div class="flex items-center justify-between pb-2 border-b-2 border-white/20 mb-1">
-                    <span class="text-xs font-black tracking-widest text-[#38BDF8] uppercase flex items-center gap-1.5">
+                class="hidden w-full max-w-5xl mt-2.5 p-4 bg-slate-900/95 backdrop-blur-2xl border border-sky-400/40 rounded-2xl shadow-2xl z-50 flex-col gap-2 transition-all duration-300">
+                <div class="flex items-center justify-between pb-2 border-b border-white/10 mb-1">
+                    <span class="text-xs font-bold tracking-widest text-[#38BDF8] uppercase flex items-center gap-1.5">
                         <span>🚀</span> NAVIGATION MENU
                     </span>
-                    <button onclick="closeMobileNavMenu()" class="text-xs font-bold px-2 py-0.5 bg-rose-500 text-white rounded border border-black shadow-[1px_1px_0px_#000]">✕ CLOSE</button>
+                    <button onclick="closeMobileNavMenu()" class="text-xs font-semibold px-2.5 py-1 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/30 hover:bg-rose-500 hover:text-white transition-all">✕ CLOSE</button>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <a href="#about" onclick="closeMobileNavMenu()"
-                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        class="flex items-center gap-2.5 p-3 bg-slate-800/80 rounded-xl border border-white/10 text-white font-semibold text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-slate-900 transition-all">
                         <span>📌</span> About
                     </a>
                     <a href="#approach" onclick="closeMobileNavMenu()"
-                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        class="flex items-center gap-2.5 p-3 bg-slate-800/80 rounded-xl border border-white/10 text-white font-semibold text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-slate-900 transition-all">
                         <span>⚡</span> Approach
                     </a>
                     <a href="#numbers" onclick="closeMobileNavMenu()"
-                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        class="flex items-center gap-2.5 p-3 bg-slate-800/80 rounded-xl border border-white/10 text-white font-semibold text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-slate-900 transition-all">
                         <span>📊</span> Our Work
                     </a>
                     <a href="#contact" onclick="closeMobileNavMenu()"
-                        class="flex items-center gap-2 p-3 bg-slate-900 rounded-xl border-2 border-white/20 text-white font-black text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-black hover:border-black shadow-[2px_2px_0px_#000] transition-all">
+                        class="flex items-center gap-2.5 p-3 bg-slate-800/80 rounded-xl border border-white/10 text-white font-semibold text-xs sm:text-sm hover:bg-[#38BDF8] hover:text-slate-900 transition-all">
                         <span>✉️</span> Contact
                     </a>
                 </div>
                 <div class="grid grid-cols-2 gap-2 mt-1 pt-2 border-t border-white/10">
                     <a href="superadmin_login.html" onclick="closeMobileNavMenu()"
-                        class="flex items-center justify-center gap-1.5 p-2.5 bg-[#C084FC] text-black font-black text-xs rounded-xl border-2 border-black shadow-[2px_2px_0px_#000]">
+                        class="flex items-center justify-center gap-1.5 p-2.5 bg-purple-600 text-white font-bold text-xs rounded-xl shadow-md">
                         <span>👑</span> Super Admin
                     </a>
                     <button onclick="navigateToSalonPortal(event); closeMobileNavMenu();"
-                        class="flex items-center justify-center gap-1.5 p-2.5 bg-[#38BDF8] text-black font-black text-xs rounded-xl border-2 border-black shadow-[2px_2px_0px_#000]">
+                        class="flex items-center justify-center gap-1.5 p-2.5 bg-sky-500 text-white font-bold text-xs rounded-xl shadow-md">
                         <span>💼</span> Salon Portal
                     </button>
                 </div>
