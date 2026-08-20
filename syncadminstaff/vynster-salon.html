@@ -183,6 +183,13 @@
             box-shadow: var(--clay-shadow-card-hover) !important;
         }
 
+        .view-section .card,
+        .view-section .card:hover,
+        #view-clients .card,
+        #view-clients .card:hover {
+            transform: none !important;
+        }
+
         /* Tactile Clay Buttons */
         .btn,
         button {
@@ -2736,9 +2743,7 @@
 
                         <div style="display:flex; align-items:center; gap:12px;">
                             <button class="btn" onclick="document.getElementById('client-import-file-input-below').click()"
-                                style="display:flex; align-items:center; gap:8px; padding:10px 20px; background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; border:none; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35); transition:all 0.2s;"
-                                onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(16,185,129,0.45)'"
-                                onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(16,185,129,0.35)'">
+                                style="display:flex; align-items:center; gap:8px; padding:10px 20px; background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; border:none; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35); transition:all 0.2s;">
                                 <span>📄</span> Add Clients (.CSV / Excel)
                             </button>
                             <input type="file" id="client-import-file-input-below" accept=".csv,.xlsx,.xls,.txt" style="display:none;" onchange="handleSalonClientFileImport(event)">
