@@ -7816,7 +7816,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadSettings();
-            checkOpeningAmount();
+            // checkOpeningAmount(); // Disabled popup on page load
             renderQuickTasks();
 
             // Recover pending receipt if Live Server reloaded the page
@@ -8042,23 +8042,8 @@
         }
 
         async function checkOpeningAmount() {
-            const key = getRegisterKey('daily');
-            let hasSetAmount = false;
-            try {
-                const res = await fetch(`${API_URL}/settings`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data[key] !== undefined && data[key] !== null) hasSetAmount = true;
-                }
-            } catch (e) { }
-
-            if (!hasSetAmount) {
-                currentRegisterMode = 'daily';
-                const descEl = document.getElementById('edit-opening-desc');
-                if (descEl) descEl.innerText = 'Please enter the opening cash amount in the register for today.';
-                document.getElementById('opening-amount-modal').style.display = 'flex';
-                document.getElementById('opening-amount-input').focus();
-            }
+            // Automatic opening cash amount popup disabled per user request
+            return;
         }
 
         async function submitOpeningAmount() {
