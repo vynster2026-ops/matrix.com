@@ -3611,6 +3611,32 @@
                     phone: salon ? salon.phone : ''
                 };
                 localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
+
+                // Map & sync uploaded salon clients to the generated accessKey and salon name
+                const rawClients = localStorage.getItem('salon_clients_' + id);
+                if (rawClients) {
+                    const parsed = JSON.parse(rawClients);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        parsed.forEach(c => {
+                            c.accessKey = accessKey;
+                            c.branchEmail = accessKey;
+                            c.salonName = salonName;
+                            c.branchName = salonName;
+                        });
+                        localStorage.setItem('salon_clients_' + accessKey, JSON.stringify(parsed));
+                        localStorage.setItem('salon_clients_' + salonName, JSON.stringify(parsed));
+
+                        for (const c of parsed) {
+                            try {
+                                await fetch(getApiUrl('/api/clients'), {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(c)
+                                });
+                            } catch (err) { }
+                        }
+                    }
+                }
             } catch (e) {}
 
             // Save to Backend API
@@ -4058,31 +4084,70 @@
                 reader.onload = async (e) => {
                     const result = e.target.result;
                     let parsedClients = [];
-                    if (typeof result === 'string' && (clientsFile.name.endsWith('.csv') || clientsFile.name.endsWith('.txt'))) {
-                        const lines = result.split('\n');
-                        for (let i = 1; i < lines.length; i++) {
+                    if (typeof result === 'string') {
+                        const lines = result.split(/\r?\n/);
+                        let startIdx = 0;
+                        if (lines.length > 0) {
+                            const firstLine = lines[0].toLowerCase();
+                            if (firstLine.includes('name') || firstLine.includes('phone') || firstLine.includes('mobile') || firstLine.includes('email')) {
+                                startIdx = 1;
+                            }
+                        }
+
+                        for (let i = startIdx; i < lines.length; i++) {
                             const line = lines[i].trim();
                             if (!line) continue;
-                            const parts = line.split(',');
-                            if (parts.length >= 2) {
+                            
+                            // Support comma, tab, or semicolon delimiters
+                            const parts = line.split(/[,;\t]/);
+                            if (parts.length >= 1 && parts[0].trim()) {
+                                const clientName = parts[0].trim();
+                                const clientPhone = parts[1] ? parts[1].trim() : '';
+                                const clientEmail = parts[2] ? parts[2].trim() : '';
+                                const clientLtv = parts[3] ? parts[3].trim() : '₹3,500';
+
                                 const cObj = {
-                                    id: 'c' + Date.now() + '_' + i,
-                                    name: parts[0] ? parts[0].trim() : 'Client ' + i,
-                                    phone: parts[1] ? parts[1].trim() : '',
-                                    email: parts[2] ? parts[2].trim() : '',
-                                    pts: 100,
-                                    ltv: "₹2,500",
-                                    branchId: reqPayload.id
+                                    id: 'c_' + reqPayload.id + '_' + Date.now() + '_' + i,
+                                    name: clientName,
+                                    phone: clientPhone || '+91 98765 00000',
+                                    email: clientEmail || (clientName.toLowerCase().replace(/[^a-z0-9]/g, '') + '@gmail.com'),
+                                    pts: 150,
+                                    ltv: clientLtv.startsWith('₹') ? clientLtv : ('₹' + clientLtv),
+                                    visits: 2,
+                                    lastVisit: new Date().toISOString().split('T')[0],
+                                    branchId: reqPayload.id,
+                                    accessKey: reqPayload.email,
+                                    branchEmail: reqPayload.email,
+                                    salonName: reqPayload.name,
+                                    branchName: reqPayload.name
                                 };
                                 parsedClients.push(cObj);
                             }
                         }
                     }
+
                     if (parsedClients.length > 0) {
-                        let existingSuperClients = JSON.parse(localStorage.getItem('SuperAdminClients') || localStorage.getItem('MedhikaMockClients') || '[]');
-                        existingSuperClients = [...parsedClients, ...existingSuperClients];
-                        localStorage.setItem('SuperAdminClients', JSON.stringify(existingSuperClients));
-                        localStorage.setItem('MedhikaMockClients', JSON.stringify(existingSuperClients));
+                        try {
+                            let existingSuperClients = JSON.parse(localStorage.getItem('SuperAdminClients') || localStorage.getItem('MedhikaMockClients') || '[]');
+                            existingSuperClients = [...parsedClients, ...existingSuperClients];
+                            localStorage.setItem('SuperAdminClients', JSON.stringify(existingSuperClients));
+                            localStorage.setItem('MedhikaMockClients', JSON.stringify(existingSuperClients));
+
+                            // Branch-specific local caches so salon portal loads clients 0ms instantly
+                            localStorage.setItem('salon_clients_' + reqPayload.id, JSON.stringify(parsedClients));
+                            localStorage.setItem('salon_clients_' + reqPayload.email, JSON.stringify(parsedClients));
+                            localStorage.setItem('salon_clients_' + reqPayload.name, JSON.stringify(parsedClients));
+
+                            let allSalonClients = JSON.parse(localStorage.getItem('medhika_all_clients') || '[]');
+                            allSalonClients = [...parsedClients, ...allSalonClients];
+                            localStorage.setItem('medhika_all_clients', JSON.stringify(allSalonClients));
+
+                            let mockDb = JSON.parse(localStorage.getItem('MedhikaMockDB') || '{}');
+                            mockDb.clients = [...parsedClients, ...(mockDb.clients || [])];
+                            localStorage.setItem('MedhikaMockDB', JSON.stringify(mockDb));
+                        } catch(err) {}
+
+                        // POST to backend API for server DB persistence
                         for (const c of parsedClients) {
                             try {
                                 await fetch(getApiUrl('/api/clients'), {
@@ -4092,13 +4157,15 @@
                                 });
                             } catch (err) { }
                         }
+
+                        if (typeof vynsterSyncEmit === 'function') {
+                            vynsterSyncEmit('clients_updated', { branchId: reqPayload.id, count: parsedClients.length });
+                        }
+                        showToast(`Uploaded & synced ${parsedClients.length} clients to salon database!`, 'success');
                     }
                 };
-                if (clientsFile.name.endsWith('.csv') || clientsFile.name.endsWith('.txt')) {
-                    reader.readAsText(clientsFile);
-                } else {
-                    reader.readAsDataURL(clientsFile);
-                }
+
+                reader.readAsText(clientsFile);
             }
 
             // 3. Network POST request
