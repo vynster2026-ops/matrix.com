@@ -8709,7 +8709,45 @@
                 }
 
                 cachedBookings = newBookings;
-                cachedClients = newClients;
+
+                let mergedClients = Array.isArray(newClients) ? [...newClients] : [];
+
+                const cacheKeys = [
+                    'SuperAdminClients',
+                    'MedhikaMockClients',
+                    'medhika_all_clients',
+                    'salon_clients_' + window.currentBranch,
+                    'salon_clients_' + localStorage.getItem("selectedBranch"),
+                    'salon_clients_' + localStorage.getItem("loggedInBranchId"),
+                    'salon_clients_' + localStorage.getItem("loggedInBranchEmail")
+                ];
+
+                cacheKeys.forEach(k => {
+                    try {
+                        const raw = localStorage.getItem(k);
+                        if (raw) {
+                            const parsed = JSON.parse(raw);
+                            if (Array.isArray(parsed)) {
+                                parsed.forEach(lc => {
+                                    if (lc && (lc.name || lc.id)) {
+                                        if (!mergedClients.some(mc => String(mc.id || mc.name) === String(lc.id || lc.name))) {
+                                            mergedClients.push(lc);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    } catch(e) {}
+                });
+
+                cachedClients = mergedClients;
+
+                try {
+                    let mDb = JSON.parse(localStorage.getItem('MedhikaMockDB') || '{}');
+                    mDb.clients = cachedClients;
+                    localStorage.setItem('MedhikaMockDB', JSON.stringify(mDb));
+                } catch(e) {}
+
                 STAFF = await sRes.json();
                 cachedInventory = await iRes.json();
                 ALL_SERVICES = await svRes.json();

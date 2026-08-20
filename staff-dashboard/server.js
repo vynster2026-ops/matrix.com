@@ -1060,7 +1060,7 @@ app.get('/api/clients', async (req, res) => {
     let clients = [];
     if (isConnected) {
         try {
-            const filter = branchParam ? {
+            const filter = (branchParam && branchParam.toLowerCase() !== 'main branch' && branchParam.toLowerCase() !== 'global' && branchParam.toLowerCase() !== 'all') ? {
                 $or: [
                     { branchId: branchParam },
                     { accessKey: branchParam },
@@ -1070,21 +1070,25 @@ app.get('/api/clients', async (req, res) => {
                 ]
             } : {};
             clients = await Client.find(filter).lean();
+            if (clients.length === 0) {
+                clients = await Client.find({}).lean();
+            }
         } catch (e) {
             console.error('Error querying MongoDB clients:', e);
             clients = JSON.parse(JSON.stringify(localDb.clients || []));
         }
     } else {
         clients = JSON.parse(JSON.stringify(localDb.clients || []));
-        if (branchParam) {
+        if (branchParam && branchParam.toLowerCase() !== 'main branch' && branchParam.toLowerCase() !== 'global' && branchParam.toLowerCase() !== 'all') {
             const bp = String(branchParam).toLowerCase().trim();
-            clients = clients.filter(c => {
+            const filtered = clients.filter(c => {
                 const cbId = String(c.branchId || '').toLowerCase();
                 const cAcc = String(c.accessKey || '').toLowerCase();
                 const cMail = String(c.branchEmail || '').toLowerCase();
                 const cSalon = String(c.salonName || c.branchName || '').toLowerCase();
                 return cbId === bp || cAcc === bp || cMail === bp || cSalon === bp || !c.branchId;
             });
+            if (filtered.length > 0) clients = filtered;
         }
     }
 
