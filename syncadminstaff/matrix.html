@@ -2546,7 +2546,73 @@
             }
         }
 
-        let vendors = [];
+        function loadSavedApprovedVendors() {
+            const deletedIds = getDeletedVendorIds();
+            let loaded = [];
+            const keys = ['medhika_approved_salons', 'salon_branches', 'vynster_branches', 'local_branches', 'registered_salons', 'master_salons'];
+            
+            keys.forEach(key => {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) {
+                            parsed.forEach(item => {
+                                if (item && item.id && !deletedIds.includes(String(item.id)) && !loaded.some(e => String(e.id) === String(item.id))) {
+                                    loaded.push({
+                                        id: item.id,
+                                        name: item.name || 'Salon',
+                                        joined: item.joined || 'Recently',
+                                        initials: (item.name || 'SA').substring(0, 2).toUpperCase(),
+                                        location: item.location || 'N/A',
+                                        plan: item.plan || (item.subscription && item.subscription.plan ? item.subscription.plan : 'Basic'),
+                                        revenue: item.revenue || '₹0',
+                                        status: item.status || 'Active',
+                                        type: item.type || 'Unisex Salon',
+                                        email: item.email || item.accessKey || '',
+                                        password: item.password || item.passcode || '',
+                                        ownerName: item.ownerName || item.owner || ''
+                                    });
+                                }
+                            });
+                        }
+                    }
+                } catch(e) {}
+            });
+            return loaded;
+        }
+
+        function loadSavedPendingSalons() {
+            const deletedIds = getDeletedVendorIds();
+            let loaded = [];
+            try {
+                const raw = localStorage.getItem('medhika_pending_salons');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach(p => {
+                            if (p && p.id && !deletedIds.includes(String(p.id)) && !loaded.some(e => String(e.id) === String(p.id))) {
+                                loaded.push(p);
+                            }
+                        });
+                    }
+                }
+            } catch(e) {}
+            return loaded;
+        }
+
+        function saveSalonsToLocalStorage() {
+            try {
+                localStorage.setItem('medhika_approved_salons', JSON.stringify(vendors));
+                localStorage.setItem('medhika_pending_salons', JSON.stringify(pendingSalons));
+                localStorage.setItem('salon_branches', JSON.stringify(vendors));
+                localStorage.setItem('vynster_branches', JSON.stringify(vendors));
+                localStorage.setItem('local_branches', JSON.stringify(vendors));
+                localStorage.setItem('registered_salons', JSON.stringify(vendors));
+            } catch(e) {}
+        }
+
+        let vendors = loadSavedApprovedVendors();
         let salonToSuspend = null;
         let globalBookings = [];
         let globalExpenses = [];
@@ -2955,7 +3021,7 @@
         };
 
         // Salon Verification & Extended Rendering
-        let pendingSalons = [];
+        let pendingSalons = loadSavedPendingSalons();
         let payments = [];
 
         function renderExtendedTables() {
@@ -3277,42 +3343,30 @@
         }
 
         async function fetchRealTimeData() {
+            const deletedIds = getDeletedVendorIds();
+
+            // First load from localStorage to preserve onboarded salons
+            const cachedVendors = loadSavedApprovedVendors();
+            const cachedPending = loadSavedPendingSalons();
+
+            cachedVendors.forEach(cv => {
+                if (!vendors.some(v => String(v.id) === String(cv.id))) {
+                    vendors.push(cv);
+                }
+            });
+            cachedPending.forEach(cp => {
+                if (!pendingSalons.some(p => String(p.id) === String(cp.id))) {
+                    pendingSalons.push(cp);
+                }
+            });
+
             try {
                 const response = await fetch(getApiUrl('/api/branches'), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.ok) {
                     const data = await response.json();
-
-                    vendors = [];
-                    pendingSalons = [];
-                    const deletedIds = getDeletedVendorIds();
-
-                    const targetSelect = document.getElementById('setting-bill-ad-target');
-                    let currentTargetVal = 'global';
-                    if (targetSelect) {
-                        currentTargetVal = targetSelect.value;
-                        targetSelect.innerHTML = '<option value="global">All Salons (Global Override)</option>';
-                    }
-
                     let branchList = Array.isArray(data) ? data : (data && data.branches && Array.isArray(data.branches) ? data.branches : []);
-
-                    // Merge localStorage salon branch caches so no onboarded salon is ever lost
-                    try {
-                        const localApproved = JSON.parse(localStorage.getItem('medhika_approved_salons') || localStorage.getItem('salon_branches') || '[]');
-                        const localPending = JSON.parse(localStorage.getItem('medhika_pending_salons') || '[]');
-
-                        localApproved.forEach(lb => {
-                            if (lb && lb.id && !branchList.some(b => String(b.id) === String(lb.id))) {
-                                branchList.push(lb);
-                            }
-                        });
-                        localPending.forEach(lp => {
-                            if (lp && lp.id && !branchList.some(b => String(b.id) === String(lp.id))) {
-                                branchList.push(lp);
-                            }
-                        });
-                    } catch (e) { }
 
                     branchList.forEach(branch => {
                         if (deletedIds.includes(String(branch.id))) return;
@@ -3329,25 +3383,26 @@
                                           branch.status === 'Pending') && !isApproved;
 
                         if (isApproved) {
-                            if (!vendors.some(v => String(v.id) === String(branch.id))) {
-                                vendors.push({
-                                    id: branch.id,
-                                    name: branch.name || 'Salon',
-                                    joined: branch.joined || 'Recently',
-                                    initials: (branch.name || 'SA').substring(0, 2).toUpperCase(),
-                                    location: branch.location || 'N/A',
-                                    plan: (branch.subscription && branch.subscription.plan) ? branch.subscription.plan : (branch.plan || 'Basic'),
-                                    revenue: branch.revenue || ('₹' + (branch.grossRevenue || 0)),
-                                    status: branch.status || 'Active',
-                                    type: branch.type || 'Unisex Salon',
-                                    email: branch.email || branch.accessKey || '',
-                                    password: branch.password || branch.passcode || '',
-                                    ownerName: branch.ownerName || branch.owner || ''
-                                });
+                            const existingV = vendors.find(v => String(v.id) === String(branch.id));
+                            const vObj = {
+                                id: branch.id,
+                                name: branch.name || 'Salon',
+                                joined: branch.joined || 'Recently',
+                                initials: (branch.name || 'SA').substring(0, 2).toUpperCase(),
+                                location: branch.location || 'N/A',
+                                plan: (branch.subscription && branch.subscription.plan) ? branch.subscription.plan : (branch.plan || 'Basic'),
+                                revenue: branch.revenue || ('₹' + (branch.grossRevenue || 0)),
+                                status: branch.status || 'Active',
+                                type: branch.type || 'Unisex Salon',
+                                email: branch.email || branch.accessKey || (existingV ? existingV.email : ''),
+                                password: branch.password || branch.passcode || (existingV ? existingV.password : ''),
+                                ownerName: branch.ownerName || branch.owner || (existingV ? existingV.ownerName : '')
+                            };
 
-                                if (targetSelect && !Array.from(targetSelect.options).some(o => o.value === String(branch.id))) {
-                                    targetSelect.innerHTML += `<option value="${branch.id}">${branch.name}</option>`;
-                                }
+                            if (!existingV) {
+                                vendors.push(vObj);
+                            } else {
+                                Object.assign(existingV, vObj);
                             }
                         } else if (isPending) {
                             if (!pendingSalons.some(p => String(p.id) === String(branch.id))) {
@@ -3371,15 +3426,25 @@
                             }
                         }
                     });
-
-                    if (targetSelect) {
-                        if (Array.from(targetSelect.options).some(o => o.value === currentTargetVal)) {
-                            targetSelect.value = currentTargetVal;
-                        }
-                    }
                 }
             } catch (error) {
-                console.warn("Backend fetch error, using local cache:", error);
+                console.warn("Backend fetch error, using persistent local storage cache:", error);
+            }
+
+            saveSalonsToLocalStorage();
+
+            const targetSelect = document.getElementById('setting-bill-ad-target');
+            if (targetSelect) {
+                const currentTargetVal = targetSelect.value || 'global';
+                targetSelect.innerHTML = '<option value="global">All Salons (Global Override)</option>';
+                vendors.forEach(v => {
+                    if (!Array.from(targetSelect.options).some(o => o.value === String(v.id))) {
+                        targetSelect.innerHTML += `<option value="${v.id}">${v.name}</option>`;
+                    }
+                });
+                if (Array.from(targetSelect.options).some(o => o.value === currentTargetVal)) {
+                    targetSelect.value = currentTargetVal;
+                }
             }
 
             try {
@@ -4233,6 +4298,7 @@
 
                 renderVendorTable();
                 renderExtendedTables();
+                saveSalonsToLocalStorage();
                 if (typeof showToast === 'function') showToast('Branch successfully deleted.', 'error');
 
                 try {
@@ -4251,13 +4317,17 @@
         window.deleteVendor = deleteVendor;
 
         function signOut() {
-            showToast('Signing out of MedhikaArts Super Admin...', 'success');
+            saveSalonsToLocalStorage();
+            if (typeof showToast === 'function') showToast('Signing out of MedhikaArts Super Admin...', 'success');
             localStorage.removeItem('adminToken');
             localStorage.removeItem('adminUser');
+            sessionStorage.removeItem('adminToken');
+            sessionStorage.removeItem('adminUser');
             setTimeout(() => {
                 window.location.href = 'superadmin_login.html';
-            }, 1500);
+            }, 600);
         }
+        window.signOut = signOut;
 
         function populateBABranchSelector() {
             const selector = document.getElementById('ba-branch-select');
