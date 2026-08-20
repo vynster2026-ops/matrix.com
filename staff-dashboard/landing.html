@@ -444,22 +444,18 @@
         <div class="w-full z-40 px-3 sm:px-8 md:px-12 pt-3 sm:pt-6 flex flex-col items-center relative">
             <nav
                 class="nav-pill-container rounded-full px-4 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between gap-2 sm:gap-6 md:gap-10 max-w-5xl w-full relative z-30">
-                <!-- Left Brand Badge / Mobile Menu Toggle -->
-                <button id="brandLogoBtn" onclick="toggleMobileNavMenu(event)"
+                <!-- Left Brand Badge -> Opens BD.html -->
+                <a href="bd.html" id="brandLogoBtn"
                     class="flex items-center gap-2.5 sm:gap-3 cursor-pointer group bg-transparent border-none outline-none text-left"
-                    title="Click logo to open mobile navigation menu">
+                    title="Click logo to open Business Development (bd.html)">
                     <img src="vynster-logo.png" alt="Vynster Symbol"
                         class="w-7 h-7 sm:w-9 sm:h-9 object-contain drop-shadow-[0_2px_10px_rgba(56,189,248,0.4)] brightness-105 contrast-110 group-hover:scale-105 transition-transform duration-300">
                     <div class="flex items-center gap-1.5">
                         <span class="font-extrabold text-base sm:text-xl tracking-wider select-none text-white brand-text">
                             V<span class="text-[#38BDF8]">Y</span>NSTER
                         </span>
-                        <!-- Mobile Navigation Badge -->
-                        <span class="inline-flex md:hidden text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/40 px-2 py-0.5 rounded-full backdrop-blur-md">
-                            MENU ▾
-                        </span>
                     </div>
-                </button>
+                </a>
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden md:flex items-center gap-6 lg:gap-10">
