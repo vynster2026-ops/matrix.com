@@ -12844,6 +12844,57 @@
           "timestamp": "2026-08-09T14:43:20.248Z"
         }
       ]
+    },
+    {
+      "id": "direct-cmp-1787206273314",
+      "name": "Direct Bulk Sending - 20/8/2026",
+      "message": "*Srijes Booking Confirmation*\n--------------------------\n*Hello Miss. Kutty*,\n\nYour booking for *Hot oil massage* is confirmed!\n\n📅 *Date:* Friday, 21 August 2026\n⏰ *Time:* 11:30 AM\n🔖 *Booking ID:* GS-58694\n\n_Thank you for choosing Srijes!_",
+      "mediaUrls": [],
+      "recipientsCount": 1,
+      "status": "completed",
+      "timestamp": "2026-08-20T06:11:13.328Z",
+      "results": [
+        {
+          "name": "Client 1",
+          "phone": "918309578708",
+          "status": "sent",
+          "timestamp": "2026-08-20T06:11:36.169Z"
+        }
+      ]
+    },
+    {
+      "id": "direct-cmp-1787206274129",
+      "name": "Direct Bulk Sending - 20/8/2026",
+      "message": "*Srijes Booking Confirmation*\n--------------------------\n*Hello Miss. Kutty*,\n\nYour booking for *Hot oil massage* is confirmed!\n\n📅 *Date:* Friday, 21 August 2026\n⏰ *Time:* 11:30 AM\n🔖 *Booking ID:* GS-58694\n\n_Thank you for choosing Srijes!_",
+      "mediaUrls": [],
+      "recipientsCount": 1,
+      "status": "completed",
+      "timestamp": "2026-08-20T06:11:14.129Z",
+      "results": [
+        {
+          "name": "Client 1",
+          "phone": "918309578708",
+          "status": "sent",
+          "timestamp": "2026-08-20T06:11:37.992Z"
+        }
+      ]
+    },
+    {
+      "id": "direct-cmp-1787206912592",
+      "name": "Direct Bulk Sending - 20/8/2026",
+      "message": "*Srijes Booking Confirmation*\n--------------------------\n*Hello Miss. Kutty*,\n\nYour booking for *Hot oil massage* is confirmed!\n\n📅 *Date:* Thursday, 20 August 2026\n⏰ *Time:* 12:00 PM\n🔖 *Booking ID:* GS-25979\n\n_Thank you for choosing Srijes!_",
+      "mediaUrls": [],
+      "recipientsCount": 1,
+      "status": "completed",
+      "timestamp": "2026-08-20T06:21:52.592Z",
+      "results": [
+        {
+          "name": "Client 1",
+          "phone": "918309578708",
+          "status": "sent",
+          "timestamp": "2026-08-20T06:22:19.815Z"
+        }
+      ]
     }
   ],
   "tickets": [

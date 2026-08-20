@@ -8676,15 +8676,22 @@
             isOfflineMode = false; // Attempt to reconnect to live server
             try {
                 const ts = new Date().getTime();
+                const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken') || 'demo-session-token';
+                const fetchOpts = {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'x-staff-access': 'true'
+                    }
+                };
                 const [crez, brez, sRes, iRes, svRes, eRes, exRes, tRes] = await Promise.all([
-                    fetch(`${API_URL}/clients?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/bookings?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/staff?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/inventory?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/services?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/events?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/expenses?_t=${ts}&branch=${window.currentBranch}`),
-                    fetch(`${API_URL}/tickets?_t=${ts}`)
+                    fetch(`${API_URL}/clients?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/bookings?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/staff?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/inventory?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/services?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/events?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/expenses?_t=${ts}&branch=${window.currentBranch}`, fetchOpts),
+                    fetch(`${API_URL}/tickets?_t=${ts}`, fetchOpts)
                 ]);
 
                 const newClients = await crez.json();
@@ -16649,7 +16656,7 @@
             }
         });
 
-        // Listen for real-time sync from other tabs
+        // Listen for real-time sync from other tabs and Vynster Sync Engine
         try {
             const bc = new BroadcastChannel('medhika_sync');
             bc.onmessage = (event) => {
@@ -16657,6 +16664,14 @@
                 if (event.data === 'refreshData') refreshData();
             };
         } catch (e) { }
+
+        // Vynster Unified Real-Time Sync Engine Event Listener
+        if (typeof vynsterSyncOn === 'function') {
+            vynsterSyncOn(['newAppointment', 'bookingCreated', 'booking_created', 'booking_updated', 'appointmentUpdated', 'refreshData', 'bookingDeleted'], function (data) {
+                console.log('⚡ [REAL-TIME SYNC ENGINE EVENT RECEIVED]', data);
+                refreshData();
+            });
+        }
 
         // Global Cross-Device Live Sync (Server-Sent Events)
         try {
