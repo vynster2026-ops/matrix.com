@@ -7,6 +7,8 @@
     <title>Vynster Salon | Management Dashboard</title>
     <!-- Chart.js for reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS for Excel (.xlsx/.xls) parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Clerk Authentication SDK -->
     <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_Y2xlcmsubWVkaGlrYWFydHMuY29tJA"
         src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
@@ -2736,6 +2738,16 @@
                             style="padding: 10px 16px; border-radius: 12px; border: 1.5px solid var(--border); font-size: 14px; width: 350px; outline:none; transition:0.2s;"
                             onfocus="this.style.borderColor='var(--primary)'"
                             onblur="this.style.borderColor='var(--border)'">
+
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <button class="btn" onclick="document.getElementById('client-import-file-input-below').click()"
+                                style="display:flex; align-items:center; gap:8px; padding:10px 20px; background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; border:none; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.35); transition:all 0.2s;"
+                                onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(16,185,129,0.45)'"
+                                onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(16,185,129,0.35)'">
+                                <span>📄</span> Add Clients (.CSV / Excel)
+                            </button>
+                            <input type="file" id="client-import-file-input-below" accept=".csv,.xlsx,.xls,.txt" style="display:none;" onchange="handleSalonClientFileImport(event)">
+                        </div>
 
                         <div id="event-automation-container"
                             style="display:none; align-items:center; gap:12px; margin-left:auto;">
@@ -13868,42 +13880,46 @@
             const file = event.target.files[0];
             if (!file) return;
 
+            const isExcel = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
             const reader = new FileReader();
+
             reader.onload = async function(e) {
-                const text = e.target.result;
-                const curB = window.currentBranch || localStorage.getItem("selectedBranch") || localStorage.getItem("loggedInBranchId") || "Main Branch";
-                
                 let parsedClients = [];
-                if (typeof text === 'string') {
-                    const lines = text.split(/\r?\n/);
-                    let startIdx = 0;
-                    if (lines.length > 0) {
-                        const firstLine = lines[0].toLowerCase();
-                        if (firstLine.includes('name') || firstLine.includes('phone') || firstLine.includes('mobile') || firstLine.includes('email')) {
-                            startIdx = 1;
+                const curB = window.currentBranch || localStorage.getItem("selectedBranch") || localStorage.getItem("loggedInBranchId") || "Main Branch";
+
+                if (isExcel && window.XLSX) {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                        
+                        let startIdx = 0;
+                        if (rows.length > 0) {
+                            const firstRowStr = JSON.stringify(rows[0]).toLowerCase();
+                            if (firstRowStr.includes('name') || firstRowStr.includes('phone') || firstRowStr.includes('email') || firstRowStr.includes('mobile')) {
+                                startIdx = 1;
+                            }
                         }
-                    }
 
-                    for (let i = startIdx; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (!line) continue;
-                        const parts = line.split(/[,;\t]/);
-                        if (parts.length >= 1 && parts[0].trim()) {
-                            let clientName = parts[0].replace(/["']/g, '').trim();
-                            let clientPhone = parts[1] ? parts[1].replace(/["']/g, '').trim() : '';
-                            let clientEmail = parts[2] ? parts[2].replace(/["']/g, '').trim() : '';
-                            let clientLtv = parts[3] ? parts[3].replace(/["']/g, '').trim() : '₹3,500';
+                        for (let i = startIdx; i < rows.length; i++) {
+                            const row = rows[i];
+                            if (!row || !Array.isArray(row) || row.length === 0) continue;
+                            let cName = row[0] ? String(row[0]).trim() : '';
+                            let cPhone = row[1] ? String(row[1]).trim() : '';
+                            let cEmail = row[2] ? String(row[2]).trim() : '';
+                            let cLtv = row[3] ? String(row[3]).trim() : '₹3,500';
 
-                            clientName = clientName.replace(/[^\w\s.-]/gi, '').trim();
-                            if (!clientName || clientName.length < 2) continue;
+                            cName = cName.replace(/[^\w\s.-]/gi, '').trim();
+                            if (!cName || cName.length < 2) continue;
 
                             const cObj = {
                                 id: 'c_' + Date.now() + '_' + i,
-                                name: clientName,
-                                phone: clientPhone || ('+91 ' + Math.floor(6000000000 + Math.random() * 3999999999)),
-                                email: clientEmail || (clientName.toLowerCase().replace(/[^a-z0-9]/g, '') + '@gmail.com'),
+                                name: cName,
+                                phone: cPhone || ('+91 ' + Math.floor(6000000000 + Math.random() * 3999999999)),
+                                email: cEmail || (cName.toLowerCase().replace(/[^a-z0-9]/g, '') + '@gmail.com'),
                                 pts: 150,
-                                ltv: clientLtv.startsWith('₹') ? clientLtv : ('₹' + clientLtv),
+                                ltv: cLtv.startsWith('₹') ? cLtv : ('₹' + cLtv),
                                 visits: 2,
                                 lastVisit: new Date().toISOString().split('T')[0],
                                 branchId: curB,
@@ -13913,6 +13929,60 @@
                                 branchName: curB
                             };
                             parsedClients.push(cObj);
+                        }
+                    } catch(exErr) {
+                        console.error('Excel parse error:', exErr);
+                    }
+                }
+
+                if (parsedClients.length === 0) {
+                    let text = '';
+                    if (typeof e.target.result === 'string') {
+                        text = e.target.result;
+                    } else if (e.target.result) {
+                        try { text = new TextDecoder('utf-8').decode(e.target.result); } catch(errText) {}
+                    }
+
+                    if (text) {
+                        const lines = text.split(/\r?\n/);
+                        let startIdx = 0;
+                        if (lines.length > 0) {
+                            const firstLine = lines[0].toLowerCase();
+                            if (firstLine.includes('name') || firstLine.includes('phone') || firstLine.includes('mobile') || firstLine.includes('email')) {
+                                startIdx = 1;
+                            }
+                        }
+
+                        for (let i = startIdx; i < lines.length; i++) {
+                            const line = lines[i].trim();
+                            if (!line) continue;
+                            const parts = line.split(/[,;\t]/);
+                            if (parts.length >= 1 && parts[0].trim()) {
+                                let clientName = parts[0].replace(/["']/g, '').trim();
+                                let clientPhone = parts[1] ? parts[1].replace(/["']/g, '').trim() : '';
+                                let clientEmail = parts[2] ? parts[2].replace(/["']/g, '').trim() : '';
+                                let clientLtv = parts[3] ? parts[3].replace(/["']/g, '').trim() : '₹3,500';
+
+                                clientName = clientName.replace(/[^\w\s.-]/gi, '').trim();
+                                if (!clientName || clientName.length < 2) continue;
+
+                                const cObj = {
+                                    id: 'c_' + Date.now() + '_' + i,
+                                    name: clientName,
+                                    phone: clientPhone || ('+91 ' + Math.floor(6000000000 + Math.random() * 3999999999)),
+                                    email: clientEmail || (clientName.toLowerCase().replace(/[^a-z0-9]/g, '') + '@gmail.com'),
+                                    pts: 150,
+                                    ltv: clientLtv.startsWith('₹') ? clientLtv : ('₹' + clientLtv),
+                                    visits: 2,
+                                    lastVisit: new Date().toISOString().split('T')[0],
+                                    branchId: curB,
+                                    accessKey: curB,
+                                    branchEmail: curB,
+                                    salonName: curB,
+                                    branchName: curB
+                                };
+                                parsedClients.push(cObj);
+                            }
                         }
                     }
                 }
@@ -13953,14 +14023,20 @@
                     }
 
                     renderClientsView(cachedClients);
-                    if (typeof showToast === 'function') showToast(`Successfully imported ${parsedClients.length} clients!`, 'success');
-                    else alert(`Successfully imported ${parsedClients.length} clients!`);
+                    if (typeof showToast === 'function') showToast(`Successfully added ${parsedClients.length} clients to directory!`, 'success');
+                    else alert(`Successfully added ${parsedClients.length} clients to directory!`);
                 } else {
                     if (typeof showToast === 'function') showToast('No clients found in selected file.', 'error');
                     else alert('No clients found in selected file.');
                 }
+                event.target.value = '';
             };
-            reader.readAsText(file);
+
+            if (isExcel) {
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.readAsText(file);
+            }
         };
 
         function renderClientsView(clients, query = '') {
