@@ -685,12 +685,19 @@
             </button>
         </nav>
 
-        <div class="header-actions">
+        <div class="header-actions" style="display: flex; align-items: center; gap: 10px;">
+            <div id="superadmin-badge" style="display: flex; align-items: center; gap: 8px; background: rgba(138, 43, 226, 0.2); border: 1px solid rgba(138, 43, 226, 0.4); padding: 6px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 700; color: #d8b4fe;">
+                <i class="fa-solid fa-crown" style="color: #f59e0b;"></i>
+                <span id="superadmin-email-text">rooter3@medhika.com</span>
+            </div>
             <button class="btn-action-primary" onclick="openNewLeadModal()">
                 <i class="fa-solid fa-plus"></i> New Deal / Lead
             </button>
             <button class="btn-action-primary" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));" onclick="openLaunchCampaignModal()">
                 <i class="fa-solid fa-paper-plane"></i> Launch Campaign
+            </button>
+            <button class="btn-action-primary" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5;" onclick="lockBDPanel()" title="Lock Super Admin BD Panel">
+                <i class="fa-solid fa-lock"></i> Lock
             </button>
         </div>
     </header>
@@ -1020,6 +1027,39 @@
         </div>
     </div>
 
+    <!-- MODAL 3: SUPER ADMIN GATEKEEPER AUTHENTICATION -->
+    <div class="modal-backdrop active" id="modal-superadmin-auth" style="z-index: 999999; backdrop-filter: blur(24px); background: rgba(5, 8, 15, 0.94); display: flex; align-items: center; justify-content: center;">
+        <div class="glass-panel modal-box" style="max-width: 440px; width: 90%; border: 1px solid rgba(138, 43, 226, 0.45); box-shadow: 0 25px 60px rgba(0,0,0,0.85); text-align: center; padding: 2.5rem 2rem; border-radius: 24px;">
+            <div style="width: 70px; height: 70px; margin: 0 auto 1.2rem; background: linear-gradient(135deg, rgba(138,43,226,0.35), rgba(0,210,255,0.25)); border: 1px solid rgba(138,43,226,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #f59e0b; box-shadow: 0 0 30px rgba(138,43,226,0.5);">
+                👑
+            </div>
+            <h3 style="font-family: var(--font-head); font-size: 1.45rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Vynster Super Admin Gateway</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5;">Restricted Access Portal — Super Admin Authentication Required to View Vynster BD Panel</p>
+
+            <form id="form-superadmin-login" onsubmit="handleSuperAdminLogin(event)">
+                <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+                    <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-envelope"></i> Super Admin Email</label>
+                    <input type="email" id="superadmin-email-input" class="form-control" placeholder="rooter3@medhika.com" value="rooter3@medhika.com" required style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 12px; padding: 12px 14px;">
+                </div>
+                <div class="form-group" style="text-align: left; margin-bottom: 1.2rem;">
+                    <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-key"></i> Super Admin Password</label>
+                    <input type="password" id="superadmin-pass-input" class="form-control" placeholder="••••••••" value="rootadmin3" required style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 12px; padding: 12px 14px;">
+                </div>
+
+                <div id="auth-error-msg" style="display: none; color: #fca5a5; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 1rem;"></div>
+
+                <button type="submit" id="btn-superadmin-submit" class="btn-action-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.95rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); border-radius: 14px; box-shadow: 0 8px 25px rgba(0,210,255,0.35);">
+                    <i class="fa-solid fa-unlock"></i> Authenticate & Unlock Vynster BD Panel
+                </button>
+
+                <div style="margin-top: 1.2rem; font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
+                    <span onclick="autofillSuperAdminCreds()" style="color: var(--accent-cyan); cursor: pointer; text-decoration: underline;"><i class="fa-solid fa-wand-magic-sparkles"></i> Fill: rooter3@medhika.com</span>
+                    <a href="superadmin_login.html" style="color: #94a3b8; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Main Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
 
@@ -1031,33 +1071,140 @@
                 : '/api'
         );
 
-        // Initial BD State
+        // Super Admin Authentication Credentials Registry
+        const SUPER_ADMIN_CREDENTIALS = {
+            'rooter3@medhika.com': 'rootadmin3',
+            'rooter1@medhika.com': 'rootadmin1',
+            'rooter2@medhika.com': 'rootadmin2',
+            'admin@medhika.com': 'admin',
+            'admin@medhikaarts.com': 'admin',
+            'admin@medika.com': 'admin'
+        };
+
+        function checkSuperAdminAuth() {
+            const isAuth = localStorage.getItem('bd_super_auth') === 'true';
+            const adminUserStr = localStorage.getItem('adminUser');
+            if (isAuth || adminUserStr) {
+                try {
+                    const user = JSON.parse(adminUserStr || '{}');
+                    if (user.email || isAuth) {
+                        const emailText = user.email || 'rooter3@medhika.com';
+                        const badgeEl = document.getElementById('superadmin-email-text');
+                        if (badgeEl) badgeEl.textContent = emailText;
+                        const modal = document.getElementById('modal-superadmin-auth');
+                        if (modal) {
+                            modal.classList.remove('active');
+                            modal.style.display = 'none';
+                        }
+                        return true;
+                    }
+                } catch(e) {}
+            }
+            const modal = document.getElementById('modal-superadmin-auth');
+            if (modal) {
+                modal.classList.add('active');
+                modal.style.display = 'flex';
+            }
+            return false;
+        }
+
+        async function handleSuperAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('superadmin-email-input').value.trim().toLowerCase();
+            const pass = document.getElementById('superadmin-pass-input').value.trim();
+            const errEl = document.getElementById('auth-error-msg');
+            const btn = document.getElementById('btn-superadmin-submit');
+
+            errEl.style.display = 'none';
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+
+            let valid = false;
+            if (SUPER_ADMIN_CREDENTIALS[email] && SUPER_ADMIN_CREDENTIALS[email] === pass) {
+                valid = true;
+            }
+
+            if (!valid) {
+                try {
+                    const res = await fetch(`${API_URL}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password: pass })
+                    });
+                    const data = await res.json();
+                    if (res.ok && (data.success || data.user)) {
+                        valid = true;
+                    }
+                } catch(err) {}
+            }
+
+            if (valid) {
+                localStorage.setItem('bd_super_auth', 'true');
+                localStorage.setItem('adminUser', JSON.stringify({
+                    email: email,
+                    name: email === 'rooter3@medhika.com' ? 'Rooter 3 (Super Admin)' : 'Super Admin',
+                    role: 'super'
+                }));
+                const badgeEl = document.getElementById('superadmin-email-text');
+                if (badgeEl) badgeEl.textContent = email;
+                const modal = document.getElementById('modal-superadmin-auth');
+                if (modal) {
+                    modal.classList.remove('active');
+                    modal.style.display = 'none';
+                }
+                showToast(`Welcome ${email}! Vynster BD Panel Unlocked.`, 'success');
+            } else {
+                errEl.textContent = 'Access Denied: Invalid Email or Password. Super Admin: rooter3@medhika.com / rootadmin3';
+                errEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Authenticate & Unlock Vynster BD Panel';
+        }
+
+        function autofillSuperAdminCreds() {
+            document.getElementById('superadmin-email-input').value = 'rooter3@medhika.com';
+            document.getElementById('superadmin-pass-input').value = 'rootadmin3';
+        }
+
+        function lockBDPanel() {
+            localStorage.removeItem('bd_super_auth');
+            localStorage.removeItem('adminUser');
+            const modal = document.getElementById('modal-superadmin-auth');
+            if (modal) {
+                modal.classList.add('active');
+                modal.style.display = 'flex';
+            }
+            showToast('Vynster BD Panel Locked.', 'info');
+        }
+
+        // Initial Vynster Project BD State
         let dealsState = [
-            { id: 'd-101', title: 'Luxury Bridal Party Package', client: 'Ananya & Family', phone: '9876543210', value: 120000, stage: 'proposal' },
-            { id: 'd-102', title: 'Oberoi Staff Wellness Contract', client: 'Oberoi Hotels HR', phone: '9812345678', value: 350000, stage: 'pitch' },
-            { id: 'd-103', title: 'Festival Keratin Special Deal', client: 'Pooja Hegde', phone: '9988776655', value: 45000, stage: 'won' },
-            { id: 'd-104', title: 'Corporate Pamper Day', client: 'TechCorp HR', phone: '9765432109', value: 210000, stage: 'won' },
-            { id: 'd-105', title: 'College Fest Sponsorship & Stalls', client: 'St. Xavier Union', phone: '9543210987', value: 85000, stage: 'new' },
-            { id: 'd-106', title: 'VIP Membership Package', client: 'Vikramaditya S.', phone: '9432109876', value: 60000, stage: 'won' },
-            { id: 'd-107', title: 'Media Influencer Collaboration', client: 'StyleStudio Agency', phone: '9321098765', value: 95000, stage: 'pitch' }
+            { id: 'd-101', title: 'Vynster Luxury Bridal Styling Suite', client: 'Ananya & Family', phone: '9876543210', value: 120000, stage: 'proposal' },
+            { id: 'd-102', title: 'Vynster Corporate Employee Wellness Contract', client: 'Oberoi Hotels HR', phone: '9812345678', value: 350000, stage: 'pitch' },
+            { id: 'd-103', title: 'Vynster Keratin & Hair Spa Festival Special', client: 'Pooja Hegde', phone: '9988776655', value: 45000, stage: 'won' },
+            { id: 'd-104', title: 'Vynster Executive Pamper & Grooming Day', client: 'TechCorp HR', phone: '9765432109', value: 210000, stage: 'won' },
+            { id: 'd-105', title: 'Vynster Campus Beauty Fest & Stalls', client: 'St. Xavier Union', phone: '9543210987', value: 85000, stage: 'new' },
+            { id: 'd-106', title: 'Vynster VIP Annual Salon Membership', client: 'Vikramaditya S.', phone: '9432109876', value: 60000, stage: 'won' },
+            { id: 'd-107', title: 'Vynster Media & Influencer Collaboration', client: 'StyleStudio Agency', phone: '9321098765', value: 95000, stage: 'pitch' }
         ];
 
         let campaignsState = [
-            { id: 'c-1', title: 'Monsoon Glow WhatsApp Blitz', channel: 'whatsapp', reach: 850, conversions: 124, roi: '5.2x', status: 'Active' },
-            { id: 'c-2', title: 'Super Admin Bill Banner Promo', channel: 'ad', reach: 1420, conversions: 198, roi: '4.1x', status: 'Active' },
-            { id: 'c-3', title: 'Weekend Hair Spa 20% Coupon', channel: 'promo', reach: 620, conversions: 89, roi: '3.8x', status: 'Active' }
+            { id: 'c-1', title: 'Vynster Festive Glow WhatsApp Blitz', channel: 'whatsapp', reach: 850, conversions: 124, roi: '5.2x', status: 'Active' },
+            { id: 'c-2', title: 'Vynster Super Admin Billing Banner Promo', channel: 'ad', reach: 1420, conversions: 198, roi: '4.1x', status: 'Active' },
+            { id: 'c-3', title: 'Vynster Weekend Hair Spa 20% Coupon', channel: 'promo', reach: 620, conversions: 89, roi: '3.8x', status: 'Active' }
         ];
 
         let b2bAccounts = [
-            { name: 'Oberoi Grand Hotels', cat: 'Corporate Hospitality', manager: 'Vynster BD', value: '₹3,50,000', status: 'Active' },
-            { name: 'TechCorp Systems India', cat: 'Employee Benefits', manager: 'Priya S.', value: '₹2,10,000', status: 'Active' },
-            { name: 'Elite Model Management', cat: 'Fashion & Styling', manager: 'Ananya M.', value: '₹1,85,000', status: 'Under Renewal' }
+            { name: 'Vynster Corporate Wellness - Oberoi Grand', cat: 'Corporate Hospitality', manager: 'Vynster Super Admin', value: '₹3,50,000', status: 'Active' },
+            { name: 'Vynster Employee Perks - TechCorp India', cat: 'Employee Benefits', manager: 'Vynster BD Team', value: '₹2,10,000', status: 'Active' },
+            { name: 'Vynster Fashion & Media - Elite Models', cat: 'Fashion & Styling', manager: 'Vynster BD Team', value: '₹1,85,000', status: 'Under Renewal' }
         ];
 
         let branchMatrix = [
-            { name: 'Main Branch (Park Street)', leads: 340, conv: '68.5%', rev: '₹8,40,000', spend: '₹65,000', roi: '12.9x' },
-            { name: 'South City Branch', leads: 210, conv: '61.2%', rev: '₹5,20,000', spend: '₹45,000', roi: '11.5x' },
-            { name: 'Salt Lake Branch', leads: 185, conv: '58.4%', rev: '₹4,85,000', spend: '₹38,000', roi: '12.7x' }
+            { name: 'Vynster Flagship Salon (Park Street)', leads: 340, conv: '68.5%', rev: '₹8,40,000', spend: '₹65,000', roi: '12.9x' },
+            { name: 'Vynster Luxury Studio (South City)', leads: 210, conv: '61.2%', rev: '₹5,20,000', spend: '₹45,000', roi: '11.5x' },
+            { name: 'Vynster Express Salon (Salt Lake)', leads: 185, conv: '58.4%', rev: '₹4,85,000', spend: '₹38,000', roi: '12.7x' }
         ];
 
         let revenueVsSpendChartInstance = null;
@@ -1065,6 +1212,7 @@
 
         // Initialize Module on Load & Register Real-time Sync
         document.addEventListener('DOMContentLoaded', () => {
+            checkSuperAdminAuth();
             renderSalesPipeline();
             renderB2BTable();
             renderCampaigns();
