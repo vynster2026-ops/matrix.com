@@ -146,7 +146,7 @@ export default {
         let targetFile = null;
 
         if (hostname.startsWith('admin.') || hostname.startsWith('salon.')) {
-            targetFile = (pathname === '/' || pathname === '') ? '/vynster-salon.html' : pathname;
+            targetFile = (pathname === '/' || pathname === '') ? '/MedhikaArts_complete_module.html' : pathname;
         } else if (hostname.startsWith('staff.')) {
             targetFile = (pathname === '/' || pathname === '') ? '/vynster-staff.html' : pathname;
         } else if (hostname.startsWith('reception.') || hostname.startsWith('booking.')) {
@@ -163,8 +163,8 @@ export default {
             targetFile = '/bd.html';
         } else if (pathname === '/superadmin' || pathname === '/superadmin_login' || pathname === '/superadmin_login.html') {
             targetFile = '/superadmin_login.html';
-        } else if (pathname === '/admin' || pathname === '/salon' || pathname === '/vynster-salon' || pathname === '/vynster-salon.html') {
-            targetFile = '/vynster-salon.html';
+        } else if (pathname === '/admin' || pathname === '/salon' || pathname === '/vynster-salon' || pathname === '/vynster-salon.html' || pathname === '/MedhikaArts_complete_module' || pathname === '/MedhikaArts_complete_module.html') {
+            targetFile = '/MedhikaArts_complete_module.html';
         } else if (pathname === '/staff' || pathname === '/vynster-staff' || pathname === '/vynster-staff.html') {
             targetFile = '/vynster-staff.html';
         } else if (pathname === '/booking' || pathname === '/reception' || pathname === '/vynster-booking' || pathname === '/vynster-booking.html') {

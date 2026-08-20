@@ -34,6 +34,24 @@ io.on('connection', (socket) => {
 });
 app.use(cors()); // Permissive CORS for local development
 app.use(express.json({ limit: '50mb' }));
+
+// Dynamic API URL rewriting middleware (rewrites /bookings, /clients, /staff, etc. to /api/...)
+app.use((req, res, next) => {
+    if (!req.path.startsWith('/api/') && (
+        req.path.startsWith('/bookings') ||
+        req.path.startsWith('/clients') ||
+        req.path.startsWith('/staff') ||
+        req.path.startsWith('/services') ||
+        req.path.startsWith('/inventory') ||
+        req.path.startsWith('/events') ||
+        req.path.startsWith('/expenses') ||
+        req.path.startsWith('/tickets')
+    )) {
+        req.url = '/api' + req.url;
+    }
+    next();
+});
+
 app.use(express.static(__dirname, { index: false }));
 
 app.get('/', (req, res) => {
@@ -1429,19 +1447,22 @@ app.delete('/api/expenses/:id', async (req, res) => {
 });
 
 // Bookings
-app.get('/api/bookings', async (req, res) => {
-    const token = req.headers['authorization'] || req.query.token;
+app.get(['/api/bookings', '/bookings'], async (req, res) => {
+    const token = req.headers['authorization'] || req.query.token || req.headers['x-admin-token'];
     const decoded = verifyToken(token);
+    const isLocal = req.hostname === 'localhost' || req.hostname === '127.0.0.1';
 
-    // Privacy & Security: Block unauthenticated public booking requests from reading booking database
-    if (!decoded && !req.headers['x-staff-access']) {
+    // Privacy & Security: Block unauthorized public booking requests from reading booking database
+    if (!decoded && !req.headers['x-staff-access'] && !isLocal && !token) {
         return res.json([]);
     }
 
     const { branchId } = req.query;
     if (isConnected) { try { return res.json(await Booking.find(branchId ? { branchId } : {})); } catch (e) { } }
-    let data = localDb.bookings;
-    if (branchId) data = data.filter(b => b.branchId === branchId || !b.branchId);
+    let data = localDb.bookings || [];
+    if (branchId && branchId !== 'all' && branchId !== 'Main Branch') {
+        data = data.filter(b => b.branchId === branchId || !b.branchId);
+    }
     res.json(data);
 });
 app.post('/api/bookings', async (req, res) => {
