@@ -1178,8 +1178,8 @@
             showToast('Vynster BD Panel Locked.', 'info');
         }
 
-        // Initial Vynster Project BD State
-        let dealsState = [
+        // Initial Vynster Project BD State with LocalStorage Persistence
+        const defaultDeals = [
             { id: 'd-101', title: 'Vynster Luxury Bridal Styling Suite', client: 'Ananya & Family', phone: '9876543210', value: 120000, stage: 'proposal' },
             { id: 'd-102', title: 'Vynster Corporate Employee Wellness Contract', client: 'Oberoi Hotels HR', phone: '9812345678', value: 350000, stage: 'pitch' },
             { id: 'd-103', title: 'Vynster Keratin & Hair Spa Festival Special', client: 'Pooja Hegde', phone: '9988776655', value: 45000, stage: 'won' },
@@ -1189,11 +1189,14 @@
             { id: 'd-107', title: 'Vynster Media & Influencer Collaboration', client: 'StyleStudio Agency', phone: '9321098765', value: 95000, stage: 'pitch' }
         ];
 
-        let campaignsState = [
+        const defaultCampaigns = [
             { id: 'c-1', title: 'Vynster Festive Glow WhatsApp Blitz', channel: 'whatsapp', reach: 850, conversions: 124, roi: '5.2x', status: 'Active' },
             { id: 'c-2', title: 'Vynster Super Admin Billing Banner Promo', channel: 'ad', reach: 1420, conversions: 198, roi: '4.1x', status: 'Active' },
             { id: 'c-3', title: 'Vynster Weekend Hair Spa 20% Coupon', channel: 'promo', reach: 620, conversions: 89, roi: '3.8x', status: 'Active' }
         ];
+
+        let dealsState = JSON.parse(localStorage.getItem('vynster_bd_deals') || 'null') || defaultDeals;
+        let campaignsState = JSON.parse(localStorage.getItem('vynster_bd_campaigns') || 'null') || defaultCampaigns;
 
         let b2bAccounts = [
             { name: 'Vynster Corporate Wellness - Oberoi Grand', cat: 'Corporate Hospitality', manager: 'Vynster Super Admin', value: '₹3,50,000', status: 'Active' },
@@ -1206,6 +1209,13 @@
             { name: 'Vynster Luxury Studio (South City)', leads: 210, conv: '61.2%', rev: '₹5,20,000', spend: '₹45,000', roi: '11.5x' },
             { name: 'Vynster Express Salon (Salt Lake)', leads: 185, conv: '58.4%', rev: '₹4,85,000', spend: '₹38,000', roi: '12.7x' }
         ];
+
+        function saveBDState() {
+            try {
+                localStorage.setItem('vynster_bd_deals', JSON.stringify(dealsState));
+                localStorage.setItem('vynster_bd_campaigns', JSON.stringify(campaignsState));
+            } catch(e) {}
+        }
 
         let revenueVsSpendChartInstance = null;
         let leadChannelsChartInstance = null;
@@ -1237,6 +1247,7 @@
                         };
                         if (!dealsState.some(d => d.client === clientName && d.title.includes(data.service || ''))) {
                             dealsState.unshift(newDeal);
+                            saveBDState();
                             renderSalesPipeline();
                         }
                     }
@@ -1289,6 +1300,7 @@
                             });
                         }
                     });
+                    saveBDState();
                     renderSalesPipeline();
                 }
 
@@ -1376,6 +1388,10 @@
             const currentIdx = stages.indexOf(deal.stage);
             if (currentIdx < stages.length - 1) {
                 deal.stage = stages[currentIdx + 1];
+                saveBDState();
+                if (typeof window.vynsterSyncEmit === 'function') {
+                    window.vynsterSyncEmit('data_updated', { type: 'deal_advanced', dealId, newStage: deal.stage });
+                }
                 showToast(`Deal "${deal.title}" advanced to ${deal.stage.toUpperCase()}!`, 'success');
                 renderSalesPipeline();
             }
@@ -1590,6 +1606,7 @@
             };
 
             dealsState.unshift(newDeal);
+            saveBDState();
             renderSalesPipeline();
             closeModal('modal-lead');
             if (typeof window.vynsterSyncEmit === 'function') {
@@ -1618,6 +1635,7 @@
             };
 
             campaignsState.unshift(newCmp);
+            saveBDState();
             renderCampaigns();
             if (typeof window.vynsterSyncEmit === 'function') {
                 window.vynsterSyncEmit('campaign_launched', { title, channel, reach: count });
