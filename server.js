@@ -1826,10 +1826,23 @@ app.post('/api/branches', async (req, res) => {
 });
 
 app.put('/api/branches/:id', async (req, res) => {
-    if (isConnected) { try { const updated = await Branch.findOneAndUpdate({ id: req.params.id }, req.body, { new: true }); if (typeof io !== 'undefined' && io) io.emit('branch_updated', updated); return res.json(updated); } catch (e) { } }
-    const idx = localDb.branches.findIndex(b => b.id === req.params.id);
-    if (idx !== -1) { localDb.branches[idx] = { ...localDb.branches[idx], ...req.body }; saveLocal(); if (typeof io !== 'undefined' && io) io.emit('branch_updated', localDb.branches[idx]); return res.json(localDb.branches[idx]); }
-    res.status(404).json({ error: 'Not found' });
+    const data = { id: req.params.id, ...req.body };
+    if (isConnected) {
+        try {
+            const updated = await Branch.findOneAndUpdate({ id: req.params.id }, data, { new: true, upsert: true });
+            if (typeof io !== 'undefined' && io) io.emit('branch_updated', updated);
+            return res.json(updated);
+        } catch (e) { }
+    }
+    const idx = localDb.branches.findIndex(b => String(b.id) === String(req.params.id));
+    if (idx !== -1) {
+        localDb.branches[idx] = { ...localDb.branches[idx], ...req.body };
+    } else {
+        localDb.branches.push(data);
+    }
+    saveLocal();
+    if (typeof io !== 'undefined' && io) io.emit('branch_updated', localDb.branches[idx] || data);
+    return res.json(idx !== -1 ? localDb.branches[idx] : data);
 });
 
 app.put('/api/branches/:id/status', authMiddleware(1), async (req, res) => {
@@ -1842,7 +1855,7 @@ app.put('/api/branches/:id/status', authMiddleware(1), async (req, res) => {
         } catch (e) { }
     }
 
-    const idx = localDb.branches.findIndex(b => b.id === id);
+    const idx = localDb.branches.findIndex(b => String(b.id) === String(id));
     if (idx !== -1) {
         localDb.branches[idx].status = status;
         saveLocal();
@@ -1858,10 +1871,10 @@ app.put('/api/branches/:id/verify', authMiddleware(1), async (req, res) => {
     const status = verificationStatus === 'Approved' ? 'Active' : 'Suspended';
 
     const updateData = {
-        verificationStatus,
+        verificationStatus: verificationStatus || 'Approved',
         verificationNotes: verificationNotes || '',
         verifiedAt: new Date(),
-        verifiedBy: req.user.email,
+        verifiedBy: req.user ? req.user.email : 'SuperAdmin',
         status
     };
 
@@ -1871,14 +1884,13 @@ app.put('/api/branches/:id/verify', authMiddleware(1), async (req, res) => {
         } catch (e) { }
     }
 
-    const idx = localDb.branches.findIndex(b => b.id === id);
+    const idx = localDb.branches.findIndex(b => String(b.id) === String(id));
     if (idx !== -1) {
         localDb.branches[idx] = { ...localDb.branches[idx], ...updateData };
         saveLocal();
 
         if (typeof io !== 'undefined' && io) io.emit('branch_updated', localDb.branches[idx]);
 
-        // Notify owner if approved
         if (verificationStatus === 'Approved') {
             sendWelcomeEmail(
                 localDb.branches[idx].email,
@@ -1889,8 +1901,12 @@ app.put('/api/branches/:id/verify', authMiddleware(1), async (req, res) => {
         }
 
         return res.json({ success: true, branch: localDb.branches[idx] });
+    } else {
+        const newBranchData = { id, name: 'Salon ' + id, ...updateData };
+        localDb.branches.push(newBranchData);
+        saveLocal();
+        return res.json({ success: true, branch: newBranchData });
     }
-    res.status(404).json({ error: 'Branch not found' });
 });
 
 app.delete('/api/branches/:id', async (req, res) => {

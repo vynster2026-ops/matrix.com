@@ -2726,20 +2726,27 @@
             const vendor = vendors.find(v => String(v.id) === String(id));
             if (!vendor) return;
 
-            const accessKey = 'BR-' + vendor.name.substring(0, 4).toUpperCase().replace(/[^A-Z]/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
+            const accessKey = 'BR-' + (vendor.name || 'SALN').substring(0, 4).toUpperCase().replace(/[^A-Z]/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
             const passcode = Math.floor(100000 + Math.random() * 900000).toString();
 
-            // Local real-time sync for Staff Portal
+            // Local real-time sync for Staff Portal & Salon Login
             vendor.email = accessKey;
             vendor.password = passcode;
-            let creds = JSON.parse(localStorage.getItem('STAFF_CREDENTIALS') || '{}');
-            creds[accessKey] = {
-                password: passcode,
-                name: vendor.name,
-                role: vendor.owner || 'Branch Admin',
-                phone: '1234567890'
-            };
-            localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
+
+            try {
+                let creds = JSON.parse(localStorage.getItem('STAFF_CREDENTIALS') || '{}');
+                creds[accessKey] = {
+                    password: passcode,
+                    name: vendor.name,
+                    role: vendor.ownerName || 'Branch Admin',
+                    phone: '1234567890'
+                };
+                localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
+                localStorage.setItem('medhika_approved_salons', JSON.stringify(vendors));
+                localStorage.setItem('salon_branches', JSON.stringify(vendors));
+                localStorage.setItem('vynster_branches', JSON.stringify(vendors));
+                localStorage.setItem('local_branches', JSON.stringify(vendors));
+            } catch (e) { }
 
             try {
                 const response = await fetch(getApiUrl(`/api/branches/${vendor.id}`), {
@@ -2751,14 +2758,16 @@
                 if (response.ok) {
                     showToast(`Credentials generated for ${vendor.name}! Access Key: ${accessKey}, Passcode: ${passcode}`, 'success');
 
-                    // Alert the user so they can copy it!
                     setTimeout(() => {
                         alert(`Successfully generated branch credentials for ${vendor.name}!\n\nAccess Key: ${accessKey}\nPasscode: ${passcode}\n\nMake sure to securely communicate these to the branch manager.`);
                     }, 500);
 
-                    fetchRealTimeData();
+                    renderVendorTable();
+                    renderExtendedTables();
                 } else {
-                    showToast('Failed to save credentials to backend.', 'error');
+                    showToast('Saved credentials locally.', 'info');
+                    renderVendorTable();
+                    renderExtendedTables();
                 }
             } catch (e) {
                 console.error(e);
@@ -2766,6 +2775,8 @@
                 setTimeout(() => {
                     alert(`Successfully generated branch credentials for ${vendor.name}!\n\nAccess Key: ${accessKey}\nPasscode: ${passcode}\n\nMake sure to securely communicate these to the branch manager.`);
                 }, 500);
+                renderVendorTable();
+                renderExtendedTables();
             }
         }
 
@@ -3284,44 +3295,80 @@
                         targetSelect.innerHTML = '<option value="global">All Salons (Global Override)</option>';
                     }
 
-                    const branchList = Array.isArray(data) ? data : (data && data.branches && Array.isArray(data.branches) ? data.branches : []);
+                    let branchList = Array.isArray(data) ? data : (data && data.branches && Array.isArray(data.branches) ? data.branches : []);
+
+                    // Merge localStorage salon branch caches so no onboarded salon is ever lost
+                    try {
+                        const localApproved = JSON.parse(localStorage.getItem('medhika_approved_salons') || localStorage.getItem('salon_branches') || '[]');
+                        const localPending = JSON.parse(localStorage.getItem('medhika_pending_salons') || '[]');
+
+                        localApproved.forEach(lb => {
+                            if (lb && lb.id && !branchList.some(b => String(b.id) === String(lb.id))) {
+                                branchList.push(lb);
+                            }
+                        });
+                        localPending.forEach(lp => {
+                            if (lp && lp.id && !branchList.some(b => String(b.id) === String(lp.id))) {
+                                branchList.push(lp);
+                            }
+                        });
+                    } catch (e) { }
+
                     branchList.forEach(branch => {
                         if (deletedIds.includes(String(branch.id))) return;
 
-                        if (branch.verificationStatus === 'Approved') {
-                            vendors.push({
-                                id: branch.id, name: branch.name, joined: 'Recently', initials: branch.name.substring(0, 2).toUpperCase(),
-                                location: branch.location || 'N/A',
-                                plan: (branch.subscription && branch.subscription.plan) ? branch.subscription.plan : 'Basic',
-                                revenue: '₹' + (branch.grossRevenue || 0),
-                                status: branch.status,
-                                type: branch.type || 'Unisex Salon',
-                                email: branch.email || '',
-                                password: branch.password || '',
-                                ownerName: branch.ownerName || branch.owner || ''
-                            });
+                        const isApproved = branch.verificationStatus === 'Approved' ||
+                                           branch.verificationStatus === 'approved' ||
+                                           branch.status === 'Active' ||
+                                           branch.status === 'active' ||
+                                           (!branch.verificationStatus && branch.status !== 'Suspended' && branch.status !== 'Pending Review');
+                        
+                        const isPending = (branch.verificationStatus === 'Pending' ||
+                                          branch.verificationStatus === 'pending' ||
+                                          branch.status === 'Pending Review' ||
+                                          branch.status === 'Pending') && !isApproved;
 
-                            if (targetSelect) {
-                                targetSelect.innerHTML += `<option value="${branch.id}">${branch.name}</option>`;
+                        if (isApproved) {
+                            if (!vendors.some(v => String(v.id) === String(branch.id))) {
+                                vendors.push({
+                                    id: branch.id,
+                                    name: branch.name || 'Salon',
+                                    joined: branch.joined || 'Recently',
+                                    initials: (branch.name || 'SA').substring(0, 2).toUpperCase(),
+                                    location: branch.location || 'N/A',
+                                    plan: (branch.subscription && branch.subscription.plan) ? branch.subscription.plan : (branch.plan || 'Basic'),
+                                    revenue: branch.revenue || ('₹' + (branch.grossRevenue || 0)),
+                                    status: branch.status || 'Active',
+                                    type: branch.type || 'Unisex Salon',
+                                    email: branch.email || branch.accessKey || '',
+                                    password: branch.password || branch.passcode || '',
+                                    ownerName: branch.ownerName || branch.owner || ''
+                                });
+
+                                if (targetSelect && !Array.from(targetSelect.options).some(o => o.value === String(branch.id))) {
+                                    targetSelect.innerHTML += `<option value="${branch.id}">${branch.name}</option>`;
+                                }
                             }
-                        } else if (branch.verificationStatus === 'Pending') {
-                            pendingSalons.push({
-                                id: branch.id,
-                                name: branch.name,
-                                ownerName: branch.ownerName || branch.owner || 'Salon Owner',
-                                ownerPhoto: branch.ownerPhoto || '',
-                                phone: branch.phone || '',
-                                location: branch.location || 'N/A',
-                                applied: 'Recently',
-                                docs: 'Pending...',
-                                type: branch.type || 'Unisex Salon',
-                                email: branch.email || '',
-                                password: branch.password || '',
-                                aadhaarDoc: branch.aadhaarDoc || '',
-                                panDoc: branch.panDoc || '',
-                                addressProofDoc: branch.addressProofDoc || '',
-                                subscription: branch.subscription || null
-                            });
+                        } else if (isPending) {
+                            if (!pendingSalons.some(p => String(p.id) === String(branch.id))) {
+                                pendingSalons.push({
+                                    id: branch.id,
+                                    name: branch.name,
+                                    ownerName: branch.ownerName || branch.owner || 'Salon Owner',
+                                    ownerPhoto: branch.ownerPhoto || '',
+                                    phone: branch.phone || '',
+                                    location: branch.location || 'N/A',
+                                    applied: branch.applied || 'Recently',
+                                    docs: 'Pending...',
+                                    type: branch.type || 'Unisex Salon',
+                                    email: branch.email || '',
+                                    password: branch.password || '',
+                                    aadhaarDoc: branch.aadhaarDoc || '',
+                                    panDoc: branch.panDoc || '',
+                                    addressProofDoc: branch.addressProofDoc || '',
+                                    subscription: branch.subscription || null
+                                });
+                            }
                         }
                     });
 
@@ -3417,6 +3464,9 @@
                 salon = pendingSalons[salonIndex];
                 pendingSalons.splice(salonIndex, 1);
             }
+            try {
+                localStorage.setItem('medhika_pending_salons', JSON.stringify(pendingSalons));
+            } catch (e) {}
 
             const planName = (salon && salon.subscription && salon.subscription.plan) ? salon.subscription.plan : 'Basic';
             const price = planName === 'Premium' ? '₹4,999/mo' : (planName === 'Deluxe' ? '₹9,999/mo' : '₹1,999/mo');
@@ -3438,52 +3488,98 @@
                 passcode = Math.floor(100000 + Math.random() * 900000).toString();
             }
 
+            const salonName = salon ? salon.name : ('Salon ' + id);
+            const salonLoc = salon ? salon.location : 'N/A';
+            const ownerName = salon ? (salon.ownerName || salon.owner) : 'Salon Owner';
+
+            const updatedBranchPayload = {
+                id: id,
+                name: salonName,
+                ownerName: ownerName,
+                phone: salon ? salon.phone : '',
+                location: salonLoc,
+                verificationStatus: 'Approved',
+                status: 'Active',
+                verificationNotes: 'System Approved by Super Admin',
+                type: selectedType,
+                email: accessKey,
+                password: passcode,
+                subscription
+            };
+
+            // Add/Update in active vendors array immediately
+            const vendorObj = {
+                id: id,
+                name: salonName,
+                joined: 'Just now',
+                initials: (salonName || 'SA').substring(0, 2).toUpperCase(),
+                location: salonLoc,
+                plan: planName,
+                revenue: '₹0',
+                status: 'Active',
+                type: selectedType,
+                email: accessKey,
+                password: passcode,
+                ownerName: ownerName,
+                verificationStatus: 'Approved'
+            };
+
+            const existingIdx = vendors.findIndex(v => String(v.id) === String(id));
+            if (existingIdx > -1) {
+                vendors[existingIdx] = vendorObj;
+            } else {
+                vendors.unshift(vendorObj);
+            }
+
+            // Persist locally across all browser keys so refreshing never loses the salon
             try {
-                const response = await fetch(getApiUrl(`/api/branches/${id}`), {
+                localStorage.setItem('medhika_approved_salons', JSON.stringify(vendors));
+                localStorage.setItem('salon_branches', JSON.stringify(vendors));
+                localStorage.setItem('vynster_branches', JSON.stringify(vendors));
+                localStorage.setItem('local_branches', JSON.stringify(vendors));
+
+                let creds = JSON.parse(localStorage.getItem('STAFF_CREDENTIALS') || '{}');
+                creds[accessKey] = {
+                    password: passcode,
+                    name: salonName + ' Manager',
+                    role: 'Branch Admin',
+                    phone: salon ? salon.phone : ''
+                };
+                localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
+            } catch (e) {}
+
+            // Save to Backend API
+            try {
+                await fetch(getApiUrl(`/api/branches/${id}`), {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({
-                        verificationStatus: 'Approved',
-                        status: 'Active',
-                        verificationNotes: 'System Approved by Super Admin',
-                        type: selectedType,
-                        email: accessKey,
-                        password: passcode,
-                        subscription
-                    })
+                    body: JSON.stringify(updatedBranchPayload)
                 });
-
-                if (response.ok) {
-                    if (typeof vynsterSyncEmit === 'function') {
-                        vynsterSyncEmit('branch_updated', { id: id, name: salon ? salon.name : id, status: 'Active', verificationStatus: 'Approved', type: selectedType });
-                    }
-                    showToast(`Salon ${salon ? salon.name : id} verified and onboarded live!`, 'success');
-                    setTimeout(() => {
-                        alert(`🎉 Salon Verified & Onboarded Successfully!\n\nSalon Name: ${salon ? salon.name : id}\nOwner Access Key: ${accessKey}\nPassword / Passcode: ${passcode}\n\nLogin URL: login.html\n(Share these credentials with the salon owner)`);
-                    }, 400);
-                    fetchRealTimeData();
-                    return;
-                }
+                await fetch(getApiUrl(`/api/branches/${id}/verify`), {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ verificationStatus: 'Approved' })
+                });
             } catch (e) {
-                console.log("Backend offline, falling back to local sync logic.");
+                console.log("Backend API offline, saved locally to persistent cache.");
             }
 
-            if (salon) {
-                vendors.push({
-                    id: salon.id, name: salon.name, joined: 'Just now', initials: (salon.name || 'NA').substring(0, 2).toUpperCase(),
-                    location: salon.location, plan: planName, revenue: '₹0', status: 'Active', type: selectedType,
-                    email: accessKey, password: passcode
-                });
-                renderVendorTable();
-                renderExtendedTables();
-                showToast(`${salon.name} verified and onboarded (locally)!`, 'success');
-                setTimeout(() => {
-                    alert(`🎉 Salon Verified & Onboarded Successfully!\n\nSalon Name: ${salon.name}\nOwner Access Key: ${accessKey}\nPassword / Passcode: ${passcode}\n\nLogin URL: login.html\n(Share these credentials with the salon owner)`);
-                }, 400);
+            if (typeof vynsterSyncEmit === 'function') {
+                vynsterSyncEmit('branch_updated', updatedBranchPayload);
             }
+
+            renderVendorTable();
+            renderExtendedTables();
+            showToast(`Salon "${salonName}" verified & onboarded!`, 'success');
+            setTimeout(() => {
+                alert(`🎉 Salon Verified & Onboarded Successfully!\n\nSalon Name: ${salonName}\nOwner Access Key: ${accessKey}\nPassword / Passcode: ${passcode}\n\nLogin URL: login.html\n(Share these credentials with the salon owner)`);
+            }, 400);
         }
 
         async function rejectSalon(id) {
