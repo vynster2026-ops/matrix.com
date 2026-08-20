@@ -2719,6 +2719,11 @@
                                     });
                                 </script>
                             </div>
+                            <button class="btn" onclick="document.getElementById('client-import-file-input').click()"
+                                style="display:flex; align-items:center; gap:8px; padding:8px 16px; background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.25);">
+                                <span>📥</span> Import Clients CSV
+                            </button>
+                            <input type="file" id="client-import-file-input" accept=".csv,.xlsx,.xls,.txt,.pdf" style="display:none;" onchange="handleSalonClientFileImport(event)">
                             <button class="btn btn-primary" onclick="refreshData()"
                                 style="display:flex; align-items:center; gap:8px; padding:8px 16px;">
                                 <span>🔄</span> Sync
@@ -13858,6 +13863,105 @@
             const params = `clientName=${encodeURIComponent(booking.clientName)}&clientPhone=${encodeURIComponent(booking.phone || '')}&services=${encodeURIComponent(booking.services.join(','))}&editId=${id}&date=${booking.date}`;
             openBooking(params);
         }
+
+        window.handleSalonClientFileImport = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const text = e.target.result;
+                const curB = window.currentBranch || localStorage.getItem("selectedBranch") || localStorage.getItem("loggedInBranchId") || "Main Branch";
+                
+                let parsedClients = [];
+                if (typeof text === 'string') {
+                    const lines = text.split(/\r?\n/);
+                    let startIdx = 0;
+                    if (lines.length > 0) {
+                        const firstLine = lines[0].toLowerCase();
+                        if (firstLine.includes('name') || firstLine.includes('phone') || firstLine.includes('mobile') || firstLine.includes('email')) {
+                            startIdx = 1;
+                        }
+                    }
+
+                    for (let i = startIdx; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        const parts = line.split(/[,;\t]/);
+                        if (parts.length >= 1 && parts[0].trim()) {
+                            let clientName = parts[0].replace(/["']/g, '').trim();
+                            let clientPhone = parts[1] ? parts[1].replace(/["']/g, '').trim() : '';
+                            let clientEmail = parts[2] ? parts[2].replace(/["']/g, '').trim() : '';
+                            let clientLtv = parts[3] ? parts[3].replace(/["']/g, '').trim() : '₹3,500';
+
+                            clientName = clientName.replace(/[^\w\s.-]/gi, '').trim();
+                            if (!clientName || clientName.length < 2) continue;
+
+                            const cObj = {
+                                id: 'c_' + Date.now() + '_' + i,
+                                name: clientName,
+                                phone: clientPhone || ('+91 ' + Math.floor(6000000000 + Math.random() * 3999999999)),
+                                email: clientEmail || (clientName.toLowerCase().replace(/[^a-z0-9]/g, '') + '@gmail.com'),
+                                pts: 150,
+                                ltv: clientLtv.startsWith('₹') ? clientLtv : ('₹' + clientLtv),
+                                visits: 2,
+                                lastVisit: new Date().toISOString().split('T')[0],
+                                branchId: curB,
+                                accessKey: curB,
+                                branchEmail: curB,
+                                salonName: curB,
+                                branchName: curB
+                            };
+                            parsedClients.push(cObj);
+                        }
+                    }
+                }
+
+                if (parsedClients.length > 0) {
+                    parsedClients.forEach(c => {
+                        if (!cachedClients.some(mc => String(mc.id || mc.name) === String(c.id || c.name))) {
+                            cachedClients.push(c);
+                        }
+                    });
+
+                    try {
+                        let superClients = JSON.parse(localStorage.getItem('SuperAdminClients') || '[]');
+                        superClients = [...parsedClients, ...superClients];
+                        localStorage.setItem('SuperAdminClients', JSON.stringify(superClients));
+                        localStorage.setItem('MedhikaMockClients', JSON.stringify(superClients));
+
+                        let allClients = JSON.parse(localStorage.getItem('medhika_all_clients') || '[]');
+                        allClients = [...parsedClients, ...allClients];
+                        localStorage.setItem('medhika_all_clients', JSON.stringify(allClients));
+
+                        localStorage.setItem('salon_clients_' + curB, JSON.stringify(cachedClients));
+                        localStorage.setItem('salon_clients_Main Branch', JSON.stringify(cachedClients));
+
+                        let mDb = JSON.parse(localStorage.getItem('MedhikaMockDB') || '{}');
+                        mDb.clients = cachedClients;
+                        localStorage.setItem('MedhikaMockDB', JSON.stringify(mDb));
+                    } catch(err) {}
+
+                    for (const c of parsedClients) {
+                        try {
+                            await fetch(`${API_URL}/clients`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(c)
+                            });
+                        } catch(e) {}
+                    }
+
+                    renderClientsView(cachedClients);
+                    if (typeof showToast === 'function') showToast(`Successfully imported ${parsedClients.length} clients!`, 'success');
+                    else alert(`Successfully imported ${parsedClients.length} clients!`);
+                } else {
+                    if (typeof showToast === 'function') showToast('No clients found in selected file.', 'error');
+                    else alert('No clients found in selected file.');
+                }
+            };
+            reader.readAsText(file);
+        };
 
         function renderClientsView(clients, query = '') {
             const tbody = document.getElementById('clients-table-body');

@@ -3612,8 +3612,8 @@
                 };
                 localStorage.setItem('STAFF_CREDENTIALS', JSON.stringify(creds));
 
-                // Map & sync uploaded salon clients to the generated accessKey and salon name
-                const rawClients = localStorage.getItem('salon_clients_' + id);
+                // Map & sync uploaded salon clients to the generated accessKey, salon name, and Main Branch
+                const rawClients = localStorage.getItem('salon_clients_' + id) || localStorage.getItem('salon_clients_' + salonName);
                 if (rawClients) {
                     const parsed = JSON.parse(rawClients);
                     if (Array.isArray(parsed) && parsed.length > 0) {
@@ -3625,6 +3625,15 @@
                         });
                         localStorage.setItem('salon_clients_' + accessKey, JSON.stringify(parsed));
                         localStorage.setItem('salon_clients_' + salonName, JSON.stringify(parsed));
+                        
+                        let mainBranchClients = JSON.parse(localStorage.getItem('salon_clients_Main Branch') || '[]');
+                        mainBranchClients = [...parsed, ...mainBranchClients];
+                        localStorage.setItem('salon_clients_Main Branch', JSON.stringify(mainBranchClients));
+
+                        let superClients = JSON.parse(localStorage.getItem('SuperAdminClients') || '[]');
+                        superClients = [...parsed, ...superClients];
+                        localStorage.setItem('SuperAdminClients', JSON.stringify(superClients));
+                        localStorage.setItem('MedhikaMockClients', JSON.stringify(superClients));
 
                         for (const c of parsed) {
                             try {
