@@ -30,14 +30,23 @@ const copyMap = [
         'syncadminstaff/MedhikaArts_booking_module.html'
     ] },
 
-    // Demo & Complete Module Portal
+    // Demo Portal
     { src: 'vynster-demo.html', targets: [
         'www/vynster-demo.html', 
         'syncadminstaff/vynster-demo.html', 
-        'staff-dashboard/vynster-demo.html',
-        'www/MedhikaArts_complete_module.html',
-        'syncadminstaff/MedhikaArts_complete_module.html',
-        'staff-dashboard/syncadminstaff/MedhikaArts_complete_module.html'
+        'staff-dashboard/vynster-demo.html'
+    ] },
+
+    // Salon Complete Module Portal
+    { src: 'MedhikaArts_complete_module.html', targets: [
+        'www/MedhikaArts_complete_module.html', 
+        'syncadminstaff/MedhikaArts_complete_module.html', 
+        'staff-dashboard/MedhikaArts_complete_module.html',
+        'staff-dashboard/syncadminstaff/MedhikaArts_complete_module.html',
+        'vynster-salon.html',
+        'www/vynster-salon.html',
+        'syncadminstaff/vynster-salon.html',
+        'staff-dashboard/vynster-salon.html'
     ] },
 
     // Matrix Super Admin Portal
