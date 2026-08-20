@@ -80,40 +80,268 @@
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
 
-        /* --- 3D Glassmorphism Design System --- */
-        .glass-3d-card,
-        .card {
-            background: rgba(255, 255, 255, 0.75) !important;
-            backdrop-filter: blur(25px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.6) !important;
-            border-radius: var(--radius-xl, 20px) !important;
-            box-shadow:
-                0 20px 40px -15px rgba(26, 107, 138, 0.15),
-                0 1px 3px rgba(255, 255, 255, 0.8) inset,
-                0 -1px 2px rgba(0, 0, 0, 0.05) inset !important;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.4s ease !important;
-            transform-style: preserve-3d;
-            perspective: 1000px;
+        /* --- 🎨 ADVANCED CLAYMORPHISM UI DESIGN SYSTEM --- */
+        :root {
+            --clay-bg-body: #eef4f9;
+            --clay-card-bg: #f8fafc;
+            --clay-radius-xl: 28px;
+            --clay-radius-lg: 20px;
+            --clay-radius-md: 14px;
+            --clay-radius-pill: 9999px;
+
+            /* Soft volumetric 3D clay shadows */
+            --clay-shadow-card: 
+                inset 5px 5px 10px rgba(255, 255, 255, 0.9),
+                inset -5px -5px 10px rgba(195, 210, 225, 0.5),
+                10px 16px 30px rgba(165, 185, 205, 0.35);
+
+            --clay-shadow-card-hover: 
+                inset 6px 6px 12px rgba(255, 255, 255, 1),
+                inset -6px -6px 12px rgba(185, 200, 215, 0.6),
+                14px 22px 38px rgba(150, 175, 200, 0.42);
+
+            --clay-shadow-btn-primary: 
+                inset 4px 4px 8px rgba(255, 255, 255, 0.45),
+                inset -4px -4px 8px rgba(0, 0, 0, 0.25),
+                8px 12px 24px rgba(26, 107, 138, 0.38);
+
+            --clay-shadow-btn-primary-hover: 
+                inset 5px 5px 10px rgba(255, 255, 255, 0.6),
+                inset -5px -5px 10px rgba(0, 0, 0, 0.3),
+                10px 16px 28px rgba(26, 107, 138, 0.48);
+
+            --clay-shadow-btn-pressed: 
+                inset -3px -3px 6px rgba(255, 255, 255, 0.3),
+                inset 4px 4px 8px rgba(0, 0, 0, 0.35),
+                3px 5px 12px rgba(26, 107, 138, 0.25);
+
+            --clay-shadow-input: 
+                inset 4px 4px 8px rgba(190, 205, 220, 0.55),
+                inset -4px -4px 8px rgba(255, 255, 255, 0.85);
+
+            --clay-shadow-input-focus: 
+                inset 3px 3px 6px rgba(180, 195, 210, 0.4),
+                inset -3px -3px 6px rgba(255, 255, 255, 0.95),
+                0 0 0 3px rgba(33, 150, 184, 0.3);
         }
 
-        [data-theme="dark"] .glass-3d-card,
-        [data-theme="dark"] .card {
-            background: rgba(30, 41, 59, 0.75) !important;
-            border: 1px solid rgba(255, 255, 255, 0.12) !important;
-            box-shadow:
-                0 20px 40px -15px rgba(0, 0, 0, 0.5),
-                0 1px 1px rgba(255, 255, 255, 0.15) inset !important;
+        body {
+            background-color: var(--clay-bg-body) !important;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(33, 150, 184, 0.08) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(29, 158, 117, 0.08) 0px, transparent 50%) !important;
+        }
+
+        .app-container {
+            background: transparent !important;
+        }
+
+        /* Sidebar Clay Volumetric Styling */
+        aside {
+            background: #f6fafc !important;
+            border-right: none !important;
+            box-shadow: 
+                inset -4px 0px 10px rgba(195, 210, 225, 0.4),
+                inset 4px 0px 10px rgba(255, 255, 255, 0.9),
+                10px 0px 24px rgba(175, 195, 215, 0.25) !important;
+        }
+
+        /* Nav Items as Tactile Clay Pills */
+        .nav-item {
+            border-radius: var(--clay-radius-pill) !important;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: linear-gradient(145deg, #ffffff, #e6f0f7) !important;
+            color: var(--primary) !important;
+            box-shadow: 
+                inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+                inset -3px -3px 6px rgba(190, 205, 220, 0.5),
+                6px 8px 16px rgba(175, 195, 215, 0.3) !important;
+            transform: translateY(-2px) scale(1.02) !important;
+        }
+
+        /* Volumetric 3D Clay Cards */
+        .glass-3d-card,
+        .card,
+        .stat-card {
+            background: var(--clay-card-bg) !important;
+            border-radius: var(--clay-radius-xl) !important;
+            border: 1px solid rgba(255, 255, 255, 0.85) !important;
+            box-shadow: var(--clay-shadow-card) !important;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease !important;
         }
 
         .glass-3d-card:hover,
-        .card:hover {
-            transform: translateY(-5px) rotateX(1.5deg) scale(1.008) !important;
-            box-shadow:
-                0 30px 60px -20px rgba(26, 107, 138, 0.3),
-                0 0 25px rgba(33, 150, 184, 0.2),
-                0 1px 3px rgba(255, 255, 255, 0.9) inset !important;
-            border-color: rgba(33, 150, 184, 0.4) !important;
+        .card:hover,
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.01) !important;
+            box-shadow: var(--clay-shadow-card-hover) !important;
+        }
+
+        /* Tactile Clay Buttons */
+        .btn,
+        button {
+            border-radius: var(--clay-radius-pill) !important;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #2196B8, #1A6B8A) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
+            box-shadow: var(--clay-shadow-btn-primary) !important;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.03) !important;
+            box-shadow: var(--clay-shadow-btn-primary-hover) !important;
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px) scale(0.98) !important;
+            box-shadow: var(--clay-shadow-btn-pressed) !important;
+        }
+
+        .btn-secondary,
+        .btn-outline {
+            background: linear-gradient(145deg, #ffffff, #eef4f8) !important;
+            color: var(--text-main) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 
+                inset 3px 3px 6px rgba(255, 255, 255, 0.9),
+                inset -3px -3px 6px rgba(190, 205, 220, 0.4),
+                4px 6px 14px rgba(175, 195, 215, 0.25) !important;
+        }
+
+        .btn-secondary:hover,
+        .btn-outline:hover {
+            transform: translateY(-2px) scale(1.02) !important;
+            box-shadow: 
+                inset 4px 4px 8px rgba(255, 255, 255, 1),
+                inset -4px -4px 8px rgba(180, 195, 210, 0.5),
+                6px 10px 20px rgba(160, 180, 200, 0.35) !important;
+        }
+
+        /* Inset Clay Input Fields & Selects */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        input[type="search"],
+        select,
+        textarea {
+            background: #eef3f8 !important;
+            border-radius: var(--clay-radius-md) !important;
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            box-shadow: var(--clay-shadow-input) !important;
+            padding: 12px 18px !important;
+            transition: all 0.25s ease !important;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            background: #ffffff !important;
+            box-shadow: var(--clay-shadow-input-focus) !important;
+            outline: none !important;
+        }
+
+        /* Clay Volumetric Badges */
+        .badge,
+        .status-badge,
+        .tag {
+            border-radius: var(--clay-radius-pill) !important;
+            box-shadow: 
+                inset 2px 2px 4px rgba(255, 255, 255, 0.6),
+                inset -2px -2px 4px rgba(0, 0, 0, 0.1),
+                2px 4px 8px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        /* Clay Tables & Event Items */
+        .data-table th {
+            border-bottom: 2px solid rgba(195, 210, 225, 0.5) !important;
+        }
+
+        .data-table td {
+            border-bottom: 1px solid rgba(225, 235, 245, 0.8) !important;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.7) !important;
+            border-radius: 12px !important;
+        }
+
+        .event-item {
+            background: #f8fafc !important;
+            border-radius: var(--clay-radius-lg) !important;
+            box-shadow: var(--clay-shadow-card) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        .event-item:hover {
+            transform: translateY(-3px) scale(1.01) !important;
+            box-shadow: var(--clay-shadow-card-hover) !important;
+        }
+
+        /* Clay Volumetric Modals */
+        .modal-content {
+            background: var(--clay-card-bg) !important;
+            border-radius: var(--clay-radius-xl) !important;
+            border: 1px solid rgba(255, 255, 255, 0.9) !important;
+            box-shadow: 
+                inset 6px 6px 14px rgba(255, 255, 255, 1),
+                inset -6px -6px 14px rgba(185, 200, 215, 0.6),
+                0 25px 60px rgba(140, 165, 190, 0.45) !important;
+        }
+
+        /* Dark Theme Claymorphism Overrides */
+        [data-theme="dark"] body {
+            background-color: #0b1329 !important;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(74, 222, 128, 0.08) 0px, transparent 50%) !important;
+        }
+
+        [data-theme="dark"] aside {
+            background: #111c38 !important;
+            box-shadow: 
+                inset -4px 0px 10px rgba(0, 0, 0, 0.5),
+                inset 4px 0px 10px rgba(255, 255, 255, 0.05),
+                10px 0px 24px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-theme="dark"] .glass-3d-card,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .stat-card {
+            background: #172445 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 
+                inset 4px 4px 8px rgba(255, 255, 255, 0.08),
+                inset -4px -4px 8px rgba(0, 0, 0, 0.6),
+                10px 16px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        [data-theme="dark"] input[type="text"],
+        [data-theme="dark"] input[type="email"],
+        [data-theme="dark"] input[type="password"],
+        [data-theme="dark"] input[type="number"],
+        [data-theme="dark"] input[type="date"],
+        [data-theme="dark"] input[type="time"],
+        [data-theme="dark"] input[type="search"],
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea {
+            background: #0f1933 !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 
+                inset 4px 4px 8px rgba(0, 0, 0, 0.6),
+                inset -4px -4px 8px rgba(255, 255, 255, 0.05) !important;
+            color: #f8fafc !important;
         }
 
         @keyframes brushFloat {
