@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Srijes BD Motion Suite - Business Development, Sales & Marketing</title>
+    <title>Vynster BD Panel - Business Development, Sales & Marketing</title>
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -662,13 +662,13 @@
 
     <!-- Header Navigation -->
     <header class="bd-header">
-        <a href="#" class="bd-brand">
-            <div class="bd-brand-icon">
-                <i class="fa-solid fa-chart-line"></i>
+        <a href="index.html" class="bd-brand" title="Back to Vynster Home">
+            <div class="bd-brand-icon" style="background: transparent; padding: 0;">
+                <img src="vynster-logo.png" alt="Vynster Symbol" style="width:36px; height:36px; object-fit:contain;">
             </div>
             <div class="bd-brand-text">
-                <h1>Srijes BD Suite</h1>
-                <p>Motion Business Intelligence</p>
+                <h1>Vynster BD Panel</h1>
+                <p>Enterprise Business Intelligence & Sales Pipeline</p>
             </div>
         </a>
 
@@ -1025,9 +1025,11 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? 'http://localhost:5000/api'
-            : '/api';
+        const API_URL = localStorage.getItem('CUSTOM_API_URL') || (
+            (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5503' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.hostname.includes('loca.lt'))
+                ? 'http://localhost:5000/api'
+                : '/api'
+        );
 
         // Initial BD State
         let dealsState = [
@@ -1047,7 +1049,7 @@
         ];
 
         let b2bAccounts = [
-            { name: 'Oberoi Grand Hotels', cat: 'Corporate Hospitality', manager: 'Srijesh K.', value: '₹3,50,000', status: 'Active' },
+            { name: 'Oberoi Grand Hotels', cat: 'Corporate Hospitality', manager: 'Vynster BD', value: '₹3,50,000', status: 'Active' },
             { name: 'TechCorp Systems India', cat: 'Employee Benefits', manager: 'Priya S.', value: '₹2,10,000', status: 'Active' },
             { name: 'Elite Model Management', cat: 'Fashion & Styling', manager: 'Ananya M.', value: '₹1,85,000', status: 'Under Renewal' }
         ];
@@ -1070,60 +1072,108 @@
             renderCharts();
             fetchServerData();
 
-            // Real-Time Cross-Portal Sync Engine Integration for BD Motion Suite
+            // Real-Time Cross-Portal Sync Engine Integration for Vynster BD Panel
             if (typeof window.vynsterSyncOn === 'function') {
                 window.vynsterSyncOn(['newAppointment', 'booking_created', 'bookingCreated', 'appointmentUpdated', 'booking_updated', 'data_updated'], (data) => {
-                    console.log('⚡ BD Motion Suite received live appointment update:', data);
+                    console.log('⚡ Vynster BD Panel received live appointment update:', data);
                     fetchServerData();
-                    if (data && data.clientName) {
+                    if (data && (data.clientName || data.name)) {
+                        const clientName = data.clientName || data.name;
                         const newDeal = {
                             id: 'd-live-' + Date.now(),
                             title: (data.service || 'Salon Service') + ' Booking',
-                            client: data.clientName,
+                            client: clientName,
                             phone: data.phone || '+91 98765 00000',
                             value: Number(data.price || data.total) || 2500,
                             stage: 'new'
                         };
-                        if (!dealsState.some(d => d.client === data.clientName && d.title.includes(data.service || ''))) {
+                        if (!dealsState.some(d => d.client === clientName && d.title.includes(data.service || ''))) {
                             dealsState.unshift(newDeal);
                             renderSalesPipeline();
                         }
                     }
                     if (typeof showToast === 'function') {
-                        showToast('⚡ Live Customer Booking synced to BD Pipeline!', 'info');
+                        showToast('⚡ Live Customer Booking synced to Vynster BD Pipeline!', 'info');
                     }
                 });
 
                 window.vynsterSyncOn('campaign_launched', (data) => {
-                    console.log('⚡ BD Suite campaign event:', data);
+                    console.log('⚡ Vynster BD Panel campaign event:', data);
                     if (typeof renderCampaigns === 'function') renderCampaigns();
                 });
             }
         });
 
-        // Fetch Real Server Data if available
+        // Fetch Real Server Data & Synced Project State
         async function fetchServerData() {
             try {
-                const resB = await fetch(`${API_URL}/bookings`);
-                if (resB.ok) {
-                    const bookings = await resB.json();
-                    if (Array.isArray(bookings) && bookings.length > 0) {
-                        const serverTotal = bookings.reduce((sum, b) => sum + (Number(b.total) || 0), 0);
-                        document.getElementById('kpi-sales-val').textContent = `₹${(serverTotal + 1250000).toLocaleString('en-IN')}`;
+                // Read local storage bookings if present
+                const localBookings = JSON.parse(localStorage.getItem('salon_bookings') || '[]');
+                let allBookings = Array.isArray(localBookings) ? localBookings : [];
+
+                try {
+                    const resB = await fetch(`${API_URL}/bookings`);
+                    if (resB.ok) {
+                        const serverBookings = await resB.json();
+                        if (Array.isArray(serverBookings) && serverBookings.length > 0) {
+                            allBookings = [...serverBookings, ...allBookings];
+                        }
                     }
+                } catch (e) {}
+
+                if (allBookings.length > 0) {
+                    const serverTotal = allBookings.reduce((sum, b) => sum + (Number(b.total) || Number(b.price) || 0), 0);
+                    if (serverTotal > 0) {
+                        document.getElementById('kpi-sales-val').textContent = `₹${(serverTotal + 965000).toLocaleString('en-IN')}`;
+                    }
+
+                    // Sync recent bookings into Kanban deals
+                    allBookings.slice(0, 5).forEach(b => {
+                        const clientName = b.clientName || b.name || b.client || 'Customer';
+                        if (!dealsState.some(d => d.client === clientName)) {
+                            dealsState.unshift({
+                                id: 'd-proj-' + (b.id || Date.now()),
+                                title: (b.service || 'Salon Treatment') + ' Deal',
+                                client: clientName,
+                                phone: b.phone || '9876543210',
+                                value: Number(b.total || b.price) || 3500,
+                                stage: b.status === 'Completed' ? 'won' : 'new'
+                            });
+                        }
+                    });
+                    renderSalesPipeline();
                 }
+
+                // Sync Clients database if available
+                try {
+                    const resC = await fetch(`${API_URL}/clients`);
+                    if (resC.ok) {
+                        const clients = await resC.json();
+                        if (Array.isArray(clients) && clients.length > 0) {
+                            clients.slice(0, 3).forEach((c, idx) => {
+                                if (b2bAccounts[idx]) {
+                                    b2bAccounts[idx].name = c.name + ' Account';
+                                }
+                            });
+                            renderB2BTable();
+                        }
+                    }
+                } catch(e) {}
 
                 const resAd = await fetch(`${API_URL}/marketing/booking-ad`);
                 if (resAd.ok) {
                     const adData = await resAd.json();
                     if (adData && adData.title) {
-                        document.getElementById('setting-ad-title').value = adData.title || '';
-                        document.getElementById('setting-ad-code').value = adData.discount || '';
-                        document.getElementById('setting-ad-desc').value = adData.description || '';
+                        const titleEl = document.getElementById('setting-ad-title');
+                        const codeEl = document.getElementById('setting-ad-code');
+                        const descEl = document.getElementById('setting-ad-desc');
+                        if (titleEl) titleEl.value = adData.title || '';
+                        if (codeEl) codeEl.value = adData.discount || '';
+                        if (descEl) descEl.value = adData.description || '';
                     }
                 }
             } catch (e) {
-                console.log('Running BD Suite with local dynamic state.');
+                console.log('Running Vynster BD Panel with project dynamic state.');
             }
         }
 
