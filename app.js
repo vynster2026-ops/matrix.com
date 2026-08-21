@@ -95,11 +95,10 @@ if (typeof STAFF_DATA !== 'undefined') {
   }
 }
 
-// NOTE: Mock seeding is DISABLED when running on a live server (localhost/production).
-// generateAppointments() only runs as last-resort fallback when no API is reachable.
+// NOTE: Staff Portal runs in 100% Real-Time Live Mode when served over HTTP/HTTPS.
 const _isLiveServer = (typeof window !== 'undefined') &&
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
-  window.location.port !== '';
+  window.location.protocol !== 'file:' &&
+  !window.location.search.includes('mock=true');
 if (!_isLiveServer && STAFF_DATA[currentStaff] && (!STAFF_DATA[currentStaff].appointments || STAFF_DATA[currentStaff].appointments.length === 0)) {
   if (typeof generateAppointments === 'function') {
     STAFF_DATA[currentStaff].appointments = generateAppointments();

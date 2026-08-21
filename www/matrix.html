@@ -4427,6 +4427,23 @@
                 recordDeletedVendorId(id);
 
                 const vIndex = vendors.findIndex(v => String(v.id) === String(id));
+                const targetVendor = vendors.find(v => String(v.id) === String(id)) || pendingSalons.find(s => String(s.id) === String(id));
+                
+                recordDeletedVendorId(id);
+                if (targetVendor) {
+                    if (targetVendor.email) recordDeletedVendorId(targetVendor.email);
+                    if (targetVendor.accessKey) recordDeletedVendorId(targetVendor.accessKey);
+                }
+
+                // Add to revoked list
+                try {
+                    let revoked = JSON.parse(localStorage.getItem('medhika_revoked_salons') || '[]');
+                    if (!revoked.includes(String(id))) revoked.push(String(id));
+                    if (targetVendor && targetVendor.email && !revoked.includes(targetVendor.email.toLowerCase())) revoked.push(targetVendor.email.toLowerCase());
+                    if (targetVendor && targetVendor.accessKey && !revoked.includes(targetVendor.accessKey.toUpperCase())) revoked.push(targetVendor.accessKey.toUpperCase());
+                    localStorage.setItem('medhika_revoked_salons', JSON.stringify(revoked));
+                } catch(e) {}
+
                 if (vIndex > -1) {
                     vendors.splice(vIndex, 1);
                 }
@@ -4438,7 +4455,12 @@
                 renderVendorTable();
                 renderExtendedTables();
                 saveSalonsToLocalStorage();
-                if (typeof showToast === 'function') showToast('Branch successfully deleted.', 'error');
+
+                if (typeof vynsterSyncEmit === 'function') {
+                    vynsterSyncEmit('REVOKE_SALON_SESSION', { branchId: id, email: targetVendor ? targetVendor.email : '', accessKey: targetVendor ? targetVendor.accessKey : '' });
+                }
+
+                if (typeof showToast === 'function') showToast('Branch successfully deleted & access revoked.', 'error');
 
                 try {
                     const response = await fetch(getApiUrl(`/api/branches/${id}`), {

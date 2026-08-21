@@ -1019,6 +1019,20 @@
             const rawEmail = emailInput.trim();
             const cleanPassword = passwordInput.trim();
 
+            // 0. Check if salon was deleted or access revoked by Super Admin
+            try {
+                const deletedIds = JSON.parse(localStorage.getItem('medhika_deleted_vendors') || '[]').map(id => String(id).trim().toLowerCase());
+                const revokedSalons = JSON.parse(localStorage.getItem('medhika_revoked_salons') || '[]').map(id => String(id).trim().toLowerCase());
+                const blockedList = [...deletedIds, ...revokedSalons];
+
+                if (blockedList.includes(cleanEmail) || blockedList.includes(rawEmail.trim().toLowerCase())) {
+                    return {
+                        success: false,
+                        error: "Access Revoked: This salon account has been terminated by Super Admin."
+                    };
+                }
+            } catch (e) {}
+
             // 1. Check Super Admin & Preset Manager Accounts
             if (superAdminMap[cleanEmail] && superAdminMap[cleanEmail].password === cleanPassword) {
                 const info = superAdminMap[cleanEmail];
@@ -1060,7 +1074,7 @@
 
             // 3. Check Local Storage Branches
             try {
-                const branches = JSON.parse(localStorage.getItem('vynster_branches') || localStorage.getItem('local_branches') || '[]');
+                const branches = JSON.parse(localStorage.getItem('vynster_branches') || localStorage.getItem('local_branches') || localStorage.getItem('medhika_approved_salons') || '[]');
                 const foundBranch = branches.find(b => 
                     (b.email && b.email.toLowerCase() === cleanEmail) || 
                     (b.accessKey && b.accessKey.toLowerCase() === cleanEmail)
@@ -1084,6 +1098,19 @@
             // 4. Pattern Match for Super Admin Generated Branch Credentials (BR-XXXX-XXXX)
             if (/^BR-/i.test(rawEmail) && cleanPassword.length >= 4) {
                 const accessKeyUpper = rawEmail.toUpperCase();
+                
+                // Verify the BR- key has not been deleted/revoked by Super Admin
+                try {
+                    const deletedIds = JSON.parse(localStorage.getItem('medhika_deleted_vendors') || '[]').map(id => String(id).trim().toLowerCase());
+                    const revokedSalons = JSON.parse(localStorage.getItem('medhika_revoked_salons') || '[]').map(id => String(id).trim().toLowerCase());
+                    if (deletedIds.includes(accessKeyUpper.toLowerCase()) || revokedSalons.includes(accessKeyUpper.toLowerCase())) {
+                        return {
+                            success: false,
+                            error: "Access Revoked: This salon account has been terminated by Super Admin."
+                        };
+                    }
+                } catch(e) {}
+
                 // Store in STAFF_CREDENTIALS so downstream pages recognize this active branch
                 try {
                     let creds = JSON.parse(localStorage.getItem('STAFF_CREDENTIALS') || '{}');

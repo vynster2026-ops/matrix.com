@@ -583,6 +583,11 @@ app.post('/api/auth/login', async (req, res) => {
     const cleanEmail = (email || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
 
+    // Check if salon account was deleted or revoked by Super Admin
+    if (localDb.deletedBranches && (localDb.deletedBranches.includes(cleanEmail) || localDb.deletedBranches.includes(email))) {
+        return res.status(403).json({ success: false, error: 'Access Revoked: This salon account has been terminated by Super Admin.' });
+    }
+
     const superAdminMap = {
         'rooter1@medhika.com': { password: 'rootadmin1', name: 'Rooter 1 (Founder & Master Super Admin)' },
         'rooter2@medhika.com': { password: 'rootadmin2', name: 'Rooter 2 (Super Admin)' },
@@ -1934,8 +1939,16 @@ app.delete('/api/branches/:id', async (req, res) => {
     const id = String(req.params.id).trim();
     console.log(`[DELETE BRANCH] Request to delete branch ID: ${id}`);
 
+    let deletedEmail = '';
+    let deletedAccessKey = '';
+
     if (isConnected) {
         try {
+            const bDoc = await Branch.findOne({ $or: [{ id: id }, { _id: id }] });
+            if (bDoc) {
+                deletedEmail = bDoc.email || '';
+                deletedAccessKey = bDoc.accessKey || '';
+            }
             await Branch.deleteOne({ $or: [{ id: id }, { _id: id }] });
             console.log(`[MONGO SUCCESS] Deleted branch ${id} from MongoDB`);
         } catch (e) {
@@ -1946,13 +1959,27 @@ app.delete('/api/branches/:id', async (req, res) => {
     if (localDb.branches) {
         const idx = localDb.branches.findIndex(b => String(b.id || b._id).trim() === id);
         if (idx !== -1) {
+            const b = localDb.branches[idx];
+            deletedEmail = deletedEmail || b.email || '';
+            deletedAccessKey = deletedAccessKey || b.accessKey || '';
             localDb.branches.splice(idx, 1);
-            saveLocal();
-            console.log(`[LOCAL DB SUCCESS] Deleted branch ${id} from localDb.json`);
         }
     }
 
-    res.json({ success: true, message: 'Branch deleted successfully' });
+    if (!localDb.deletedBranches) localDb.deletedBranches = [];
+    if (!localDb.deletedBranches.includes(id)) localDb.deletedBranches.push(id);
+    if (deletedEmail && !localDb.deletedBranches.includes(deletedEmail.toLowerCase())) localDb.deletedBranches.push(deletedEmail.toLowerCase());
+    if (deletedAccessKey && !localDb.deletedBranches.includes(deletedAccessKey.toUpperCase())) localDb.deletedBranches.push(deletedAccessKey.toUpperCase());
+
+    saveLocal();
+    console.log(`[LOCAL DB SUCCESS] Deleted & revoked branch ${id} from localDb.json`);
+
+    if (typeof io !== 'undefined' && io) {
+        io.emit('REVOKE_SALON_SESSION', { branchId: id, email: deletedEmail, accessKey: deletedAccessKey });
+        io.emit('branch_deleted', { id, email: deletedEmail });
+    }
+
+    res.json({ success: true, message: 'Branch deleted and access revoked successfully' });
 });
 
 // --- NEW: Chains & Multi-Salon API ---

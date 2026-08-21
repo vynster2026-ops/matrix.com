@@ -20241,6 +20241,39 @@
             window.addEventListener('touchmove', onMove, { passive: true });
             window.addEventListener('touchend', onEnd);
         })();
+
+        // Check if current salon access was revoked by Super Admin
+        (function checkSalonRevocation() {
+            const curBranch = (window.currentBranch || localStorage.getItem("selectedBranch") || localStorage.getItem("loggedInBranchId") || "").trim().toLowerCase();
+            const curEmail = (localStorage.getItem("loggedInEmail") || "").trim().toLowerCase();
+            const deletedIds = JSON.parse(localStorage.getItem('medhika_deleted_vendors') || '[]').map(id => String(id).trim().toLowerCase());
+            const revokedSalons = JSON.parse(localStorage.getItem('medhika_revoked_salons') || '[]').map(id => String(id).trim().toLowerCase());
+            const blockedList = [...deletedIds, ...revokedSalons];
+
+            if ((curBranch && blockedList.includes(curBranch)) || (curEmail && blockedList.includes(curEmail))) {
+                alert("Your salon account access has been revoked by Super Admin.");
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "login.html";
+            }
+        })();
+
+        if (typeof vynsterSyncOn === 'function') {
+            vynsterSyncOn('REVOKE_SALON_SESSION', function(data) {
+                const curBranch = (window.currentBranch || localStorage.getItem("selectedBranch") || localStorage.getItem("loggedInBranchId") || "").trim().toLowerCase();
+                const curEmail = (localStorage.getItem("loggedInEmail") || "").trim().toLowerCase();
+                if (data && (
+                    (data.branchId && String(data.branchId).trim().toLowerCase() === curBranch) ||
+                    (data.email && String(data.email).trim().toLowerCase() === curEmail) ||
+                    (data.accessKey && String(data.accessKey).trim().toLowerCase() === curBranch)
+                )) {
+                    alert("Your salon account access has been revoked by Super Admin.");
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = "login.html";
+                }
+            });
+        }
     </script>
 </body>
 
